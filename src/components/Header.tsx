@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { NAV, SITE } from "@/config/site";
-import { Seal } from "./Icons";
+import { Monogram } from "./Monogram";
 import { MobileNav } from "./MobileNav";
 
 export function Header() {
@@ -12,7 +12,7 @@ export function Header() {
       <div className="site-header on-dark">
         <div className="wrap">
           <Link className="brand" href="/" aria-label={`${SITE.name}, accueil`}>
-            <Seal />
+            <Monogram />
             <span>{SITE.name}</span>
           </Link>
           <nav className="nav" aria-label="Navigation principale">

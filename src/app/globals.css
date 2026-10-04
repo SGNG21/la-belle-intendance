@@ -307,8 +307,8 @@ p {
   text-decoration: none;
 }
 .brand svg {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: auto;
+  height: 2.6rem;
   flex: none;
 }
 .nav {

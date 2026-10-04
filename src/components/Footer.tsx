@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { COMMUNES, CONTACT, NAV, SERVICES, SITE, sapActive } from "@/config/site";
-import { Seal } from "./Icons";
+import { Monogram } from "./Monogram";
 import { Fill } from "./Fill";
 import { CookieSettings } from "./Consent";
 
@@ -11,7 +11,7 @@ export function Footer() {
         <div className="footer-grid">
           <div>
             <Link className="brand" href="/" style={{ marginBottom: "1rem" }}>
-              <Seal />
+              <Monogram />
               <span>{SITE.name}</span>
             </Link>
             <p className="muted" style={{ maxWidth: "20rem" }}>
