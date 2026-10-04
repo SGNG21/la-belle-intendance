@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { COMMUNES, PRICING, SITE } from "@/config/site";
 import { PageHero } from "@/components/PageHero";
+import { Band } from "@/components/Figure";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/joigny";
@@ -11,6 +12,11 @@ export default function Page() {
   return (
     <>
       <PageHero title="Ménage et intendance à Joigny" lede="Nous sommes installés à Joigny et nous intervenons dans un rayon d'environ vingt-cinq kilomètres." path={path} crumbLabel="Joigny et alentour" />
+
+      <Band
+        src="/images/hero-maison-bourguignonne.webp"
+        alt="Maison bourguignonne en pierre, volets ouverts sur la campagne"
+      />
 
       <section className="section">
         <div className="wrap split">

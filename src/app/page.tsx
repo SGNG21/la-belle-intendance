@@ -2,7 +2,8 @@ import Link from "next/link";
 import { COMMUNES, SERVICES, SITE } from "@/config/site";
 import { Check, Sprig } from "@/components/Icons";
 import { ReportCard } from "@/components/ReportCard";
-import { Band, Figure } from "@/components/Figure";
+import Image from "next/image";
+import { Figure } from "@/components/Figure";
 import { SapNotice } from "@/components/SapNotice";
 import { Faq } from "@/components/Faq";
 import { getFaqs } from "@/lib/content";
@@ -26,6 +27,16 @@ export default function HomePage() {
   return (
     <>
       <section className="hero on-dark">
+        <div className="hero-bg">
+          <Image
+            src="/images/maison-terrasse-vallee.webp"
+            alt="Maison de pierre et sa terrasse, ouvertes sur la vallée de l'Yonne au couchant"
+            width={1672}
+            height={941}
+            sizes="100vw"
+            priority
+          />
+        </div>
         <Sprig className="sprig" />
         <div className="wrap">
           <div className="hero-grid">
@@ -74,11 +85,6 @@ export default function HomePage() {
           </ul>
         </div>
       </section>
-
-      <Band
-        src="/images/hero-maison-bourguignonne.webp"
-        alt="Maison bourguignonne en pierre, volets ouverts sur la campagne"
-      />
 
       <section className="section section--navy on-dark">
         <div className="wrap">
