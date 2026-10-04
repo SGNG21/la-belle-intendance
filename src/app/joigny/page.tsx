@@ -14,8 +14,8 @@ export default function Page() {
       <PageHero title="Ménage et intendance à Joigny" lede="Nous sommes installés à Joigny et nous intervenons dans un rayon d'environ vingt-cinq kilomètres." path={path} crumbLabel="Joigny et alentour" />
 
       <Band
-        src="/images/hero-maison-bourguignonne.webp"
-        alt="Maison bourguignonne en pierre, volets ouverts sur la campagne"
+        src="/images/maison-terrasse-vallee.webp"
+        alt="Terrasse d'une maison de pierre ouverte sur la vallée de l'Yonne"
       />
 
       <section className="section">

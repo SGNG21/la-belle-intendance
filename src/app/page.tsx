@@ -3,7 +3,7 @@ import { COMMUNES, SERVICES, SITE } from "@/config/site";
 import { Check, Sprig } from "@/components/Icons";
 import { ReportCard } from "@/components/ReportCard";
 import Image from "next/image";
-import { Figure } from "@/components/Figure";
+import { Band, Figure } from "@/components/Figure";
 import { SapNotice } from "@/components/SapNotice";
 import { Faq } from "@/components/Faq";
 import { getFaqs } from "@/lib/content";
@@ -63,6 +63,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <Band
+        src="/images/hero-maison-bourguignonne.webp"
+        alt="Maison bourguignonne en pierre, volets vert amande, ouverte sur la campagne au couchant"
+      />
 
       <section className="section">
         <div className="wrap">

@@ -1113,9 +1113,9 @@ p {
 .band img {
   display: block;
   width: 100%;
-  height: clamp(16rem, 38vw, 30rem);
+  height: clamp(18rem, 46vw, 36rem);
   object-fit: cover;
-  object-position: center 60%;
+  object-position: center 48%;
 }
 
 /* ---------- Fond photographique du hero d'accueil ---------- */
