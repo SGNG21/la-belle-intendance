@@ -3,6 +3,7 @@ import { Check } from "@/components/Icons";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
+import { Band } from "@/components/Figure";
 import { SapNotice } from "@/components/SapNotice";
 import { pageMeta } from "@/lib/meta";
 import { service } from "@/lib/schema";
@@ -42,6 +43,11 @@ export default function Page() {
           </Link>
         </div>
       </PageHero>
+
+      <Band
+        src="/images/preparation-maison-avant-arrivee.webp"
+        alt="Chambre préparée, lit fait et fenêtre ouverte sur le jardin"
+      />
 
       <section className="section">
         <div className="wrap">

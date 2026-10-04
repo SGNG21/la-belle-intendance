@@ -2,6 +2,7 @@ import Link from "next/link";
 import { COMMUNES, SERVICES, SITE } from "@/config/site";
 import { Check, Sprig } from "@/components/Icons";
 import { ReportCard } from "@/components/ReportCard";
+import { Band, Figure } from "@/components/Figure";
 import { SapNotice } from "@/components/SapNotice";
 import { Faq } from "@/components/Faq";
 import { getFaqs } from "@/lib/content";
@@ -74,6 +75,11 @@ export default function HomePage() {
         </div>
       </section>
 
+      <Band
+        src="/images/hero-maison-bourguignonne.webp"
+        alt="Maison bourguignonne en pierre, volets ouverts sur la campagne"
+      />
+
       <section className="section section--navy on-dark">
         <div className="wrap">
           <div className="section-head">
@@ -114,6 +120,14 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
+          </div>
+          <div style={{ maxWidth: "34rem", margin: "2.5rem auto 0" }}>
+            <Figure
+              src="/images/compte-rendu-photo-intendance.webp"
+              alt="Compte rendu de passage consulté sur un téléphone, dans un salon"
+              caption="Image d'ambiance. Le contenu du compte rendu est fixé avec vous."
+              sizes="(max-width: 900px) 100vw, 34rem"
+            />
           </div>
           <div className="btn-row" style={{ marginTop: "2.5rem" }}>
             <Link className="btn" href="/grandes-demeures-intendance">

@@ -47,6 +47,13 @@ export default function Page() {
             <h2>Hébergement</h2>
             <p>{LEGAL.host}.</p>
 
+            <h2>Crédits visuels</h2>
+            <p>
+              Les photographies d'ambiance du site sont des images de synthèse générées par intelligence artificielle. Elles illustrent le type de
+              prestation proposé&nbsp;: elles ne représentent ni un logement de client, ni une intervention réalisée. Aucune comparaison avant/après n'est
+              présentée sur ce site.
+            </p>
+
             <h2>Propriété intellectuelle</h2>
             <p>Les textes, le sceau et les éléments graphiques du site sont la propriété de {SITE.name}. Toute reproduction sans autorisation est interdite.</p>
           </div>

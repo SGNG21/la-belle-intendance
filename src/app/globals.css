@@ -1076,3 +1076,41 @@ p {
 @media (max-width: 40rem) {
   .report { transform: none; }
 }
+
+/* ---------- Images d'illustration ---------- */
+.figure {
+  margin: 0 0 2rem;
+}
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--cream);
+}
+.on-dark .figure img {
+  border-color: var(--line-on-dark);
+}
+.figure figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+.on-dark .figure figcaption {
+  color: var(--mist);
+}
+
+.band {
+  width: 100%;
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+}
+.band img {
+  display: block;
+  width: 100%;
+  height: clamp(16rem, 38vw, 30rem);
+  object-fit: cover;
+  object-position: center 60%;
+}

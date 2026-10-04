@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Check } from "./Icons";
 import { JsonLd } from "./JsonLd";
 import { PageHero } from "./PageHero";
+import { Figure } from "./Figure";
 import { SapNotice } from "./SapNotice";
 import { Faq, type FaqItem } from "./Faq";
 import { service } from "@/lib/schema";
@@ -17,6 +18,8 @@ export interface ServicePageProps {
   forWhom: { title: string; items: string[] };
   sap?: "menage" | "autre" | "none";
   faqs?: FaqItem[];
+  /** Image d'ambiance facultative, affichée en tête de la colonne de texte. */
+  image?: { src: string; alt: string; caption?: string };
   extra?: React.ReactNode;
   ctaLabel?: string;
   ctaHref?: string;
@@ -40,6 +43,7 @@ export function ServicePage(p: ServicePageProps) {
       <section className="section">
         <div className="wrap split split--wide-left">
           <div className="prose">
+            {p.image ? <Figure src={p.image.src} alt={p.image.alt} caption={p.image.caption} /> : null}
             {p.intro.map((t) => (
               <p key={t}>{t}</p>
             ))}

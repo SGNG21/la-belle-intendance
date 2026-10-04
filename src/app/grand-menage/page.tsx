@@ -13,6 +13,7 @@ export default function Page() {
       path={path}
       serviceType="Grand ménage"
       description={description}
+      image={{ src: "/images/entretien-cuisine-maison.webp", alt: "Cuisine de maison de campagne, plan de travail dégagé", caption: "Image d'ambiance." }}
       intro={[
         "Le grand ménage reprend tout ce que l'entretien du quotidien laisse de côté : derrière les meubles, l'intérieur des placards, les plinthes, les vitres, les recoins de la cuisine et des salles de bains.",
         "Il se commande seul, à une date de votre choix, ou comme premier passage avant de passer à un entretien régulier. Dans ce cas, la maison part d'une base saine et les passages suivants sont plus courts.",
