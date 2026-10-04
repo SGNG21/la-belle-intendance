@@ -1135,13 +1135,13 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(104deg, rgba(24, 42, 69, 0.9) 0%, rgba(24, 42, 69, 0.81) 34%, rgba(24, 42, 69, 0.5) 68%, rgba(24, 42, 69, 0.3) 100%);
+  background: linear-gradient(104deg, rgba(24, 42, 69, 0.86) 0%, rgba(24, 42, 69, 0.82) 54%, rgba(24, 42, 69, 0.08) 85%, rgba(24, 42, 69, 0) 100%);
 }
 .hero .sprig { z-index: 1; }
 .hero .wrap { z-index: 2; }
 @media (max-width: 60rem) {
   .hero-bg::after {
-    background: linear-gradient(180deg, rgba(24, 42, 69, 0.88) 0%, rgba(24, 42, 69, 0.8) 55%, rgba(24, 42, 69, 0.9) 100%);
+    background: linear-gradient(180deg, rgba(24, 42, 69, 0.8) 0%, rgba(24, 42, 69, 0.62) 55%, rgba(24, 42, 69, 0.76) 100%);
   }
 }
 
