@@ -13,6 +13,7 @@ export default function Page() {
       path={path}
       serviceType="Nettoyage de locaux professionnels"
       description={description}
+      image={{ src: "/images/commerce-avant-ouverture.webp", alt: "Boutique de centre-ville avant l'ouverture : sol nettoyé, comptoir et rayonnages en bois dégagés", caption: "Image d'ambiance." }}
       ctaLabel="Demander un devis professionnel"
       ctaHref="/contact?type=professionnel#formulaire"
       intro={[

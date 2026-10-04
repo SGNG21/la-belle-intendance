@@ -38,7 +38,7 @@ export default function HomePage() {
         </div>
         <Sprig className="sprig" />
         <div className="wrap">
-          <div className="hero-grid hero-grid--solo">
+          <div className="hero-grid">
             <div className="hero-copy">
               <h1>Ménage soigné et intendance de maison, à Joigny et alentour</h1>
               <p className="lede">
@@ -58,6 +58,7 @@ export default function HomePage() {
                 <span>Particuliers et entreprises</span>
               </p>
             </div>
+            <ReportCard />
           </div>
         </div>
       </section>
@@ -124,9 +125,6 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
-          </div>
-          <div style={{ maxWidth: "30rem", margin: "3rem auto 0" }}>
-            <ReportCard />
           </div>
           <div className="btn-row" style={{ marginTop: "2.5rem" }}>
             <Link className="btn" href="/grandes-demeures-intendance">
