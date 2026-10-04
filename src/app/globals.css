@@ -391,6 +391,9 @@ p {
 .hero {
   position: relative;
   overflow: hidden;
+  display: grid;
+  align-items: center;
+  min-height: clamp(32rem, 78vh, 46rem);
   background: var(--navy-deep);
   color: var(--cream);
   padding-block: clamp(3rem, 7vw, 6rem) clamp(3.5rem, 8vw, 7rem);
@@ -416,6 +419,10 @@ p {
 @media (min-width: 62rem) {
   .hero-grid {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+  /* Hero sans carte : le texte tient la moitié gauche, la photo garde la droite. */
+  .hero-grid--solo {
+    grid-template-columns: minmax(0, 52%);
   }
 }
 .hero-copy {
@@ -1135,13 +1142,13 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(104deg, rgba(24, 42, 69, 0.86) 0%, rgba(24, 42, 69, 0.82) 54%, rgba(24, 42, 69, 0.08) 85%, rgba(24, 42, 69, 0) 100%);
+  background: linear-gradient(100deg, rgba(24, 42, 69, 0.92) 0%, rgba(24, 42, 69, 0.88) 46%, rgba(24, 42, 69, 0.55) 58%, rgba(24, 42, 69, 0.12) 72%, rgba(24, 42, 69, 0) 82%);
 }
 .hero .sprig { z-index: 1; }
 .hero .wrap { z-index: 2; }
 @media (max-width: 60rem) {
   .hero-bg::after {
-    background: linear-gradient(180deg, rgba(24, 42, 69, 0.8) 0%, rgba(24, 42, 69, 0.62) 55%, rgba(24, 42, 69, 0.76) 100%);
+    background: linear-gradient(180deg, rgba(24, 42, 69, 0.85) 0%, rgba(24, 42, 69, 0.7) 55%, rgba(24, 42, 69, 0.82) 100%);
   }
 }
 

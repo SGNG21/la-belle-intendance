@@ -3,7 +3,7 @@ import { Check } from "@/components/Icons";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
-import { Band } from "@/components/Figure";
+import { Band, Figure } from "@/components/Figure";
 import { SapNotice } from "@/components/SapNotice";
 import { pageMeta } from "@/lib/meta";
 import { service } from "@/lib/schema";
@@ -90,6 +90,17 @@ export default function Page() {
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap" style={{ maxWidth: "34rem" }}>
+          <Figure
+            src="/images/compte-rendu-photo-intendance.webp"
+            alt="Compte rendu de passage consulté sur un téléphone, dans un salon"
+            caption="Image d'ambiance. Le contenu du compte rendu est fixé avec vous."
+            sizes="(max-width: 900px) 100vw, 34rem"
+          />
         </div>
       </section>
 

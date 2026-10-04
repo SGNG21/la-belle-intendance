@@ -3,7 +3,6 @@ import { COMMUNES, SERVICES, SITE } from "@/config/site";
 import { Check, Sprig } from "@/components/Icons";
 import { ReportCard } from "@/components/ReportCard";
 import Image from "next/image";
-import { Band, Figure } from "@/components/Figure";
 import { SapNotice } from "@/components/SapNotice";
 import { Faq } from "@/components/Faq";
 import { getFaqs } from "@/lib/content";
@@ -29,8 +28,8 @@ export default function HomePage() {
       <section className="hero on-dark">
         <div className="hero-bg">
           <Image
-            src="/images/maison-terrasse-vallee.webp"
-            alt="Maison de pierre et sa terrasse, ouvertes sur la vallée de l'Yonne au couchant"
+            src="/images/hero-maison-bourguignonne.webp"
+            alt="Maison bourguignonne en pierre, volets vert amande, ouverte sur la campagne au couchant"
             width={1672}
             height={941}
             sizes="100vw"
@@ -39,7 +38,7 @@ export default function HomePage() {
         </div>
         <Sprig className="sprig" />
         <div className="wrap">
-          <div className="hero-grid">
+          <div className="hero-grid hero-grid--solo">
             <div className="hero-copy">
               <h1>Ménage soigné et intendance de maison, à Joigny et alentour</h1>
               <p className="lede">
@@ -59,15 +58,9 @@ export default function HomePage() {
                 <span>Particuliers et entreprises</span>
               </p>
             </div>
-            <ReportCard />
           </div>
         </div>
       </section>
-
-      <Band
-        src="/images/hero-maison-bourguignonne.webp"
-        alt="Maison bourguignonne en pierre, volets vert amande, ouverte sur la campagne au couchant"
-      />
 
       <section className="section">
         <div className="wrap">
@@ -132,13 +125,8 @@ export default function HomePage() {
               </ul>
             </div>
           </div>
-          <div style={{ maxWidth: "34rem", margin: "2.5rem auto 0" }}>
-            <Figure
-              src="/images/compte-rendu-photo-intendance.webp"
-              alt="Compte rendu de passage consulté sur un téléphone, dans un salon"
-              caption="Image d'ambiance. Le contenu du compte rendu est fixé avec vous."
-              sizes="(max-width: 900px) 100vw, 34rem"
-            />
+          <div style={{ maxWidth: "30rem", margin: "3rem auto 0" }}>
+            <ReportCard />
           </div>
           <div className="btn-row" style={{ marginTop: "2.5rem" }}>
             <Link className="btn" href="/grandes-demeures-intendance">
