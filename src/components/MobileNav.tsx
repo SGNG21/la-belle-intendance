@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { NAV } from "@/config/site";
+import { CONTACT, NAV } from "@/config/site";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -28,8 +28,13 @@ export function MobileNav() {
               </Link>
             ))}
             <Link className="btn" href="/contact" onClick={() => setOpen(false)}>
-              Demander un devis
+              Demander une visite et un devis
             </Link>
+            {CONTACT.phone && CONTACT.phoneE164 ? (
+              <a className="btn btn--ghost" href={`tel:${CONTACT.phoneE164}`} onClick={() => setOpen(false)}>
+                Appeler le {CONTACT.phone}
+              </a>
+            ) : null}
           </div>
         </nav>
       ) : null}

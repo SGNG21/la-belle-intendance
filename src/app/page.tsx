@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { COMMUNES, SERVICES, SITE } from "@/config/site";
-import { Check, Sprig } from "@/components/Icons";
+import { COMMUNES, CONTACT, SERVICES, SITE } from "@/config/site";
+import { Check, Phone, Sprig } from "@/components/Icons";
 import { ReportCard } from "@/components/ReportCard";
 import Image from "next/image";
 import { SapNotice } from "@/components/SapNotice";
@@ -49,12 +49,20 @@ export default function HomePage() {
               </p>
               <div className="btn-row">
                 <Link className="btn" href="/contact">
-                  Demander un devis
+                  Demander une visite et un devis
                 </Link>
-                <Link className="btn btn--ghost" href="/tarifs#simulateur">
-                  Estimer mon besoin
-                </Link>
+                {CONTACT.phone && CONTACT.phoneE164 ? (
+                  <a className="btn btn--ghost btn--phone" href={`tel:${CONTACT.phoneE164}`}>
+                    <Phone />
+                    <span>{CONTACT.phone}</span>
+                  </a>
+                ) : null}
               </div>
+              <p className="hero-secondary">
+                <Link className="link-quiet" href="/tarifs#simulateur">
+                  Estimer la durée pour mon logement
+                </Link>
+              </p>
               <p className="hero-facts">
                 <span>Joigny et ses alentours</span>
                 <span>Devis écrit avant toute intervention</span>

@@ -296,6 +296,7 @@ p {
 .brand {
   display: inline-flex;
   align-items: center;
+  flex: none;
   gap: 0.75rem;
   text-decoration: none;
   font-family: var(--font-display);
@@ -313,14 +314,16 @@ p {
 }
 .nav {
   display: none;
-  gap: 1.75rem;
+  gap: 1.25rem;
   align-items: center;
+  flex: none;
 }
 .nav a {
   text-decoration: none;
   font-size: 0.98rem;
   padding-block: 0.4rem;
   border-bottom: 1px solid transparent;
+  white-space: nowrap;
 }
 .nav a:hover,
 .nav a[aria-current="page"] {
@@ -384,6 +387,12 @@ p {
   background: var(--cream);
   color: var(--navy-deep);
   border: 1px solid var(--cream);
+}
+.mobile-nav .btn--ghost {
+  margin-top: 0.6rem;
+  background: transparent;
+  color: var(--cream);
+  border-color: var(--line-on-dark);
 }
 
 /* ---------- Hero ---------- */
@@ -1172,5 +1181,51 @@ p {
 @media (min-width: 62rem) {
   .hero .report {
     zoom: 0.82;
+  }
+}
+
+/* ---------- Appel téléphonique ---------- */
+.header-phone {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--cream);
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 0.4rem 0.2rem;
+}
+.header-phone svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--gold);
+  flex: none;
+}
+.header-phone:hover span {
+  text-decoration: underline;
+}
+
+/* Bouton d'appel : même gabarit que les autres, avec le combiné en tête. */
+.btn--phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.btn--phone svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+
+/* Lien discret sous les deux boutons principaux du hero. */
+.hero-secondary {
+  margin-top: -0.4rem;
+}
+
+/* Déclaré après le bloc ci-dessus, sinon `display: none` l'emporterait.
+   80rem et non 62rem : en dessous, le numéro pousse la navigation hors cadre. */
+@media (min-width: 80rem) {
+  .header-phone {
+    display: inline-flex;
   }
 }

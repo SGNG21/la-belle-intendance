@@ -60,3 +60,12 @@ export function PhotoIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/** Combiné téléphone, trait fin, accordé au reste du jeu d'icônes. */
+export function Phone({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6.5 3h3l1.5 4-2 1.3a12 12 0 0 0 5.7 5.7L16 12l4 1.5v3a1.5 1.5 0 0 1-1.6 1.5A15.5 15.5 0 0 1 4 5.6 1.5 1.5 0 0 1 5.5 4z" />
+    </svg>
+  );
+}

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { NAV, SITE } from "@/config/site";
+import { CONTACT, NAV, SITE } from "@/config/site";
+import { Phone } from "./Icons";
 import { Monogram } from "./Monogram";
 import { MobileNav } from "./MobileNav";
 
@@ -22,6 +23,12 @@ export function Header() {
               </Link>
             ))}
           </nav>
+          {CONTACT.phone && CONTACT.phoneE164 ? (
+            <a className="header-phone" href={`tel:${CONTACT.phoneE164}`}>
+              <Phone />
+              <span>{CONTACT.phone}</span>
+            </a>
+          ) : null}
           <Link className="btn header-cta" href="/contact">
             Demander un devis
           </Link>
