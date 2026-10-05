@@ -25,9 +25,9 @@ export const SITE = {
 
 /** Coordonnées. `null` = à renseigner avant la mise en ligne. */
 export const CONTACT = {
-  phone: null as string | null, // format affiché, ex. "03 86 00 00 00"
-  phoneE164: null as string | null, // ex. "+33386000000"
-  email: null as string | null,
+  phone: "07 83 29 15 41" as string | null, // format affiché
+  phoneE164: "+33783291541" as string | null, // format international
+  email: "contact@labelleintendance.com" as string | null,
   /** Adresse postale : laisser null si l'activité est exercée à domicile et masquée sur Google. */
   streetAddress: null as string | null,
   hours: null as string | null, // ex. "Du lundi au vendredi, 8 h – 18 h"
