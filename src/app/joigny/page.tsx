@@ -5,13 +5,13 @@ import { Band } from "@/components/Figure";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/joigny";
-const description = "Ménage et intendance de maison à Joigny : centre ancien, bords de l'Yonne et coteaux. Zone d'intervention de La Belle Intendance, rayon d'environ 25 km.";
-export const metadata = pageMeta({ title: "Ménage à Joigny et alentour", description, path });
+const description = "Ménage et intendance de maison à Joigny : centre ancien, bords de l'Yonne et coteaux. La zone d'intervention de La Belle Intendance, commune par commune.";
+export const metadata = pageMeta({ title: "Ménage à Joigny et ses alentours", description, path });
 
 export default function Page() {
   return (
     <>
-      <PageHero title="Ménage et intendance à Joigny" lede="Nous sommes installés à Joigny et nous intervenons dans un rayon d'environ vingt-cinq kilomètres." path={path} crumbLabel="Joigny et alentour" />
+      <PageHero title="Ménage et intendance à Joigny" lede="Nous sommes installés à Joigny et nous intervenons dans les communes alentour." path={path} crumbLabel="Joigny et ses alentours" />
 
       <Band
         src="/images/maison-terrasse-vallee.webp"

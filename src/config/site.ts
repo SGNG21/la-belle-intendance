@@ -11,16 +11,15 @@ export const SITE = {
   shortName: "LBI",
   url: (process.env.SITE_URL ?? "https://labelleintendance.fr").replace(/\/$/, ""),
   locale: "fr-FR",
-  tagline: "Ménage et intendance de maison à Joigny et alentour",
+  tagline: "Ménage et intendance de maison à Joigny et ses alentours",
   description:
-    "Ménage à domicile, entretien de grandes maisons et intendance de résidences secondaires à Joigny (89) et dans un rayon d'environ 25 km. Devis sur mesure.",
+    "Ménage à domicile, entretien de grandes maisons et intendance de résidences secondaires à Joigny (89) et ses alentours. Devis sur mesure.",
   city: "Joigny",
   postalCode: "89300",
   department: "Yonne",
   region: "Bourgogne-Franche-Comté",
   country: "FR",
   geo: { lat: 47.9833, lng: 3.4 },
-  radiusKm: 25,
   indexable: process.env.SITE_INDEXABLE === "true",
 } as const;
 
@@ -97,7 +96,7 @@ export const PRICING = {
   estimateValidated: false,
 };
 
-/** Communes du rayon d'intervention (cœur de zone, pas de pages dédiées). */
+/** Communes des alentours desservies (cœur de zone, pas de pages dédiées). */
 export const COMMUNES = [
   "Joigny",
   "Cézy",

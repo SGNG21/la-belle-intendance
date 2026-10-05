@@ -5,7 +5,7 @@ import { PageHero } from "@/components/PageHero";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/contact";
-const description = "Demandez un devis de ménage ou d'intendance à Joigny et alentour. Décrivez votre besoin, nous vous rappelons et nous vous envoyons un devis écrit.";
+const description = "Demandez un devis de ménage ou d'intendance à Joigny et ses alentours. Décrivez votre besoin, nous vous rappelons et nous vous envoyons un devis écrit.";
 export const metadata = pageMeta({ title: "Demander un devis de ménage à Joigny", description, path });
 
 export default function Page() {
@@ -30,7 +30,7 @@ export default function Page() {
             <p>
               <strong>Zone</strong>
               <br />
-              {SITE.city} et {SITE.radiusKm} km alentour
+              {SITE.city} et ses alentours
             </p>
             {CONTACT.hours ? (
               <p>

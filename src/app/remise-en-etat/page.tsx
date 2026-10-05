@@ -2,7 +2,7 @@ import { ServicePage } from "@/components/ServicePage";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/remise-en-etat";
-const description = "Nettoyage de remise en état à Joigny et alentour : après travaux, avant ou après un déménagement, avant une remise des clés.";
+const description = "Nettoyage de remise en état à Joigny et ses alentours : après travaux, avant ou après un déménagement, avant une remise des clés.";
 export const metadata = pageMeta({ title: "Nettoyage de remise en état à Joigny", description, path });
 
 export default function Page() {

@@ -2,7 +2,7 @@ import { ServicePage } from "@/components/ServicePage";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/grand-menage";
-const description = "Grand ménage à Joigny et alentour : nettoyage approfondi d'une maison ou d'un appartement, au printemps, avant une réception ou après une longue absence.";
+const description = "Grand ménage à Joigny et ses alentours : nettoyage approfondi d'une maison ou d'un appartement, au printemps, avant une réception ou après une longue absence.";
 export const metadata = pageMeta({ title: "Grand ménage à Joigny", description, path });
 
 export default function Page() {

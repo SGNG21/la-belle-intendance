@@ -8,7 +8,7 @@ import { getFaqs } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/tarifs";
-const description = "Comment sont établis nos tarifs de ménage à Joigny et alentour, simulateur de durée et explication du crédit d'impôt pour services à la personne.";
+const description = "Comment sont établis nos tarifs de ménage à Joigny et ses alentours, simulateur de durée et explication du crédit d'impôt pour services à la personne.";
 export const metadata = pageMeta({ title: "Tarifs du ménage à domicile à Joigny", description, path });
 
 export default function Page() {

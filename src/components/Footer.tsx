@@ -15,7 +15,7 @@ export function Footer() {
               <span>{SITE.name}</span>
             </Link>
             <p className="muted" style={{ maxWidth: "20rem" }}>
-              {SITE.tagline}. Intervention à {SITE.city} et dans un rayon d'environ {SITE.radiusKm} km.
+              {SITE.tagline}. Intervention à {SITE.city} et dans ses alentours.
             </p>
           </div>
           <div>

@@ -21,7 +21,7 @@ export function GET() {
     `- Nom : ${SITE.name}`,
     `- Activité : ménage à domicile, grand ménage, remise en état, entretien de grandes demeures, intendance de résidences secondaires, nettoyage de locaux professionnels`,
     `- Implantation : ${SITE.postalCode} ${SITE.city}, ${SITE.department} (${SITE.region}), France`,
-    `- Zone d'intervention : ${SITE.city} et environ ${SITE.radiusKm} km autour`,
+    `- Zone d'intervention : ${SITE.city} et ses alentours`,
     `- Communes desservies : ${COMMUNES.join(", ")}`,
     ...(CONTACT.phone ? [`- Téléphone : ${CONTACT.phone}`] : []),
     ...(CONTACT.email ? [`- E-mail : ${CONTACT.email}`] : []),

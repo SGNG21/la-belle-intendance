@@ -2,7 +2,7 @@ import { ServicePage } from "@/components/ServicePage";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/professionnels";
-const description = "Entretien de bureaux, cabinets médicaux et paramédicaux, commerces et agences à Joigny et alentour : contrat sur mesure, interlocuteur unique.";
+const description = "Entretien de bureaux, cabinets médicaux et paramédicaux, commerces et agences à Joigny et ses alentours : contrat sur mesure, interlocuteur unique.";
 export const metadata = pageMeta({ title: "Nettoyage de bureaux et cabinets", description, path });
 
 export default function Page() {

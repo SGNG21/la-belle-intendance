@@ -2,7 +2,7 @@ import { ServicePage } from "@/components/ServicePage";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/entretien-regulier";
-const description = "Ménage à domicile régulier à Joigny et alentour : un passage par semaine ou tous les quinze jours, selon un cahier des charges écrit avec vous.";
+const description = "Ménage à domicile régulier à Joigny et ses alentours : un passage par semaine ou tous les quinze jours, selon un cahier des charges écrit avec vous.";
 export const metadata = pageMeta({ title: "Ménage à domicile régulier à Joigny", description, path });
 
 export default function Page() {

@@ -13,7 +13,7 @@ export function getFaqs(): FaqItem[] {
     { q: "Le crédit d'impôt s'applique-t-il ?", a: credit },
     {
       q: "Dans quelles communes intervenez-vous ?",
-      a: `Nous intervenons à ${SITE.city} et dans un rayon d'environ ${SITE.radiusKm} km, notamment à ${COMMUNES.slice(1, 9).join(", ")} et dans les communes voisines. Si la vôtre n'apparaît pas, demandez-nous : nous vous répondons selon la distance.`,
+      a: `Nous intervenons à ${SITE.city} et dans ses alentours, notamment à ${COMMUNES.slice(1, 9).join(", ")} et dans les communes voisines. Si la vôtre n'apparaît pas, demandez-nous : nous vous répondons selon la distance.`,
     },
     {
       q: "Dois-je être présent pendant le ménage ?",

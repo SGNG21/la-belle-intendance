@@ -14,7 +14,7 @@ export default function OgImage() {
           <div style={{ fontSize: 34 }}>{SITE.name}</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-          <div style={{ fontSize: 76, lineHeight: 1.08, maxWidth: 940 }}>Ménage et intendance de maison à Joigny et alentour</div>
+          <div style={{ fontSize: 76, lineHeight: 1.08, maxWidth: 940 }}>Ménage et intendance de maison à Joigny et ses alentours</div>
           <div style={{ fontSize: 32, color: "#aec6d2" }}>Particuliers, grandes demeures, entreprises · Yonne</div>
         </div>
       </div>

@@ -11,7 +11,7 @@ import { serviceItemList } from "@/lib/schema";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata = pageMeta({
-  title: "Ménage et intendance de maison à Joigny et alentour",
+  title: "Ménage et intendance de maison à Joigny et ses alentours",
   description: SITE.description,
   path: "/",
 });
@@ -43,7 +43,7 @@ export default function HomePage() {
         <div className="wrap">
           <div className="hero-grid">
             <div className="hero-copy">
-              <h1>Ménage soigné et intendance de maison, à Joigny et alentour</h1>
+              <h1>Ménage soigné et intendance de maison, à Joigny et ses alentours</h1>
               <p className="lede">
                 De l'appartement à la grande demeure, nous entretenons votre maison selon un cahier des charges écrit ensemble, et nous vous en rendons compte.
               </p>
@@ -56,7 +56,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <p className="hero-facts">
-                <span>Joigny et {SITE.radiusKm} km alentour</span>
+                <span>Joigny et ses alentours</span>
                 <span>Devis écrit avant toute intervention</span>
                 <span>Particuliers et entreprises</span>
               </p>
@@ -156,7 +156,7 @@ export default function HomePage() {
       <section className="section section--cream">
         <div className="wrap split split--wide-left">
           <div style={{ display: "grid", gap: "1.5rem" }}>
-            <h2>Joigny, et vingt-cinq kilomètres autour</h2>
+            <h2>Joigny et ses alentours</h2>
             <p className="communes">
               {COMMUNES.map((c) => (
                 <span key={c} className={c === "Joigny" ? "core" : undefined}>
