@@ -4,7 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/confidentialite";
-export const metadata = pageMeta({ title: "Politique de confidentialité", description: `Comment ${SITE.name} traite vos données personnelles : finalités, durée, droits.`, path });
+export const metadata = pageMeta({ title: "Politique de confidentialité", description: `Comment ${SITE.name} traite vos données personnelles : données du formulaire de devis, finalités, durée de conservation et vos droits.`, path });
 
 export default function Page() {
   return (

@@ -1,4 +1,4 @@
-import { COMMUNES, CONTACT, FOUNDER, LEGAL, SERVICES, SITE, sapActive } from "@/config/site";
+import { COMMUNES, CONTACT, FOUNDER, LEGAL, PRICING, SERVICES, SITE, sapActive } from "@/config/site";
 
 /** Construit les données structurées. Une valeur inconnue est omise, jamais remplacée par un faux. */
 const drop = <T extends Record<string, unknown>>(o: T): T =>
@@ -15,6 +15,12 @@ export function localBusiness() {
     name: SITE.name,
     url: SITE.url,
     description: SITE.description,
+    // Logo et vignette de marque : les seuls visuels qui appartiennent à
+    // l'entreprise. Aucune photo d'ambiance ici, elles sont de synthèse.
+    logo: `${SITE.url}/icon.svg`,
+    image: `${SITE.url}/opengraph-image`,
+    priceRange: PRICING.hourlyTTC ? "€€" : undefined,
+    currenciesAccepted: "EUR",
     telephone: CONTACT.phoneE164,
     email: CONTACT.email,
     areaServed: [
@@ -59,7 +65,24 @@ export function service(opts: { name: string; description: string; path: string;
     serviceType: opts.serviceType,
     url: abs(opts.path),
     provider: { "@id": `${SITE.url}/#entreprise` },
-    areaServed: { "@type": "City", name: SITE.city },
+    areaServed: COMMUNES.map((name) => ({ "@type": "City", name })),
+    inLanguage: SITE.locale,
+  };
+}
+
+/** Liste des prestations : aide les moteurs génératifs à énumérer l'offre. */
+export function serviceItemList() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `Prestations — ${SITE.name}`,
+    itemListElement: SERVICES.map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: s.name,
+      description: s.short,
+      url: abs(s.href),
+    })),
   };
 }
 

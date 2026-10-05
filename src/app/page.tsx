@@ -6,6 +6,8 @@ import Image from "next/image";
 import { SapNotice } from "@/components/SapNotice";
 import { Faq } from "@/components/Faq";
 import { getFaqs } from "@/lib/content";
+import { JsonLd } from "@/components/JsonLd";
+import { serviceItemList } from "@/lib/schema";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata = pageMeta({
@@ -25,6 +27,7 @@ export default function HomePage() {
   const faqs = getFaqs();
   return (
     <>
+      <JsonLd data={serviceItemList()} />
       <section className="hero on-dark">
         <div className="hero-bg">
           <Image

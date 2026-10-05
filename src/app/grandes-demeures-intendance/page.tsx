@@ -9,8 +9,8 @@ import { pageMeta } from "@/lib/meta";
 import { service } from "@/lib/schema";
 
 const path = "/grandes-demeures-intendance";
-const description = "Entretien de grandes maisons et intendance de résidences secondaires à Joigny et dans l'Yonne : préparation avant votre arrivée, contrôle après votre départ, compte rendu.";
-export const metadata = pageMeta({ title: "Grandes demeures et résidences secondaires à Joigny", description, path });
+const description = "Entretien de grandes maisons et intendance de résidences secondaires à Joigny (89) : préparation avant votre arrivée, contrôle après votre départ, compte rendu.";
+export const metadata = pageMeta({ title: "Intendance de grandes demeures", description, path });
 
 const faqs = [
   {

@@ -6,7 +6,7 @@ import { pageMeta } from "@/lib/meta";
 
 const path = "/joigny";
 const description = "Ménage et intendance de maison à Joigny : centre ancien, bords de l'Yonne et coteaux. Zone d'intervention de La Belle Intendance, rayon d'environ 25 km.";
-export const metadata = pageMeta({ title: "Ménage à Joigny et dans un rayon de 25 km", description, path });
+export const metadata = pageMeta({ title: "Ménage à Joigny et alentour", description, path });
 
 export default function Page() {
   return (
