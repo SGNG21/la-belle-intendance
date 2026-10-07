@@ -24,7 +24,7 @@ export default function Page() {
             <p>Trois éléments entrent dans le devis : la durée nécessaire, la prestation choisie et la distance depuis Joigny.</p>
             <ul>
               <li>
-                <strong>Entretien régulier :</strong> facturé à l'heure, selon la durée d'un passage définie avec vous.
+                <strong>Entretien régulier :</strong> facturé à l'heure ou au forfait, selon la durée d'un passage définie avec vous.
               </li>
               <li>
                 <strong>Grand ménage, remise en état :</strong> un forfait, après échange et visite si nécessaire.
