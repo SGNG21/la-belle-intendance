@@ -40,7 +40,7 @@ export const CONTACT = {
 export const LEGAL = {
   publisherName: null as string | null, // nom de l'exploitant (entreprise individuelle)
   legalForm: "Micro-entreprise" as string | null,
-  siret: null as string | null,
+  siret: "830 242 764 00025" as string | null,
   vatMention: null as string | null, // ex. "TVA non applicable, art. 293 B du CGI" ou n° de TVA
   insurer: null as string | null, // assureur RC professionnelle
   host: "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",

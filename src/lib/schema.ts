@@ -37,7 +37,7 @@ export function localBusiness() {
     }),
     geo: { "@type": "GeoCoordinates", latitude: SITE.geo.lat, longitude: SITE.geo.lng },
     sameAs: sameAs.length ? sameAs : undefined,
-    taxID: LEGAL.siret,
+    taxID: LEGAL.siret?.replace(/\s/g, "") ?? undefined,
     founder: FOUNDER.firstName ? { "@type": "Person", name: FOUNDER.firstName } : undefined,
     knowsAbout: ["Ménage à domicile", "Entretien de grandes maisons", "Intendance de résidence secondaire", "Nettoyage de locaux professionnels"],
     // Volontairement ni AggregateRating ni Review tant qu'il n'existe pas d'avis réels affichés sur le site.
