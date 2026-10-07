@@ -98,7 +98,7 @@ export default function Page() {
           <Figure
             src="/images/compte-rendu-photo-intendance.webp"
             alt="Compte rendu de passage consulté sur un téléphone, dans un salon"
-            caption="Image d'ambiance. Le contenu du compte rendu est fixé avec vous."
+            caption="Le contenu du compte rendu est fixé avec vous."
             sizes="(max-width: 900px) 100vw, 34rem"
           />
         </div>

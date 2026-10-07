@@ -13,7 +13,7 @@ export default function Page() {
       path={path}
       serviceType="Nettoyage de remise en état"
       description={description}
-      image={{ src: "/images/remise-cles-intendance.webp", alt: "Remise de clés sur le pas d'une porte de maison", caption: "Image d'ambiance." }}
+      image={{ src: "/images/remise-cles-intendance.webp", alt: "Remise de clés sur le pas d'une porte de maison" }}
       intro={[
         "Après un chantier, après un déménagement ou avant un état des lieux, le logement a besoin d'un nettoyage plus poussé que le ménage ordinaire : poussière fine, traces, résidus, sols à reprendre.",
         "Nous intervenons sur un créneau convenu, avec une liste de ce qui doit être remis en état. Le devis est établi après un échange, parfois une visite, car l'ampleur dépend vraiment du chantier.",

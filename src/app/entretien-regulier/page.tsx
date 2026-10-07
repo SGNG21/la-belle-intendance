@@ -13,7 +13,7 @@ export default function Page() {
       path={path}
       serviceType="Ménage à domicile"
       description={description}
-      image={{ src: "/images/salon-lumineux-intendance.webp", alt: "Salon clair d'une maison ancienne, rideaux de lin et parquet", caption: "Image d'ambiance." }}
+      image={{ src: "/images/salon-lumineux-intendance.webp", alt: "Salon clair d'une maison ancienne, rideaux de lin et parquet" }}
       intro={[
         "L'entretien régulier convient à un appartement comme à une grande maison. Nous fixons avec vous la fréquence, la durée d'un passage et les pièces à privilégier, puis nous l'écrivons.",
         "Ce cahier des charges évolue : vous pouvez ajouter une tâche, déplacer un jour ou suspendre pendant vos vacances. Vous n'avez pas à ré-expliquer à chaque fois.",
