@@ -29,7 +29,7 @@ export default function Page() {
         title: "Pour qui",
         items: ["Cabinets médicaux, paramédicaux et professions libérales", "Agences immobilières, notaires, assurances", "Bureaux et petites entreprises", "Commerces et showrooms"],
       }}
-      sap="none"
+      modes="pro"
       faqs={[
         { q: "Intervenez-vous en dehors des heures d'ouverture ?", a: "Oui, lorsque c'est possible : tôt le matin, en soirée ou le week-end. Les horaires sont fixés dans le contrat." },
         { q: "Comment est établi le devis ?", a: "Après un échange sur vos besoins et, le plus souvent, une visite des locaux. Le contrat précise la fréquence, les horaires et le contenu de chaque passage." },

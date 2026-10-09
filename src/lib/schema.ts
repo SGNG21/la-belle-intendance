@@ -1,4 +1,4 @@
-import { COMMUNES, CONTACT, FOUNDER, LEGAL, PRICING, SERVICES, SITE, sapActive } from "@/config/site";
+import { COMMUNES, CONTACT, FOUNDER, LEGAL, PRICING, SERVICES, SITE } from "@/config/site";
 
 /** Construit les données structurées. Une valeur inconnue est omise, jamais remplacée par un faux. */
 const drop = <T extends Record<string, unknown>>(o: T): T =>
@@ -112,4 +112,3 @@ export function faqPage(faqs: { q: string; a: string }[]) {
 }
 
 export const serviceList = SERVICES.map((s) => ({ name: s.name, path: s.href, serviceType: s.serviceType, description: s.short }));
-export const sapDeclared = sapActive;

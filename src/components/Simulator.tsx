@@ -9,7 +9,7 @@ import { track } from "@/lib/track";
 const eur = (n: number) => `${n.toLocaleString("fr-FR")} €`;
 const hours = (h: number) => `${h.toLocaleString("fr-FR")} h`;
 
-export function Simulator({ sapDeclared, hourlyKnown }: { sapDeclared: boolean; hourlyKnown: boolean }) {
+export function Simulator({ hourlyKnown }: { hourlyKnown: boolean }) {
   const uid = useId();
   const [housing, setHousing] = useState<HousingType>("maison");
   const [surface, setSurface] = useState(120);
@@ -74,9 +74,6 @@ export function Simulator({ sapDeclared, hourlyKnown }: { sapDeclared: boolean; 
         {hourlyKnown && e.priceLow != null && e.priceHigh != null ? (
           <p>
             Soit environ <strong>{eur(e.priceLow)} à {eur(e.priceHigh)}</strong> TTC.
-            {sapDeclared && e.afterCreditLow != null && e.afterCreditHigh != null ? (
-              <> Après crédit d'impôt de 50 % : <strong>{eur(e.afterCreditLow)} à {eur(e.afterCreditHigh)}</strong>.</>
-            ) : null}
           </p>
         ) : (
           <p>Le tarif est indiqué dans votre devis écrit, selon la prestation et la distance.</p>

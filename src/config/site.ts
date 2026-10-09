@@ -54,18 +54,27 @@ export const FOUNDER = {
 };
 
 /**
- * Services à la personne (SAP).
- * Tant que `declarationNumber` est null, AUCUNE mention d'avantage fiscal
- * n'est présentée comme acquise : le site affiche la version pédagogique.
- * Dès que le numéro de déclaration (récépissé NOVA) est saisi, la version
- * "déclarée" s'active partout.
+ * Modes d'intervention.
+ *
+ * L'entreprise n'est PAS déclarée au titre des services à la personne et n'a
+ * pas vocation à l'être. Conséquence directe : une prestation facturée
+ * n'ouvre droit à AUCUN crédit ni réduction d'impôt, et le site ne doit
+ * jamais le laisser entendre.
+ *
+ * Deux modes sont proposés au client, choisis avant la première intervention
+ * et jamais cumulés sur une même prestation :
+ *  - `prestation` : devis puis facture de la micro-entreprise ;
+ *  - `cesu` : emploi direct, le client devient particulier employeur et
+ *    déclare les heures sur cesu.urssaf.fr. C'est l'emploi d'un salarié à
+ *    domicile qui ouvre droit au crédit d'impôt de 50 % (art. 199 sexdecies
+ *    du CGI), sans aucune déclaration SAP de l'intervenante.
  */
-export const SAP = {
-  declarationNumber: null as string | null, // ex. "SAP123456789"
-  declarationDate: null as string | null, // ex. "12 octobre 2026"
-  avanceImmediate: false, // passer à true seulement une fois l'avance immédiate URSSAF activée
+export const MODES = {
+  prestation: true,
+  cesu: true,
+  /** Taux horaire net salarial en emploi direct. `null` tant qu'il n'est pas arrêté. */
+  cesuNetHourly: null as number | null,
 };
-export const sapActive = () => Boolean(SAP.declarationNumber);
 
 /**
  * Tarification. Aucun prix n'est inventé : tant que `hourlyTTC` est null,

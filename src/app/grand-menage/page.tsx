@@ -27,7 +27,7 @@ export default function Page() {
         title: "Quand le choisir",
         items: ["Au printemps ou à la rentrée", "Avant une réception ou l'arrivée d'invités", "Après une longue absence ou un hiver fermé", "En premier passage avant un entretien régulier"],
       }}
-      sap="menage"
+      modes="domicile"
     />
   );
 }

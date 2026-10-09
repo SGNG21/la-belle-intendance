@@ -1,21 +1,21 @@
 import Link from "next/link";
 import { Faq } from "@/components/Faq";
 import { PageHero } from "@/components/PageHero";
-import { SapNotice } from "@/components/SapNotice";
+import { ModesNotice } from "@/components/ModesNotice";
 import { Simulator } from "@/components/Simulator";
-import { PRICING, sapActive } from "@/config/site";
+import { PRICING } from "@/config/site";
 import { getFaqs } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/tarifs";
-const description = "Comment sont établis nos tarifs de ménage à Joigny et ses alentours, simulateur de durée et explication du crédit d'impôt pour services à la personne.";
-export const metadata = pageMeta({ title: "Tarifs du ménage à domicile à Joigny", description, path });
+const description = "Comment sont établis nos tarifs de ménage à Joigny et ses alentours, simulateur de durée, et les deux modes d'intervention : prestation facturée ou emploi direct déclaré au CESU.";
+export const metadata = pageMeta({ title: "Tarifs et modes d'intervention", description, path });
 
 export default function Page() {
   const faqs = getFaqs();
   return (
     <>
-      <PageHero title="Tarifs et crédit d'impôt" lede="Un prix annoncé avant de commencer, calculé selon ce que votre logement demande." path={path} crumbLabel="Tarifs" />
+      <PageHero title="Tarifs et modes d'intervention" lede="Un prix annoncé avant de commencer, calculé selon ce que votre logement demande." path={path} crumbLabel="Tarifs" />
 
       <section className="section">
         <div className="wrap split split--wide-left">
@@ -41,14 +41,15 @@ export default function Page() {
               Le déplacement est inclus jusqu'à {PRICING.travel.zoneAKm} km de Joigny. Au-delà, un supplément dépend de la distance : il est indiqué dans le devis, jamais ajouté après coup.
             </p>
             <h3>Devis écrit</h3>
-            <p>Vous recevez un devis avant toute intervention. Il précise le contenu des passages, la durée, le prix et, selon la prestation, le crédit d'impôt éventuel.</p>
+            <p>Vous recevez un devis avant toute intervention. Il précise le contenu des passages, la durée, le prix et le mode d&apos;intervention retenu.</p>
+            <h3>Emploi direct au CESU</h3>
+            <p>
+              Si vous préférez m&apos;employer directement plutôt que de faire appel à l&apos;entreprise, vous devenez particulier employeur : vous déclarez les heures sur cesu.urssaf.fr, l&apos;Urssaf calcule les cotisations et vous récupérez 50 % en crédit d&apos;impôt, immédiatement avec CESU+. Nous convenons alors d&apos;un taux horaire net et d&apos;un contrat de travail, au lieu d&apos;un devis et d&apos;une facture.
+            </p>
           </div>
           <div style={{ display: "grid", gap: "1.25rem", alignContent: "start" }}>
-            <h2 style={{ fontSize: "1.5rem" }}>Crédit d'impôt</h2>
-            <SapNotice />
-            {sapActive() ? (
-              <p className="muted">Le crédit d'impôt est calculé sur les dépenses de l'année, dans la limite d'un plafond qui dépend de votre situation. Il s'applique aux seules prestations éligibles, ce que le devis précise.</p>
-            ) : null}
+            <h2 style={{ fontSize: "1.5rem" }}>Prestation ou emploi direct</h2>
+            <ModesNotice />
           </div>
         </div>
       </section>
@@ -59,7 +60,7 @@ export default function Page() {
             <h2>Estimer la durée pour votre logement</h2>
             <p className="muted">Quelques informations suffisent pour obtenir un ordre de grandeur.</p>
           </div>
-          <Simulator sapDeclared={sapActive()} hourlyKnown={PRICING.hourlyTTC != null} />
+          <Simulator hourlyKnown={PRICING.hourlyTTC != null} />
         </div>
       </section>
 

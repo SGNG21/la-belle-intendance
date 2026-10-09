@@ -4,7 +4,7 @@ import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
 import { Band, Figure } from "@/components/Figure";
-import { SapNotice } from "@/components/SapNotice";
+import { ModesNotice } from "@/components/ModesNotice";
 import { pageMeta } from "@/lib/meta";
 import { service } from "@/lib/schema";
 
@@ -114,14 +114,14 @@ export default function Page() {
           <div className="prose">
             <h2>Locations de courte durée</h2>
             <p>Si vous louez votre maison ou un gîte, nous assurons le ménage entre deux séjours, facturé au forfait par rotation. Les lits et le linge de maison sont une option, à convenir ensemble avant la première rotation.</p>
-            <p className="muted">Cette prestation ne donne pas droit au crédit d'impôt pour services à la personne.</p>
+            <p className="muted">Les locations de courte durée sont facturées par l&apos;entreprise : elles ne relèvent pas du domicile du particulier et n&apos;ouvrent donc pas droit au crédit d&apos;impôt.</p>
           </div>
         </div>
       </section>
 
       <section className="section">
         <div className="wrap">
-          <SapNotice scope="autre" />
+          <ModesNotice />
         </div>
       </section>
 

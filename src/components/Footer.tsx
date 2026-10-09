@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { COMMUNES, CONTACT, NAV, SERVICES, SITE, sapActive } from "@/config/site";
+import { COMMUNES, CONTACT, NAV, SERVICES, SITE } from "@/config/site";
 import { Monogram } from "./Monogram";
 import { Fill } from "./Fill";
 import { CookieSettings } from "./Consent";
@@ -57,11 +57,9 @@ export function Footer() {
         </div>
 
         <div className="footer-sap">
-          {sapActive() ? (
-            <p>Entreprise déclarée services à la personne. Le crédit d'impôt de 50 % concerne les prestations de ménage et d'entretien courant du domicile des particuliers.</p>
-          ) : (
-            <p>Le crédit d'impôt pour services à la personne est ouvert aux entreprises déclarées. Nous l'indiquerons ici dès que notre déclaration sera effective.</p>
-          )}
+          <p>
+            Deux modes d&apos;intervention au choix : prestation facturée par l&apos;entreprise, ou emploi direct déclaré au CESU. Le crédit d&apos;impôt de 50 % ne s&apos;applique qu&apos;en emploi direct. L&apos;entreprise n&apos;est pas déclarée au titre des services à la personne.
+          </p>
           <p>
             © {new Date().getFullYear()} {SITE.name} · <Link href="/mentions-legales">Mentions légales</Link> · <Link href="/confidentialite">Confidentialité</Link> · <CookieSettings />
           </p>

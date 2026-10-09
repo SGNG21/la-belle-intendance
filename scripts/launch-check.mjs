@@ -35,7 +35,8 @@ for (const [key, scope, label] of need) if (isNull(key, scope)) blockers.push(`R
 if (isNull("hourlyTTC", "PRICING")) warnings.push("Tarif horaire TTC non renseigné : le simulateur n'affiche aucun prix (durée seulement). Voulu ? Sinon renseigner PRICING.hourlyTTC.");
 if (/estimateValidated:\s*false/.test(config)) blockers.push("Heuristique de durée du simulateur non validée par l'opératrice terrain (PRICING.estimateValidated).");
 if (isNull("zoneBLimitKm", "PRICING")) warnings.push("Bornes de distance des zones B et C non renseignées : le site n'annonce aucun montant de supplément (voulu pour l'instant).");
-if (isNull("declarationNumber", "SAP")) warnings.push("SAP.declarationNumber vide : le site reste en version « pédagogique », sans promesse de crédit d'impôt. Normal tant que le récépissé NOVA n'est pas obtenu.");
+if (/declarationNumber|sapActive|SapNotice/.test(config)) blockers.push("Reliquat de l'ancien dispositif « services à la personne » dans src/config/site.ts : l'entreprise ne se déclare pas SAP, le crédit d'impôt ne passe que par l'emploi direct au CESU.");
+if (isNull("cesuNetHourly", "MODES")) warnings.push("MODES.cesuNetHourly non renseigné : aucun taux horaire net n'est annoncé pour l'emploi direct au CESU (voulu tant qu'il n'est pas arrêté).");
 if (isNull("googleBusinessUrl", "CONTACT")) warnings.push("Fiche Google Business non liée (CONTACT.googleBusinessUrl) : à ajouter au schema sameAs une fois créée.");
 
 // Repères visibles ⟦…⟧ laissés dans le code source (hors config)
@@ -65,7 +66,8 @@ const claims = [
   "Confirmer avec l'opératrice : « la même personne à chaque passage, autant que possible ».",
   "Confirmer : un compte rendu avec photos est bien transmis après chaque intervention en grande demeure.",
   "Confirmer le périmètre d'intendance affiché (aération, coordination d'intervenants, contrôle, fermeture).",
-  "Confirmer : ménage et linge entre deux séjours (location courte durée) facturés au forfait par rotation.",
+  "Confirmer : ménage entre deux séjours (location courte durée) facturé au forfait par rotation, lits et linge en option.",
+  "Confirmer que l'emploi direct au CESU est bien proposé, et à quel taux horaire net (MODES.cesuNetHourly).",
   "Confirmer : possibilité d'intervenir hors des heures d'ouverture pour les professionnels.",
   "Prénom et rôle affichés sur la page À propos (FOUNDER).",
   "Faire relire les pages Mentions légales et Confidentialité avant publication.",

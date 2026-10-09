@@ -3,7 +3,7 @@ import { Check } from "./Icons";
 import { JsonLd } from "./JsonLd";
 import { PageHero } from "./PageHero";
 import { Figure } from "./Figure";
-import { SapNotice } from "./SapNotice";
+import { ModesNotice } from "./ModesNotice";
 import { Faq, type FaqItem } from "./Faq";
 import { service } from "@/lib/schema";
 
@@ -16,7 +16,7 @@ export interface ServicePageProps {
   intro: string[];
   included: { title: string; items: string[] };
   forWhom: { title: string; items: string[] };
-  sap?: "menage" | "autre" | "none";
+  modes?: "domicile" | "pro" | "none";
   faqs?: FaqItem[];
   /** Image d'ambiance facultative, affichée en tête de la colonne de texte. */
   image?: { src: string; alt: string; caption?: string };
@@ -76,10 +76,10 @@ export function ServicePage(p: ServicePageProps) {
         </div>
       </section>
 
-      {p.sap !== "none" ? (
+      {p.modes !== "none" ? (
         <section className="section section--cream">
           <div className="wrap">
-            <SapNotice scope={p.sap ?? "menage"} />
+            <ModesNotice scope={p.modes ?? "domicile"} />
           </div>
         </section>
       ) : null}

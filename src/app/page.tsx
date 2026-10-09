@@ -3,7 +3,7 @@ import { COMMUNES, CONTACT, SERVICES, SITE } from "@/config/site";
 import { Check, Phone, Sprig } from "@/components/Icons";
 import { ReportCard } from "@/components/ReportCard";
 import Image from "next/image";
-import { SapNotice } from "@/components/SapNotice";
+import { ModesNotice } from "@/components/ModesNotice";
 import { Faq } from "@/components/Faq";
 import { getFaqs } from "@/lib/content";
 import { JsonLd } from "@/components/JsonLd";
@@ -180,10 +180,10 @@ export default function HomePage() {
             </div>
           </div>
           <div style={{ display: "grid", gap: "1.25rem", alignContent: "start" }}>
-            <h2 style={{ fontSize: "1.5rem" }}>Crédit d'impôt</h2>
-            <SapNotice />
+            <h2 style={{ fontSize: "1.5rem" }}>Prestation ou emploi direct</h2>
+            <ModesNotice />
             <Link className="link-quiet" href="/tarifs">
-              Tarifs et crédit d'impôt
+              Tarifs et modes d'intervention
             </Link>
           </div>
         </div>

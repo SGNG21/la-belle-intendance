@@ -27,7 +27,7 @@ export default function Page() {
         title: "Pour qui",
         items: ["Familles et actifs qui manquent de temps", "Personnes qui souhaitent déléguer l'entretien", "Propriétaires d'une grande maison à suivre régulièrement"],
       }}
-      sap="menage"
+      modes="domicile"
     />
   );
 }

@@ -26,7 +26,7 @@ export default function Page() {
         title: "Pour qui",
         items: ["Particuliers après travaux ou rénovation", "Locataires et propriétaires lors d'un changement de logement", "Agences et professionnels de l'immobilier"],
       }}
-      sap="autre"
+      modes="domicile"
     />
   );
 }
