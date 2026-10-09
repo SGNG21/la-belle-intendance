@@ -21,7 +21,7 @@ export default function Page() {
       ]}
       included={{
         title: "Ce que comprend un passage",
-        items: ["Dépoussiérage des surfaces et du mobilier", "Aspiration et lavage des sols", "Cuisine : plan de travail, plaques, évier, façades", "Salles de bains et sanitaires", "Lits refaits, poubelles sorties sur demande", "Repassage possible en complément"],
+        items: ["Dépoussiérage des surfaces et du mobilier", "Aspiration et lavage des sols", "Cuisine : plan de travail, plaques, évier, façades", "Salles de bains et sanitaires", "Poubelles sorties sur demande", "Repassage possible en complément", "Lits et linge de maison : en option, à convenir"],
       }}
       forWhom={{
         title: "Pour qui",

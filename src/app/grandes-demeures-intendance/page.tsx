@@ -15,7 +15,7 @@ export const metadata = pageMeta({ title: "Intendance de grandes demeures", desc
 const faqs = [
   {
     q: "Qu'est-ce que l'intendance de maison ?",
-    a: "C'est l'ensemble des tâches qui permettent à une maison d'être prête et en bon état quand vous y arrivez : ménage complet, aération, lits faits, vérification visuelle, coordination des intervenants, remise en ordre à votre départ. Le périmètre exact est défini bien par bien.",
+    a: "C'est l'ensemble des tâches qui permettent à une maison d'être prête et en bon état quand vous y arrivez : ménage complet, aération, vérification visuelle, coordination des intervenants, remise en ordre à votre départ. Les lits et le linge de maison sont une option, à convenir ensemble. Le périmètre exact est défini bien par bien.",
   },
   {
     q: "Comment suis-je tenu informé si je suis loin ?",
@@ -46,7 +46,7 @@ export default function Page() {
 
       <Band
         src="/images/preparation-maison-avant-arrivee.webp"
-        alt="Chambre préparée, lit fait et fenêtre ouverte sur le jardin"
+        alt="Chambre préparée avant l'arrivée des propriétaires, fenêtre ouverte sur le jardin"
       />
 
       <section className="section">
@@ -59,7 +59,7 @@ export default function Page() {
             <div>
               <h3>Avant votre arrivée</h3>
               <ul className="checklist">
-                {["Ouverture des volets et aération", "Ménage complet de toutes les pièces", "Lits faits, linge changé, salles de bains prêtes", "Vérification visuelle de la maison et des abords"].map((t) => (
+                {["Ouverture des volets et aération", "Ménage complet de toutes les pièces", "Salles de bains prêtes", "Vérification visuelle de la maison et des abords", "Lits et linge de maison : en option, à convenir"].map((t) => (
                   <li key={t}>
                     <Check />
                     <span>{t}</span>
@@ -113,7 +113,7 @@ export default function Page() {
           </div>
           <div className="prose">
             <h2>Locations de courte durée</h2>
-            <p>Si vous louez votre maison ou un gîte, nous assurons le ménage et le linge entre deux séjours, facturés au forfait par rotation.</p>
+            <p>Si vous louez votre maison ou un gîte, nous assurons le ménage entre deux séjours, facturé au forfait par rotation. Les lits et le linge de maison sont une option, à convenir ensemble avant la première rotation.</p>
             <p className="muted">Cette prestation ne donne pas droit au crédit d'impôt pour services à la personne.</p>
           </div>
         </div>

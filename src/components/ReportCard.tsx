@@ -34,7 +34,7 @@ export function ReportCard() {
           <Check />
           <div>
             Chambres
-            <span>Lits refaits, poussières, sols</span>
+            <span>Poussières, sols, surfaces</span>
           </div>
         </li>
       </ul>

@@ -106,7 +106,7 @@ export default function HomePage() {
             <div>
               <h3>Avant votre arrivée</h3>
               <ul className="checklist">
-                {["Ouverture et aération", "Ménage complet", "Lits faits, linge changé", "Vérification visuelle de la maison"].map((t) => (
+                {["Ouverture et aération", "Ménage complet", "Vérification visuelle de la maison", "Lits et linge de maison : en option, à convenir"].map((t) => (
                   <li key={t}>
                     <Check />
                     <span>{t}</span>
