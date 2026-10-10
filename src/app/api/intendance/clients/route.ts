@@ -22,6 +22,7 @@ export async function POST(req: Request) {
         email: text(b.email, 160),
         telephone: text(b.telephone, 30),
         commune: text(b.commune, 80),
+        adresse: text(b.adresse, 300),
         type: oneOf(b.type, ["particulier", "professionnel"] as const) ?? "particulier",
         mode: oneOf(b.mode, ["prestation", "cesu"] as const),
         notes: text(b.notes, 4000),

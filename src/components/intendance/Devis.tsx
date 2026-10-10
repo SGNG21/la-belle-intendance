@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Bien, Client } from "@/lib/crmModel";
+import { dureeMenage, heures, type Bien, type Client } from "@/lib/crmModel";
 import {
   RYTHMES,
   STATUT_DEVIS,
@@ -181,7 +181,9 @@ function DevisForm({
   const bien = biens.find((b) => b.id === bienId);
 
   const [prestation, setPrestation] = useState("");
-  const [duree, setDuree] = useState(bien?.duree_h?.toString() ?? "");
+  // Sans durée convenue, on part de ce que le logement laisse prévoir.
+  const estime = (b?: Bien) => (b ? dureeMenage(b) : 0);
+  const [duree, setDuree] = useState((bien?.duree_h ?? estime(bien) ?? "").toString());
   const [taux, setTaux] = useState(reglages.taux_horaire?.toString() ?? "");
   const [deplacement, setDeplacement] = useState(reglages.deplacement?.toString() ?? "");
   const [frequence, setFrequence] = useState(bien?.frequence ?? "");
@@ -193,9 +195,10 @@ function DevisForm({
 
   // Changer de bien recale le simulateur sur ce bien-là.
   useEffect(() => {
-    setDuree(bien?.duree_h?.toString() ?? "");
+    setDuree((bien?.duree_h ?? estime(bien) ?? "").toString());
     setFrequence(bien?.frequence ?? "");
-  }, [bien?.id, bien?.duree_h, bien?.frequence]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bien?.id]);
 
   const passage = nombre(duree) * nombre(taux) + nombre(deplacement);
   const mois = parMois(frequence) * passage;
@@ -286,6 +289,9 @@ function DevisForm({
           <label className="field">
             <span>Durée du passage (h)</span>
             <input className="input" type="number" inputMode="decimal" step="any" min={0.5} max={24} value={duree} onChange={(e) => setDuree(e.target.value)} />
+            {bien && !bien.duree_h && estime(bien) > 0 ? (
+              <span className="desk-meta">Estimé à {heures(estime(bien))} d&apos;après le logement.</span>
+            ) : null}
           </label>
           <label className="field">
             <span>Taux horaire (€)</span>

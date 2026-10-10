@@ -2033,3 +2033,77 @@ p {
   cursor: pointer;
   text-decoration: underline;
 }
+
+/* ---------- Le bien : caractéristiques, pièces intitulées ---------- */
+
+.carac-liste { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.carac-liste label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 0.88rem;
+  color: var(--navy-deep);
+  cursor: pointer;
+}
+.carac-liste label.is-on { border-color: var(--sage-deep); background: #fff; }
+.carac-liste input { width: 1.1rem; height: 1.1rem; accent-color: var(--sage-deep); margin: 0; flex: none; }
+
+.lien-bouton {
+  font: inherit;
+  font-size: 0.86rem;
+  color: var(--navy);
+  background: none;
+  border: 0;
+  padding: 0.5rem 0.2rem;
+  min-height: 2.75rem;
+  margin-left: 0.6rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.lien-bouton:hover { color: var(--navy-deep); }
+
+.pieces { list-style: none; margin: 0.6rem 0 0; padding: 0; display: grid; gap: 0.6rem; counter-reset: piece; }
+.pieces li {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  padding: 0.6rem 0.7rem;
+  display: grid;
+  gap: 0.45rem;
+}
+.pieces-tete { display: flex; gap: 0.5rem; align-items: center; }
+.pieces-tete .input { flex: 1; min-width: 0; }
+.pieces-ordre { display: flex; gap: 0.15rem; flex: none; }
+.pieces-ordre button {
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  width: 2.4rem;
+  min-height: 2.75rem;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.pieces-ordre button:hover:not([disabled]) { color: var(--navy-deep); border-color: var(--navy); }
+.pieces-ordre button[disabled] { opacity: 0.35; cursor: default; }
+
+.puces { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.puces button {
+  font: inherit;
+  font-size: 0.84rem;
+  color: var(--navy);
+  background: var(--cream);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+.puces button:hover { border-color: var(--gold); }

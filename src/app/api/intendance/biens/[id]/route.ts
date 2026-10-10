@@ -1,4 +1,4 @@
-import { CrmError, type Bien, type Client, db, dec, int, prestations, text } from "@/lib/crm";
+import { CARACTERISTIQUES, CrmError, USAGES, type Bien, type Client, db, dec, int, oneOf, prestations, text } from "@/lib/crm";
 import { body, guarded } from "@/lib/crmRoute";
 
 export const runtime = "nodejs";
@@ -30,6 +30,18 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if ("surface" in b) patch.surface = int(b.surface, 5, 5000);
     if ("chambres" in b) patch.chambres = int(b.chambres, 0, 40);
     if ("salles_de_bains" in b) patch.salles_de_bains = int(b.salles_de_bains, 0, 20);
+    if ("wc" in b) patch.wc = int(b.wc, 0, 20);
+    if ("pieces_vie" in b) patch.pieces_vie = int(b.pieces_vie, 0, 20);
+    if ("lits" in b) patch.lits = int(b.lits, 0, 40);
+    if ("cuisine_equipee" in b) patch.cuisine_equipee = b.cuisine_equipee === true;
+    if ("usage" in b) patch.usage = oneOf(b.usage, USAGES);
+    if ("caracteristiques" in b) {
+      const connues = CARACTERISTIQUES.map((c) => c.id) as readonly string[];
+      patch.caracteristiques = Array.isArray(b.caracteristiques)
+        ? [...new Set(b.caracteristiques.filter((x): x is string => typeof x === "string" && connues.includes(x)))]
+        : [];
+    }
+    if ("km" in b) patch.km = dec(b.km, 0, 300);
     if ("duree_h" in b) patch.duree_h = dec(b.duree_h, 0.5, 24);
     if ("prestations" in b) patch.prestations = prestations(b.prestations);
     if (!Object.keys(patch).length) return {};

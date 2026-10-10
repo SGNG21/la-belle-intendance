@@ -21,7 +21,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const patch: Record<string, unknown> = {};
     const nom = text(b.nom, 120);
     if (nom) patch.nom = nom;
-    for (const [k, max] of [["email", 160], ["telephone", 30], ["commune", 80], ["notes", 4000]] as const) {
+    for (const [k, max] of [["email", 160], ["telephone", 30], ["commune", 80], ["adresse", 300], ["notes", 4000]] as const) {
       if (k in b) patch[k] = text(b[k], max);
     }
     const type = oneOf(b.type, ["particulier", "professionnel"] as const);

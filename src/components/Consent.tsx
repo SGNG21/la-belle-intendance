@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { useCallback, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ANALYTICS } from "@/config/site";
 
@@ -26,6 +27,9 @@ function readChoice(): Choice {
  * « Accepter » et « Refuser » ont le même poids visuel.
  */
 export function Consent() {
+  // L'outil interne n'est pas du public : ni bannière, ni mesure d'audience.
+  const chemin = usePathname();
+  const interne = chemin?.startsWith("/intendance") ?? false;
   const [choice, setChoice] = useState<Choice>(null);
   const [ready, setReady] = useState(false);
   const [forceOpen, setForceOpen] = useState(false);
@@ -48,7 +52,7 @@ export function Consent() {
     setForceOpen(false);
   }, []);
 
-  if (!hasTracking || !ready) return null;
+  if (!hasTracking || !ready || interne) return null;
 
   return (
     <>

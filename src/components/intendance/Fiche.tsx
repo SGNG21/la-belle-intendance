@@ -2,7 +2,21 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CATALOGUE, STATUT_LABEL, origine, type Bien, type Client, type Demande } from "@/lib/crmModel";
+import {
+  CARACTERISTIQUES,
+  CATALOGUE,
+  STATUT_LABEL,
+  USAGES,
+  USAGE_LABEL,
+  dureeMenage,
+  heures,
+  origine,
+  piecesProposees,
+  type Bien,
+  type Client,
+  type Demande,
+  type UsageBien,
+} from "@/lib/crmModel";
 import { api, shortDate } from "@/lib/intendanceApi";
 import { DevisBloc } from "./Devis";
 
@@ -77,6 +91,7 @@ function Coordonnees({ client, reload }: { client: Client; reload: () => Promise
           email: f.email ?? "",
           telephone: f.telephone ?? "",
           commune: f.commune ?? "",
+          adresse: f.adresse ?? "",
           type: f.type,
           mode: f.mode ?? "",
           notes: f.notes ?? "",
@@ -99,6 +114,7 @@ function Coordonnees({ client, reload }: { client: Client; reload: () => Promise
           <h1>{client.nom}</h1>
           <p className="desk-meta">
             {[
+              client.adresse,
               client.commune,
               client.type === "professionnel" ? "Professionnel" : "Particulier",
               client.mode === "cesu" ? "Contrat CESU" : client.mode === "prestation" ? "Facturation entreprise" : null,
@@ -130,6 +146,10 @@ function Coordonnees({ client, reload }: { client: Client; reload: () => Promise
         <label className="field">
           <span>Commune</span>
           <input className="input" value={f.commune ?? ""} onChange={(e) => setF({ ...f, commune: e.target.value })} />
+        </label>
+        <label className="field desk-grid-large">
+          <span>Adresse</span>
+          <input className="input" value={f.adresse ?? ""} onChange={(e) => setF({ ...f, adresse: e.target.value })} />
         </label>
         <label className="field">
           <span>Téléphone</span>
@@ -251,13 +271,22 @@ function BienCard({ bien, reload }: { bien: Bien; reload: () => Promise<void> })
     );
   }
 
+  const pluriel = (n: number | null, un: string, plusieurs = `${un}s`) => (n == null ? null : `${n} ${n > 1 ? plusieurs : un}`);
   const chiffres = [
+    bien.usage ? USAGE_LABEL[bien.usage] : null,
     bien.surface ? `${bien.surface} m²` : null,
-    bien.chambres != null ? `${bien.chambres} chambre${bien.chambres > 1 ? "s" : ""}` : null,
-    bien.salles_de_bains != null ? `${bien.salles_de_bains} salle${bien.salles_de_bains > 1 ? "s" : ""} de bains` : null,
+    pluriel(bien.chambres, "chambre"),
+    pluriel(bien.salles_de_bains, "salle de bains", "salles de bains"),
+    pluriel(bien.wc, "WC", "WC"),
+    pluriel(bien.pieces_vie, "pièce de vie", "pièces de vie"),
+    pluriel(bien.lits, "lit"),
+    bien.cuisine_equipee ? "cuisine équipée" : null,
     bien.frequence,
     bien.duree_h ? `${String(bien.duree_h).replace(".", ",")} h par passage` : null,
+    bien.km != null ? `${String(bien.km).replace(".", ",")} km` : null,
   ].filter(Boolean);
+
+  const traits = CARACTERISTIQUES.filter((c) => bien.caracteristiques?.includes(c.id)).map((c) => c.label);
 
   return (
     <article className="bien">
@@ -271,6 +300,11 @@ function BienCard({ bien, reload }: { bien: Bien; reload: () => Promise<void> })
         </button>
       </div>
       {chiffres.length ? <p className="desk-detail">{chiffres.join(" · ")}</p> : null}
+      {traits.length ? (
+        <p className="bien-ligne">
+          <span>Particularités du lieu</span> {traits.join(" · ")}
+        </p>
+      ) : null}
       {bien.acces ? (
         <p className="bien-ligne">
           <span>Accès</span> {bien.acces}
@@ -291,7 +325,7 @@ function BienCard({ bien, reload }: { bien: Bien; reload: () => Promise<void> })
           ))}
         </ul>
       ) : (
-        <p className="desk-meta">Aucune prestation retenue : le compte rendu n&apos;aura rien à proposer.</p>
+        <p className="desk-meta">Aucune pièce ni option enregistrée : le compte rendu n&apos;aura rien à proposer.</p>
       )}
       <div className="btn-row">
         <Link className="btn btn--ghost" href={`/intendance/compte-rendu?bien=${bien.id}`}>
@@ -307,30 +341,69 @@ function BienForm({ bien, clientId, onDone, onCancel }: { bien?: Bien; clientId?
     libelle: bien?.libelle ?? "",
     adresse: bien?.adresse ?? "",
     commune: bien?.commune ?? "",
+    km: bien?.km?.toString() ?? "",
+    usage: (bien?.usage ?? "") as UsageBien | "",
     surface: bien?.surface?.toString() ?? "",
     chambres: bien?.chambres?.toString() ?? "",
     salles_de_bains: bien?.salles_de_bains?.toString() ?? "",
+    wc: bien?.wc?.toString() ?? "",
+    pieces_vie: bien?.pieces_vie?.toString() ?? "",
+    lits: bien?.lits?.toString() ?? "",
     acces: bien?.acces ?? "",
     particularites: bien?.particularites ?? "",
     frequence: bien?.frequence ?? "",
     duree_h: bien?.duree_h?.toString() ?? "",
     notes: bien?.notes ?? "",
   });
-  const [retenues, setRetenues] = useState<Presta[]>(bien?.prestations ?? []);
+  const [cuisine, setCuisine] = useState(bien?.cuisine_equipee ?? false);
+  const [caracs, setCaracs] = useState<string[]>(bien?.caracteristiques ?? []);
+  const [lignes, setLignes] = useState<Presta[]>(bien?.prestations ?? []);
   const [busy, setBusy] = useState(false);
   const [erreur, setErreur] = useState("");
   const [confirme, setConfirme] = useState(false);
 
-  const estRetenue = (label: string) => retenues.some((r) => r.label === label);
-  const basculer = (label: string) =>
-    setRetenues((r) => (r.some((x) => x.label === label) ? r.filter((x) => x.label !== label) : [...r, { label, detail: "" }]));
-  const consigne = (label: string, detail: string) => setRetenues((r) => r.map((x) => (x.label === label ? { ...x, detail } : x)));
+  const nb = (v: string) => (v.trim() === "" ? null : Number(v.replace(",", ".")));
+  const logement = {
+    chambres: nb(f.chambres),
+    salles_de_bains: nb(f.salles_de_bains),
+    wc: nb(f.wc),
+    pieces_vie: nb(f.pieces_vie),
+    surface: nb(f.surface),
+    cuisine_equipee: cuisine,
+    caracteristiques: caracs,
+  };
+  const estimation = dureeMenage(logement);
+
+  const existe = (label: string) => lignes.some((l) => l.label.toLowerCase() === label.trim().toLowerCase());
+  const ajouter = (label: string) => !existe(label) && setLignes((l) => [...l, { label, detail: "" }]);
+  const majLigne = (i: number, patch: Partial<Presta>) => setLignes((l) => l.map((x, n) => (n === i ? { ...x, ...patch } : x)));
+  const deplacer = (i: number, d: -1 | 1) =>
+    setLignes((l) => {
+      const j = i + d;
+      if (j < 0 || j >= l.length) return l;
+      const copie = [...l];
+      [copie[i], copie[j]] = [copie[j], copie[i]];
+      return copie;
+    });
+
+  /** Les pièces déduites du logement, ajoutées sans écraser ce qui est déjà là. */
+  const proposer = () => {
+    const proposees = piecesProposees(logement).filter((x) => !existe(x));
+    setLignes((l) => [...proposees.map((label) => ({ label, detail: "" })), ...l]);
+  };
 
   async function enregistrer(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setErreur("");
-    const payload = { ...f, prestations: retenues, ...(clientId ? { clientId } : {}) };
+    const payload = {
+      ...f,
+      usage: f.usage || null,
+      cuisine_equipee: cuisine,
+      caracteristiques: caracs,
+      prestations: lignes.filter((l) => l.label.trim()),
+      ...(clientId ? { clientId } : {}),
+    };
     try {
       await api(bien ? `/api/intendance/biens/${bien.id}` : "/api/intendance/biens", {
         method: bien ? "PATCH" : "POST",
@@ -355,35 +428,92 @@ function BienForm({ bien, clientId, onDone, onCancel }: { bien?: Bien; clientId?
     }
   }
 
-  const champ = (k: keyof typeof f) => ({ value: f[k], onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value }) });
+  const champ = (k: keyof typeof f) => ({
+    value: f[k] as string,
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value }),
+  });
+  const compte = (k: keyof typeof f, label: string, max: number) => (
+    <label className="field">
+      <span>{label}</span>
+      <input className="input" type="number" inputMode="numeric" min={0} max={max} {...champ(k)} />
+    </label>
+  );
 
   return (
     <form className="desk-form" onSubmit={enregistrer}>
       <div className="desk-grid">
         <label className="field">
           <span>Libellé</span>
-          <input className="input" {...champ("libelle")} placeholder="Maison de caractère, 6 pièces" required />
+          <input className="input" {...champ("libelle")} placeholder="Longère des Prés" required />
         </label>
         <label className="field">
-          <span>Commune</span>
-          <input className="input" {...champ("commune")} />
+          <span>Usage</span>
+          <select className="input" {...champ("usage")}>
+            <option value="">À définir</option>
+            {USAGES.map((u) => (
+              <option key={u} value={u}>
+                {USAGE_LABEL[u]}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="field desk-grid-large">
           <span>Adresse</span>
           <input className="input" {...champ("adresse")} />
         </label>
         <label className="field">
-          <span>Surface (m²)</span>
-          <input className="input" type="number" inputMode="numeric" min={5} max={5000} {...champ("surface")} />
+          <span>Commune</span>
+          <input className="input" {...champ("commune")} />
         </label>
         <label className="field">
-          <span>Chambres</span>
-          <input className="input" type="number" inputMode="numeric" min={0} max={40} {...champ("chambres")} />
+          <span>Distance depuis Joigny (km)</span>
+          <input className="input" type="number" inputMode="decimal" step="any" min={0} max={300} {...champ("km")} />
         </label>
-        <label className="field">
-          <span>Salles de bains</span>
-          <input className="input" type="number" inputMode="numeric" min={0} max={20} {...champ("salles_de_bains")} />
+      </div>
+
+      <fieldset className="simu">
+        <legend>Le logement</legend>
+        <div className="desk-grid">
+          <label className="field">
+            <span>Surface (m²)</span>
+            <input className="input" type="number" inputMode="numeric" min={5} max={5000} {...champ("surface")} />
+          </label>
+          {compte("chambres", "Chambres", 40)}
+          {compte("salles_de_bains", "Salles de bains", 20)}
+          {compte("wc", "WC séparés", 20)}
+          {compte("pieces_vie", "Pièces de vie", 20)}
+          {compte("lits", "Lits", 40)}
+        </div>
+        <label className="desk-check">
+          <input type="checkbox" checked={cuisine} onChange={(e) => setCuisine(e.target.checked)} />
+          <span>Cuisine équipée à nettoyer</span>
         </label>
+
+        <div>
+          <span className="desk-label">Ce qui allonge le passage</span>
+          <div className="carac-liste">
+            {CARACTERISTIQUES.map((c) => (
+              <label key={c.id} className={caracs.includes(c.id) ? "is-on" : ""}>
+                <input
+                  type="checkbox"
+                  checked={caracs.includes(c.id)}
+                  onChange={(e) => setCaracs(e.target.checked ? [...caracs, c.id] : caracs.filter((x) => x !== c.id))}
+                />
+                <span>{c.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <p className="simu-total">
+          Ménage complet estimé à <strong>{heures(estimation)}</strong>
+          <button type="button" className="lien-bouton" onClick={() => setF({ ...f, duree_h: String(estimation) })}>
+            En faire la durée du passage
+          </button>
+        </p>
+      </fieldset>
+
+      <div className="desk-grid">
         <label className="field">
           <span>Fréquence</span>
           <select className="input" {...champ("frequence")}>
@@ -411,29 +541,77 @@ function BienForm({ bien, clientId, onDone, onCancel }: { bien?: Bien; clientId?
       </label>
 
       <fieldset className="presta-set">
-        <legend>Prestations retenues</legend>
-        <p className="desk-meta">Ce qui est coché ici se retrouve dans le compte rendu de passage, dans cet ordre.</p>
-        {CATALOGUE.map((g) => (
-          <div key={g.groupe} className="presta-groupe">
-            <h4>{g.groupe}</h4>
-            {g.items.map((item) => (
-              <div key={item} className={`presta-item${estRetenue(item) ? " is-on" : ""}`}>
-                <label>
-                  <input type="checkbox" checked={estRetenue(item)} onChange={() => basculer(item)} />
-                  <span>{item}</span>
-                </label>
-                {estRetenue(item) ? (
+        <legend>Ce qui est relevé à chaque passage</legend>
+        <p className="desk-meta">
+          Cette liste devient le compte rendu, dans cet ordre. Renommez les pièces comme on les appelle dans la maison : « chambre des
+          enfants » vaut mieux que « Chambre 2 ».
+        </p>
+
+        <div className="btn-row desk-newrow">
+          <button type="button" className="btn btn--ghost" onClick={proposer}>
+            Proposer les pièces du logement
+          </button>
+        </div>
+
+        {lignes.length ? (
+          <ol className="pieces">
+            {lignes.map((l, i) => (
+              <li key={i}>
+                <div className="pieces-tete">
                   <input
-                    className="input presta-detail"
-                    value={retenues.find((r) => r.label === item)?.detail ?? ""}
-                    onChange={(e) => consigne(item, e.target.value)}
-                    placeholder="Consigne particulière (facultatif)"
+                    className="input"
+                    value={l.label}
+                    onChange={(e) => majLigne(i, { label: e.target.value })}
+                    aria-label={`Intitulé de la ligne ${i + 1}`}
+                    placeholder="Chambre des enfants"
                   />
-                ) : null}
-              </div>
+                  <div className="pieces-ordre">
+                    <button type="button" onClick={() => deplacer(i, -1)} disabled={i === 0} aria-label="Monter">
+                      ↑
+                    </button>
+                    <button type="button" onClick={() => deplacer(i, 1)} disabled={i === lignes.length - 1} aria-label="Descendre">
+                      ↓
+                    </button>
+                    <button type="button" onClick={() => setLignes(lignes.filter((_, n) => n !== i))} aria-label="Retirer">
+                      ×
+                    </button>
+                  </div>
+                </div>
+                <input
+                  className="input presta-detail"
+                  value={l.detail}
+                  onChange={(e) => majLigne(i, { detail: e.target.value })}
+                  placeholder="Consigne particulière (facultatif)"
+                  aria-label={`Consigne pour ${l.label || `la ligne ${i + 1}`}`}
+                />
+              </li>
             ))}
-          </div>
-        ))}
+          </ol>
+        ) : (
+          <p className="desk-meta">Rien pour l&apos;instant : partez des pièces du logement, puis ajoutez les options convenues.</p>
+        )}
+
+        <div className="btn-row desk-newrow">
+          <button type="button" className="btn btn--ghost" onClick={() => setLignes([...lignes, { label: "", detail: "" }])}>
+            Ajouter une ligne
+          </button>
+        </div>
+
+        {CATALOGUE.map((g) => {
+          const restantes = (g.items as readonly string[]).filter((x) => !existe(x));
+          return restantes.length ? (
+            <div key={g.groupe} className="presta-groupe">
+              <h4>{g.groupe}</h4>
+              <div className="puces">
+                {restantes.map((item) => (
+                  <button type="button" key={item} onClick={() => ajouter(item)}>
+                    + {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null;
+        })}
       </fieldset>
 
       <label className="field">

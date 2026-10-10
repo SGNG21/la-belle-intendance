@@ -242,6 +242,7 @@ function Clients({ rows, reload }: { rows: ClientRow[] | null; reload: () => Pro
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
   const [commune, setCommune] = useState("");
+  const [adresse, setAdresse] = useState("");
   const [type, setType] = useState<"particulier" | "professionnel">("particulier");
   const [busy, setBusy] = useState(false);
   const [erreur, setErreur] = useState("");
@@ -253,7 +254,7 @@ function Clients({ rows, reload }: { rows: ClientRow[] | null; reload: () => Pro
     try {
       const { clientId } = await api<{ clientId: string }>("/api/intendance/clients", {
         method: "POST",
-        body: JSON.stringify({ nom, email, telephone, commune, type }),
+        body: JSON.stringify({ nom, email, telephone, commune, adresse, type }),
       });
       await reload();
       window.location.href = `/intendance/clients/${clientId}`;
@@ -277,6 +278,10 @@ function Clients({ rows, reload }: { rows: ClientRow[] | null; reload: () => Pro
             <label className="field">
               <span>Commune</span>
               <input className="input" value={commune} onChange={(e) => setCommune(e.target.value)} />
+            </label>
+            <label className="field desk-grid-large">
+              <span>Adresse</span>
+              <input className="input" value={adresse} onChange={(e) => setAdresse(e.target.value)} />
             </label>
             <label className="field">
               <span>Téléphone</span>
