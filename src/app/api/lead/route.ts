@@ -150,7 +150,7 @@ async function sendEmail(cfg: { key: string; to: string; from: string }, payload
       reply_to: payload.lead.email,
       subject: leadSubject(payload),
       text: leadText(payload),
-      html: leadHtml(payload),
+      html: leadHtml(payload, SITE.url),
     }),
   });
   if (!res.ok) throw new Error(`resend ${res.status} ${await res.text().catch(() => "")}`.trim());
