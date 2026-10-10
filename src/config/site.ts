@@ -6,10 +6,22 @@
  * bloque la mise en ligne tant qu'il en reste. Aucune coordonnée n'est inventée.
  */
 
+/**
+ * Adresse canonique du site.
+ *
+ * `SITE_URL` est saisi à la main dans l'hébergeur : une espace ou une
+ * tabulation collée par mégarde se retrouverait sinon dans TOUTES les URL
+ * canoniques, le sitemap, l'Open Graph et les données structurées. On nettoie,
+ * et on refuse une valeur qui ne ressemble pas à une URL.
+ */
+const CANONICAL_URL = "https://la-belle-intendance.fr";
+const envUrl = (process.env.SITE_URL ?? "").trim().replace(/\/+$/, "");
+const siteUrl = /^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(envUrl) ? envUrl : CANONICAL_URL;
+
 export const SITE = {
   name: "La Belle Intendance",
   shortName: "LBI",
-  url: (process.env.SITE_URL ?? "https://la-belle-intendance.fr").replace(/\/$/, ""),
+  url: siteUrl,
   locale: "fr-FR",
   tagline: "Ménage et intendance de maison à Joigny et ses alentours",
   description:
