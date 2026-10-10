@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { scoreLead, validateLead, type LeadInput } from "@/lib/lead";
-import { leadHtml, leadSubject, leadText, type LeadMailContext } from "@/lib/leadEmail";
+import { confirmHtml, confirmSubject, confirmText, leadHtml, leadSubject, leadText, type LeadMailContext } from "@/lib/leadEmail";
+import { CONTACT, SITE } from "@/config/site";
 
 export const runtime = "nodejs";
 
@@ -80,8 +81,13 @@ export async function POST(req: Request) {
   const webhook = process.env.N8N_LEAD_WEBHOOK_URL;
   const { RESEND_API_KEY: key, LEAD_EMAIL_TO: to, LEAD_EMAIL_FROM: from } = process.env;
 
-  if (webhook) return send(() => postWebhook(webhook, payload), "webhook");
-  if (key && to && from) return send(() => sendEmail({ key, to, from }, payload), "e-mail");
+  // L'accusé de réception part dès que Resend est configuré, quel que soit
+  // l'acheminement de la notification : sans lui, la personne ne sait pas si
+  // son message est parti.
+  const ack = key && from ? () => sendConfirmation({ key, from }, payload) : null;
+
+  if (webhook) return send(() => postWebhook(webhook, payload), "webhook", ack);
+  if (key && to && from) return send(() => sendEmail({ key, to, from }, payload), "e-mail", ack);
 
   if (process.env.NODE_ENV !== "production") {
     console.log("[lead:dev] aucun acheminement configuré, demande non transmise :", JSON.stringify(payload));
@@ -93,14 +99,17 @@ export async function POST(req: Request) {
 
 type Payload = LeadMailContext & { source: string; consentGiven: boolean; consentAt: string };
 
-async function send(run: () => Promise<void>, label: string) {
+async function send(run: () => Promise<void>, label: string, ack: (() => Promise<void>) | null) {
   try {
     await run();
-    return NextResponse.json({ ok: true });
   } catch (e) {
     console.error(`[lead] échec d'envoi (${label}) :`, e instanceof Error ? e.message : e);
     return NextResponse.json({ ok: false, error: "Votre demande n'a pas pu être transmise. Réessayez ou contactez-nous directement." }, { status: 502 });
   }
+  // La demande est enregistrée : un accusé de réception raté ne doit pas la
+  // faire échouer côté visiteur. On le signale dans les journaux, rien de plus.
+  if (ack) await ack().catch((e) => console.error("[lead] accusé de réception non envoyé :", e instanceof Error ? e.message : e));
+  return NextResponse.json({ ok: true });
 }
 
 /** fetch avec garde-temps : une API lente ne doit pas bloquer la fonction. */
@@ -135,6 +144,23 @@ async function sendEmail(cfg: { key: string; to: string; from: string }, payload
       subject: leadSubject(payload),
       text: leadText(payload),
       html: leadHtml(payload),
+    }),
+  });
+  if (!res.ok) throw new Error(`resend ${res.status} ${await res.text().catch(() => "")}`.trim());
+}
+
+/** Accusé de réception au visiteur. Les réponses arrivent dans la boîte de l'entreprise. */
+async function sendConfirmation(cfg: { key: string; from: string }, payload: Payload): Promise<void> {
+  const res = await fetchWithTimeout("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: cfg.from,
+      to: [payload.lead.email],
+      ...(CONTACT.email ? { reply_to: CONTACT.email } : {}),
+      subject: confirmSubject(),
+      text: confirmText(payload, CONTACT.replyDelay, CONTACT.phone, SITE.url),
+      html: confirmHtml(payload, CONTACT.replyDelay, CONTACT.phone, SITE.url),
     }),
   });
   if (!res.ok) throw new Error(`resend ${res.status} ${await res.text().catch(() => "")}`.trim());

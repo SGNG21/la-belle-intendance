@@ -31,6 +31,8 @@ export const CONTACT = {
   /** Adresse postale : laisser null si l'activité est exercée à domicile et masquée sur Google. */
   streetAddress: null as string | null,
   hours: null as string | null, // ex. "Du lundi au vendredi, 8 h – 18 h"
+  /** Délai de rappel annoncé dans l'accusé de réception. `null` = aucune promesse de délai. */
+  replyDelay: null as string | null, // ex. "sous 48 heures ouvrées"
   facebook: null as string | null,
   instagram: null as string | null,
   googleBusinessUrl: null as string | null,

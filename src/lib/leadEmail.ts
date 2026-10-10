@@ -74,3 +74,82 @@ export function leadHtml(c: LeadMailContext): string {
   </p>
 </div>`;
 }
+
+/* ------------------------------------------------------------------ *
+ * Accusé de réception envoyé à la personne qui a rempli le formulaire.
+ * Elle doit pouvoir vérifier ce qu'elle a demandé et savoir ce qui suit.
+ * ------------------------------------------------------------------ */
+
+const recap = (l: LeadInput): [string, string][] => {
+  const out: [string, string][] = [["Commune", l.commune], ["Fréquence souhaitée", FREQUENCY_LABEL[l.frequency] ?? l.frequency]];
+  if (l.housing) out.unshift(["Logement", HOUSING_LABEL[l.housing] ?? l.housing]);
+  if (l.surface != null) out.push(["Surface", `${l.surface} m²`]);
+  return out;
+};
+
+export function confirmSubject(): string {
+  return "Votre demande est bien arrivée — La Belle Intendance";
+}
+
+export function confirmText(c: LeadMailContext, delay: string | null, phone: string | null, site: string): string {
+  const first = c.lead.name.trim().split(/\s+/)[0] || "";
+  const when = delay ? ` Je reviens vers vous ${delay}.` : " Je reviens vers vous rapidement.";
+  const lines = recap(c.lead).map(([k, v]) => `${k} : ${v}`).join("\n");
+  const needs = c.lead.needs ? `\n\nCe que vous m'avez écrit :\n${c.lead.needs}` : "";
+  const tel = phone ? `\n\nSi c'est urgent, appelez-moi au ${phone}.` : "";
+  return [
+    `Bonjour ${first},`.trim(),
+    "",
+    `J'ai bien reçu votre demande.${when}`,
+    "",
+    "Nous en parlons au téléphone, je passe voir le logement si sa taille le justifie, et vous recevez ensuite un devis écrit. Rien ne commence avant que vous l'ayez accepté.",
+    "",
+    "Ce que vous avez indiqué",
+    "------------------------",
+    lines + needs,
+    tel,
+    "",
+    "À bientôt,",
+    "Coralie — La Belle Intendance",
+    site,
+    "",
+    "--",
+    `Ce message confirme l'enregistrement de votre demande le ${c.receivedAt}. Vos informations servent uniquement à vous répondre et à établir votre devis ; vous pouvez demander leur suppression à tout moment en répondant à cet e-mail.`,
+  ].join("\n");
+}
+
+export function confirmHtml(c: LeadMailContext, delay: string | null, phone: string | null, site: string): string {
+  const first = esc(c.lead.name.trim().split(/\s+/)[0] || "");
+  const when = delay ? `Je reviens vers vous ${esc(delay)}.` : "Je reviens vers vous rapidement.";
+  const tr = recap(c.lead)
+    .map(
+      ([k, v]) =>
+        `<tr><th align="left" style="padding:5px 16px 5px 0;font:500 12px/1.5 system-ui,sans-serif;color:#4f7288;white-space:nowrap;vertical-align:top">${esc(k)}</th>` +
+        `<td style="padding:5px 0;font:400 14px/1.5 system-ui,sans-serif;color:#1b2a40">${esc(v)}</td></tr>`,
+    )
+    .join("");
+  const needs = c.lead.needs
+    ? `<div style="margin-top:14px;background:#f4eee2;border-left:2px solid #ae8130;padding:12px 16px;font:400 14px/1.6 system-ui,sans-serif;color:#1b2a40;white-space:pre-wrap">${esc(c.lead.needs)}</div>`
+    : "";
+  const tel = phone
+    ? `<p style="margin:22px 0 0;font:400 15px/1.6 system-ui,sans-serif;color:#1b2a40">Si c’est urgent, appelez-moi au <strong style="white-space:nowrap">${esc(phone)}</strong>.</p>`
+    : "";
+  return `<div style="max-width:600px;margin:0 auto;padding:30px 26px;background:#fbf8f1">
+  <p style="margin:0 0 4px;font:500 11px/1.4 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#ae8130">La Belle Intendance</p>
+  <h1 style="margin:0 0 20px;font:400 24px/1.25 Georgia,serif;color:#182a45">Votre demande est bien arrivée</h1>
+  <p style="margin:0 0 14px;font:400 16px/1.6 system-ui,sans-serif;color:#1b2a40">Bonjour ${first},</p>
+  <p style="margin:0 0 14px;font:400 16px/1.6 system-ui,sans-serif;color:#1b2a40">J’ai bien reçu votre demande. ${when}</p>
+  <p style="margin:0 0 24px;font:400 15px/1.6 system-ui,sans-serif;color:#4d5f74">Nous en parlons au téléphone, je passe voir le logement si sa taille le justifie, et vous recevez ensuite un devis écrit. Rien ne commence avant que vous l’ayez accepté.</p>
+  <p style="margin:0 0 8px;font:500 12px/1.5 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#4f7288">Ce que vous avez indiqué</p>
+  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse">${tr}</table>
+  ${needs}
+  ${tel}
+  <p style="margin:26px 0 0;font:400 16px/1.6 system-ui,sans-serif;color:#1b2a40">À bientôt,<br>
+    <span style="font-family:Georgia,serif;font-size:18px;color:#182a45">Coralie</span><br>
+    <span style="font:400 13px/1.6 system-ui,sans-serif;color:#4f7288">La Belle Intendance · <a href="${esc(site)}" style="color:#4f7288">${esc(site.replace(/^https?:\/\//, ""))}</a></span>
+  </p>
+  <p style="margin:26px 0 0;padding-top:14px;border-top:1px solid #d8cdb6;font:400 11px/1.6 system-ui,sans-serif;color:#4f7288">
+    Ce message confirme l’enregistrement de votre demande le ${esc(c.receivedAt)}. Vos informations servent uniquement à vous répondre et à établir votre devis ; vous pouvez demander leur suppression à tout moment en répondant à cet e-mail.
+  </p>
+</div>`;
+}
