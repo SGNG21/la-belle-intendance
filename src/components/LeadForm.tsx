@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { COMMUNES } from "@/config/site";
 import {
@@ -25,7 +26,14 @@ const num = (v: string): number | undefined => {
   return Number.isFinite(n) ? n : NaN;
 };
 
-export function LeadForm({ defaultClientType = "particulier" }: { defaultClientType?: ClientType }) {
+/**
+ * `redirectTo` : page de confirmation vers laquelle rediriger après envoi.
+ * Sans elle, le formulaire affiche sa confirmation sur place — c'est le
+ * comportement de la page Contact. Les pages de destination préfèrent une
+ * URL dédiée, mesurable comme conversion.
+ */
+export function LeadForm({ defaultClientType = "particulier", redirectTo }: { defaultClientType?: ClientType; redirectTo?: string }) {
+  const router = useRouter();
   const uid = useId();
   const id = (k: string) => `${uid}-${k}`;
   const startedAt = useRef<number>(Date.now());
@@ -107,6 +115,13 @@ export function LeadForm({ defaultClientType = "particulier" }: { defaultClientT
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: FieldErrors; error?: string };
       if (res.ok && data.ok) {
+        if (redirectTo) {
+          // La conversion est déclenchée par la page d'arrivée : un seul endroit
+          // qui compte, qu'on arrive du formulaire ou qu'on recharge la page.
+          setStatus({ kind: "sending" });
+          router.push(redirectTo);
+          return;
+        }
         track("generate_lead", { client_type: clientType, frequency: frequency || "n/a" });
         setStatus({ kind: "ok" });
         return;

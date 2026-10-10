@@ -6,8 +6,6 @@ import "@fontsource/cormorant-garamond/600.css";
 import "@fontsource-variable/jost";
 import "./globals.css";
 import { SITE } from "@/config/site";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { Consent } from "@/components/Consent";
 import { JsonLd } from "@/components/JsonLd";
 import { localBusiness, website } from "@/lib/schema";
@@ -35,9 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <JsonLd data={localBusiness()} />
         <JsonLd data={website()} />
-        <Header />
-        <main id="contenu">{children}</main>
-        <Footer />
+        {children}
         <Consent />
       </body>
     </html>
