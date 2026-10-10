@@ -4,6 +4,7 @@ import { CONTACT, SITE } from "@/config/site";
 import { validateReport, type ReportInput } from "@/lib/report";
 import { reportHtml, reportSubject, reportText } from "@/lib/reportEmail";
 import { SESSION_COOKIE, codeIsValid, tokenIsValid } from "@/lib/intendance";
+import { archiveEnabled, archiveReport } from "@/lib/archive";
 
 export const runtime = "nodejs";
 
@@ -23,7 +24,8 @@ export async function POST(req: Request) {
   const raw = await req.text();
   if (raw.length > MAX_BODY) return NextResponse.json({ ok: false, error: "Photos trop lourdes. Réessayez avec moins de photos." }, { status: 413 });
 
-  let body: Partial<ReportInput>;
+  // Le compte rendu, plus le lien facultatif vers la fiche d'où il vient.
+  let body: Partial<ReportInput> & { clientId?: unknown; bienId?: unknown };
   try {
     body = JSON.parse(raw);
   } catch {
@@ -98,6 +100,15 @@ export async function POST(req: Request) {
   } catch (e) {
     console.error("[compte-rendu] échec d'envoi :", e instanceof Error ? e.message : e);
     return NextResponse.json({ ok: false, error: "Le compte rendu n'a pas pu être envoyé. Réessayez." }, { status: 502 });
+  }
+
+  // L'archive vient après l'envoi : le client a son compte rendu quoi qu'il
+  // arrive, et un incident de base ne le lui reprend pas.
+  if (archiveEnabled()) {
+    const uuid = (v: unknown) => (typeof v === "string" && /^[0-9a-f-]{36}$/i.test(v) ? v : null);
+    await archiveReport(report, to, { clientId: uuid(body.clientId), bienId: uuid(body.bienId) }).catch((e) =>
+      console.error("[compte-rendu] archivage manqué :", e instanceof Error ? e.message : e),
+    );
   }
 
   return NextResponse.json({ ok: true });

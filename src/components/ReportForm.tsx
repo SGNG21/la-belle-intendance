@@ -1,7 +1,8 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { PIECES, validateReport, type ReportErrors, type ReportInput } from "@/lib/report";
+import type { Bien, Client } from "@/lib/crmModel";
 
 type Status = { kind: "idle" } | { kind: "sending" } | { kind: "ok" } | { kind: "error"; message: string };
 type Room = { label: string; detail: string; on: boolean };
@@ -45,6 +46,41 @@ export function ReportForm() {
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<ReportErrors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [fiche, setFiche] = useState<string | null>(null);
+  const [lien, setLien] = useState<{ clientId?: string; bienId: string } | null>(null);
+
+  /**
+   * Arrivée depuis la fiche d'un bien : « /intendance/compte-rendu?bien=… ».
+   *
+   * Le formulaire se règle sur ce bien — le client, son adresse, et la liste
+   * des prestations retenues, déjà cochées avec leur consigne. Les pièces non
+   * retenues restent proposées en dessous : un passage peut sortir du cadre.
+   */
+  useEffect(() => {
+    const bienId = new URLSearchParams(window.location.search).get("bien");
+    if (!bienId || !/^[0-9a-f-]{36}$/i.test(bienId)) return;
+    let annule = false;
+    fetch(`/api/intendance/biens/${bienId}`, { cache: "no-store" })
+      .then((r) => (r.ok ? (r.json() as Promise<{ bien: Bien; client: Pick<Client, "id" | "nom" | "email"> | null }>) : null))
+      .then((d) => {
+        if (annule || !d?.bien) return;
+        const { bien, client } = d;
+        setClientName(client?.nom ?? "");
+        setClientEmail(client?.email ?? "");
+        setProperty([bien.libelle, bien.commune].filter(Boolean).join(", "));
+        const retenues = bien.prestations ?? [];
+        setRooms([
+          ...retenues.map((p) => ({ label: p.label, detail: p.detail ?? "", on: true })),
+          ...PIECES.filter((l) => !retenues.some((p) => p.label === l)).map((label) => ({ label, detail: "", on: false })),
+        ]);
+        setFiche(bien.libelle);
+        setLien({ bienId: bien.id, ...(client ? { clientId: client.id } : {}) });
+      })
+      .catch(() => {});
+    return () => {
+      annule = true;
+    };
+  }, []);
 
   const toggle = (i: number) => setRooms((r) => r.map((x, n) => (n === i ? { ...x, on: !x.on } : x)));
   const detail = (i: number, v: string) => setRooms((r) => r.map((x, n) => (n === i ? { ...x, detail: v } : x)));
@@ -81,7 +117,7 @@ export function ReportForm() {
       const res = await fetch("/api/compte-rendu", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(draft),
+        body: JSON.stringify({ ...draft, ...(lien ?? {}) }),
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: ReportErrors; error?: string };
       if (res.ok && data.ok) {
@@ -97,7 +133,7 @@ export function ReportForm() {
 
   function reset() {
     setClientName(""); setClientEmail(""); setProperty(""); setDate(today());
-    setRooms(initialRooms()); setAlert(""); setPhotos([]); setErrors({}); setStatus({ kind: "idle" });
+    setRooms(initialRooms()); setAlert(""); setPhotos([]); setErrors({}); setStatus({ kind: "idle" }); setFiche(null); setLien(null);
   }
 
   if (status.kind === "ok") {
@@ -120,6 +156,7 @@ export function ReportForm() {
 
   return (
     <form className="form" onSubmit={onSubmit} noValidate>
+      {fiche ? <p className="cr-fiche">Prérempli depuis la fiche : <strong>{fiche}</strong></p> : null}
       <fieldset>
         <legend>La maison</legend>
         <div className="field">

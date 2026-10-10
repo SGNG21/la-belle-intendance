@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { scoreLead, validateLead, type LeadInput } from "@/lib/lead";
 import { confirmHtml, confirmSubject, confirmText, leadHtml, leadSubject, leadText, type LeadMailContext } from "@/lib/leadEmail";
 import { CONTACT, SITE } from "@/config/site";
+import { crmEnabled, recordDemande } from "@/lib/crm";
 
 export const runtime = "nodejs";
 
@@ -86,6 +87,11 @@ export async function POST(req: Request) {
   // son message est parti.
   const ack = key && from ? () => sendConfirmation({ key, from }, payload) : null;
 
+  // La fiche prospect avant tout envoi : si la messagerie tombe, la demande
+  // est quand même dans le back-office, avec son origine (référencement,
+  // campagne, réseaux sociaux) telle que le lien l'a transmise.
+  if (crmEnabled()) await saveDemande(payload).catch((e) => console.error("[lead] fiche prospect non enregistrée :", e instanceof Error ? e.message : e));
+
   if (webhook) return send(() => postWebhook(webhook, payload), "webhook", ack);
   if (key && to && from) return send(() => sendEmail({ key, to, from }, payload), "e-mail", ack);
 
@@ -98,6 +104,29 @@ export async function POST(req: Request) {
 }
 
 type Payload = LeadMailContext & { source: string; consentGiven: boolean; consentAt: string };
+
+/** Dépose la demande dans la base du back-office. Best effort : jamais bloquant. */
+async function saveDemande(p: Payload): Promise<void> {
+  const l = p.lead;
+  await recordDemande({
+    nom: l.name,
+    email: l.email,
+    telephone: l.phone || null,
+    commune: l.commune || null,
+    type_client: l.clientType,
+    logement: l.housing ?? null,
+    surface: l.surface ?? null,
+    chambres: l.bedrooms ?? null,
+    salles_de_bains: l.bathrooms ?? null,
+    frequence: l.frequency,
+    besoin: l.needs || null,
+    score: p.scoring.score,
+    priorite: p.scoring.tier,
+    raisons: p.scoring.reasons,
+    page: p.page || null,
+    utm: p.utm,
+  });
+}
 
 async function send(run: () => Promise<void>, label: string, ack: (() => Promise<void>) | null) {
   try {
