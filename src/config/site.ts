@@ -38,7 +38,7 @@ export const CONTACT = {
 
 /** Identité juridique, pour les mentions légales. */
 export const LEGAL = {
-  publisherName: null as string | null, // nom de l'exploitant (entreprise individuelle)
+  publisherName: "Coralie Renault" as string | null, // nom de l'exploitante (entreprise individuelle)
   legalForm: "Micro-entreprise" as string | null,
   siret: "830 242 764 00025" as string | null,
   vatMention: "TVA non applicable, art. 293 B du CGI" as string | null, // franchise en base (micro-entreprise)
