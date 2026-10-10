@@ -54,8 +54,8 @@ export async function db<T>(path: string, init: RequestInit = {}): Promise<T> {
     },
     cache: "no-store",
   });
+  const body = await res.text().catch(() => "");
   if (!res.ok) {
-    const body = await res.text().catch(() => "");
     const conflit = res.status === 409;
     throw new CrmError(
       conflit ? "Cette fiche existe déjà." : "La base n'a pas répondu.",
@@ -63,8 +63,10 @@ export async function db<T>(path: string, init: RequestInit = {}): Promise<T> {
       `${path} → ${res.status} ${body}`.trim(),
     );
   }
-  if (res.status === 204) return undefined as T;
-  return (await res.json()) as T;
+  // `Prefer: return=minimal` répond 201 avec un corps vide, et une suppression
+  // répond 204 : dans les deux cas il n'y a rien à analyser.
+  if (!body) return undefined as T;
+  return JSON.parse(body) as T;
 }
 
 

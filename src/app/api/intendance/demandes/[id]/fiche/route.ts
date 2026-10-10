@@ -20,22 +20,36 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     if (!d) throw new CrmError("Demande introuvable.", 404);
     if (d.client_id) return { clientId: d.client_id, existing: true };
 
-    const [client] = await db<Client[]>("clients", {
-      method: "POST",
-      headers: { Prefer: "return=representation" },
-      body: JSON.stringify({
-        nom: d.nom,
-        email: d.email,
-        telephone: d.telephone,
-        commune: d.commune,
-        type: d.type_client === "professionnel" ? "professionnel" : "particulier",
-        notes: d.besoin,
-      }),
-    });
+    // Une même personne peut écrire deux fois. Plutôt que de buter sur
+    // l'unicité de l'adresse, on rattache la demande à la fiche existante.
+    const connus = d.email
+      ? await db<Client[]>(`clients?email=ilike.${encodeURIComponent(d.email)}&select=*&limit=1`)
+      : [];
 
-    // Un bien n'est créé que si la demande dit quelque chose du logement.
+    const client =
+      connus[0] ??
+      (
+        await db<Client[]>("clients", {
+          method: "POST",
+          headers: { Prefer: "return=representation" },
+          body: JSON.stringify({
+            nom: d.nom,
+            email: d.email,
+            telephone: d.telephone,
+            commune: d.commune,
+            type: d.type_client === "professionnel" ? "professionnel" : "particulier",
+            notes: d.besoin,
+          }),
+        })
+      )[0];
+
+    // Un bien n'est créé que si la demande dit quelque chose du logement, et
+    // seulement si la fiche n'en porte pas déjà un : on ne duplique pas.
     const libelle = d.logement ? (HOUSING_LABEL[d.logement as HousingType] ?? d.logement) : null;
-    if (libelle || d.surface || d.chambres) {
+    const dejaUnBien = connus.length
+      ? (await db<{ id: string }[]>(`biens?client_id=eq.${client.id}&select=id&limit=1`)).length > 0
+      : false;
+    if (!dejaUnBien && (libelle || d.surface || d.chambres)) {
       await db<Bien[]>("biens", {
         method: "POST",
         headers: { Prefer: "return=minimal" },
@@ -57,6 +71,6 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       body: JSON.stringify({ client_id: client.id, statut: "rappele" }),
     });
 
-    return { clientId: client.id, existing: false };
+    return { clientId: client.id, existing: connus.length > 0 };
   });
 }

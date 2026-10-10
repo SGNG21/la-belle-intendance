@@ -129,6 +129,21 @@ export const COMMUNES = [
   "Appoigny",
 ] as const;
 
+/**
+ * Mesure d'audience.
+ *
+ * L'identifiant GA4 est public — il figure dans le code source de chaque page
+ * dès que le traceur est chargé. Il est donc écrit ici, et la variable
+ * d'environnement reste prioritaire si l'on veut pointer ailleurs.
+ *
+ * Le chargement reste soumis au consentement : rien n'est déposé avant que le
+ * visiteur ait répondu à la bannière.
+ */
+export const ANALYTICS = {
+  ga4: (process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "").trim() || "G-CKJLM6H9CJ",
+  clarity: (process.env.NEXT_PUBLIC_CLARITY_ID ?? "").trim() || null,
+};
+
 export const NAV = [
   { href: "/entretien-regulier", label: "Entretien régulier" },
   { href: "/grandes-demeures-intendance", label: "Grandes demeures" },

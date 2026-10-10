@@ -3,9 +3,9 @@
 import Script from "next/script";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { ANALYTICS } from "@/config/site";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
+const { ga4: GA_ID, clarity: CLARITY_ID } = ANALYTICS;
 const KEY = "lbi-consent";
 const hasTracking = Boolean(GA_ID || CLARITY_ID);
 
