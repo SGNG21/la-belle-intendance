@@ -20,6 +20,15 @@ export default function Page() {
 
             <h2>Données collectées par le formulaire de devis</h2>
             <p>Type de client, logement (type, surface, nombre de pièces), fréquence souhaitée, commune, précisions libres, nom, téléphone et e-mail. Nous collectons également la page d'origine et, le cas échéant, les paramètres de campagne publicitaire de l'adresse visitée, pour savoir quel canal vous a conduit à nous.</p>
+            <p>Votre demande est enregistrée dans notre outil interne de suivi, accessible par mot de passe, afin que rien ne se perde entre votre message et notre réponse.</p>
+
+            <h2>Données conservées si vous devenez client</h2>
+            <p>
+              Nous tenons une fiche : vos coordonnées, le mode convenu (facturation ou contrat CESU), les caractéristiques du bien (adresse, surface, nombre de pièces), les consignes d&apos;accès que vous nous donnez, les particularités à respecter et les prestations retenues. Nous y ajoutons les devis établis et les comptes rendus de passage, qui peuvent comporter des photos du logement lorsqu&apos;elles éclairent un point signalé.
+            </p>
+            <p>
+              Ces informations servent à exécuter la prestation convenue et à vous en rendre compte. Les consignes d&apos;accès sont conservées parce que vous nous les confiez pour notre intervention ; vous pouvez nous demander de les effacer à tout moment, et nous le faisons à la fin de la relation.
+            </p>
 
             <h2>Pourquoi nous les utilisons</h2>
             <ul>
@@ -29,10 +38,20 @@ export default function Page() {
             </ul>
 
             <h2>Combien de temps nous les gardons</h2>
-            <p>Trois ans après notre dernier échange si vous ne devenez pas client. Pour un client, la durée de la relation contractuelle, puis les délais légaux de conservation comptable.</p>
+            <p>Trois ans après notre dernier échange si vous ne devenez pas client. Pour un client, la durée de la relation contractuelle, puis les délais légaux de conservation comptable. Les consignes d&apos;accès et les photos jointes aux comptes rendus sont effacées à la fin de la relation.</p>
 
             <h2>Qui y a accès</h2>
-            <p>Nous-mêmes, et nos prestataires techniques strictement nécessaires : hébergement du site, outil de traitement des demandes et envoi de messages. Vos données ne sont pas vendues.</p>
+            <p>
+              Nous-mêmes, et les prestataires techniques strictement nécessaires au fonctionnement du service :
+            </p>
+            <ul>
+              <li>l&apos;hébergement du site, assuré par {LEGAL.host}&nbsp;;</li>
+              <li>la base de données et le stockage des documents, hébergés dans l&apos;Union européenne ;</li>
+              <li>l&apos;envoi des e-mails (accusé de réception, devis, compte rendu), depuis des serveurs situés dans l&apos;Union européenne.</li>
+            </ul>
+            <p>
+              L&apos;hébergeur du site est établi aux États-Unis : des transferts hors de l&apos;Union européenne peuvent donc avoir lieu, encadrés par les garanties contractuelles prévues par ce prestataire. Vos données ne sont ni vendues, ni cédées à des tiers à des fins commerciales.
+            </p>
 
             <h2>Mesure d'audience et cookies</h2>
             <p>Le site ne dépose aucun traceur avant votre choix. Si vous acceptez la mesure d'audience, des outils statistiques sont chargés pour comprendre l'usage du site. Vous pouvez changer d'avis à tout moment depuis le lien « Gérer les cookies » en bas de page.</p>
