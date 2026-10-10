@@ -37,11 +37,6 @@ export default function Page() {
               Le client peut, s&apos;il le préfère, recourir à l&apos;emploi direct : il devient alors particulier employeur et déclare les heures auprès de l&apos;Urssaf via le CESU. C&apos;est l&apos;emploi d&apos;un salarié à domicile qui ouvre droit, pour l&apos;employeur, au crédit d&apos;impôt de 50 % prévu à l&apos;article 199 sexdecies du code général des impôts. Ce régime relève de la relation entre le client et l&apos;Urssaf, non d&apos;une prestation de l&apos;entreprise.
             </p>
 
-            <h2>Assurance</h2>
-            <p>
-              Responsabilité civile professionnelle souscrite auprès de <Fill value={LEGAL.insurer} label="assureur" />.
-            </p>
-
             <h2>Hébergement</h2>
             <p>{LEGAL.host}.</p>
 

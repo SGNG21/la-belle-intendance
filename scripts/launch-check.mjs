@@ -28,7 +28,6 @@ const need = [
   ["publisherName", "LEGAL", "Nom de l'exploitant (mentions légales)"],
   ["siret", "LEGAL", "SIRET"],
   ["vatMention", "LEGAL", "Mention TVA"],
-  ["insurer", "LEGAL", "Assureur RC professionnelle"],
 ];
 for (const [key, scope, label] of need) if (isNull(key, scope)) blockers.push(`Renseigner : ${label} (src/config/site.ts, ${scope}.${key})`);
 
