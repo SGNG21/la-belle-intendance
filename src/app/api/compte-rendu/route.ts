@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { CONTACT, SITE } from "@/config/site";
 import { validateReport, type ReportInput } from "@/lib/report";
 import { reportHtml, reportSubject, reportText } from "@/lib/reportEmail";
+import { SESSION_COOKIE, codeIsValid, tokenIsValid } from "@/lib/intendance";
 
 export const runtime = "nodejs";
 
@@ -10,14 +12,6 @@ const MAX_BODY = 12_000_000;
 
 const clean = (v: unknown, max: number) =>
   typeof v === "string" ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, max) : "";
-
-/** Comparaison à durée constante : un code ne doit pas se deviner au chronomètre. */
-function sameSecret(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-}
 
 export async function POST(req: Request) {
   const expected = process.env.INTENDANCE_CODE;
@@ -36,8 +30,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Requête invalide." }, { status: 400 });
   }
 
-  if (!sameSecret(clean(body.code, 80), expected)) {
-    return NextResponse.json({ ok: false, error: "Code incorrect." }, { status: 401 });
+  // Le cookie de session suffit ; le code en clair reste accepté en secours,
+  // par exemple depuis un onglet dont la session a expiré.
+  const jar = await cookies();
+  const authorized =
+    tokenIsValid(jar.get(SESSION_COOKIE)?.value, expected) || codeIsValid(clean(body.code, 200), expected);
+  if (!authorized) {
+    return NextResponse.json({ ok: false, error: "Session expirée. Saisissez à nouveau le mot de passe." }, { status: 401 });
   }
 
   const report: ReportInput = {

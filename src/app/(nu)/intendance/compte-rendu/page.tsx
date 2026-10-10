@@ -1,4 +1,5 @@
 import { LandingFooter, LandingHeader } from "@/components/LandingChrome";
+import { IntendanceGate } from "@/components/IntendanceGate";
 import { ReportForm } from "@/components/ReportForm";
 
 /**
@@ -17,6 +18,7 @@ export default function Page() {
   return (
     <>
       <LandingHeader />
+      <IntendanceGate>
       <section className="lp-sec lp-sec--paper">
         <div className="lp-in lp-in--narrow">
           <div className="kicker-gold">Usage interne</div>
@@ -27,6 +29,7 @@ export default function Page() {
           <ReportForm />
         </div>
       </section>
+      </IntendanceGate>
       <LandingFooter />
     </>
   );

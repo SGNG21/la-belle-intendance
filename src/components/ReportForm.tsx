@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 import { PIECES, validateReport, type ReportErrors, type ReportInput } from "@/lib/report";
 
 type Status = { kind: "idle" } | { kind: "sending" } | { kind: "ok" } | { kind: "error"; message: string };
@@ -35,7 +35,6 @@ export function ReportForm() {
   const uid = useId();
   const id = (k: string) => `${uid}-${k}`;
 
-  const [code, setCode] = useState("");
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [property, setProperty] = useState("");
@@ -46,16 +45,6 @@ export function ReportForm() {
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<ReportErrors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-
-  // Le code reste pour la session : on ne le retape pas à chaque maison.
-  useEffect(() => {
-    try {
-      const saved = sessionStorage.getItem("lbi-code");
-      if (saved) setCode(saved);
-    } catch {
-      /* navigation privée, stockage refusé : sans importance */
-    }
-  }, []);
 
   const toggle = (i: number) => setRooms((r) => r.map((x, n) => (n === i ? { ...x, on: !x.on } : x)));
   const detail = (i: number, v: string) => setRooms((r) => r.map((x, n) => (n === i ? { ...x, detail: v } : x)));
@@ -92,11 +81,10 @@ export function ReportForm() {
       const res = await fetch("/api/compte-rendu", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...draft, code }),
+        body: JSON.stringify(draft),
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: ReportErrors; error?: string };
       if (res.ok && data.ok) {
-        try { sessionStorage.setItem("lbi-code", code); } catch { /* sans importance */ }
         setStatus({ kind: "ok" });
         return;
       }
@@ -207,14 +195,6 @@ export function ReportForm() {
             </div>
           ) : null}
           {err("photos")}
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Envoi</legend>
-        <div className="field">
-          <label htmlFor={id("cd")}>Code d&apos;accès</label>
-          <input id={id("cd")} className="input" type="password" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="current-password" />
         </div>
       </fieldset>
 
