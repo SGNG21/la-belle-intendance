@@ -112,6 +112,13 @@ async function send(run: () => Promise<void>, label: string, ack: (() => Promise
   return NextResponse.json({ ok: true });
 }
 
+/**
+ * Expéditeur affiché. Sans nom, la messagerie du destinataire montre
+ * l'adresse brute (« site@… »), ce qui fait technique et peu engageant.
+ * On rajoute donc le nom de l'entreprise quand la variable n'en porte pas.
+ */
+const sender = (from: string) => (from.includes("<") ? from : `${SITE.name} <${from}>`);
+
 /** fetch avec garde-temps : une API lente ne doit pas bloquer la fonction. */
 async function fetchWithTimeout(url: string, init: RequestInit, ms = 8000): Promise<Response> {
   const ctrl = new AbortController();
@@ -138,7 +145,7 @@ async function sendEmail(cfg: { key: string; to: string; from: string }, payload
     method: "POST",
     headers: { Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: cfg.from,
+      from: sender(cfg.from),
       to: cfg.to.split(",").map((a) => a.trim()).filter(Boolean),
       reply_to: payload.lead.email,
       subject: leadSubject(payload),
@@ -155,7 +162,7 @@ async function sendConfirmation(cfg: { key: string; from: string }, payload: Pay
     method: "POST",
     headers: { Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: cfg.from,
+      from: sender(cfg.from),
       to: [payload.lead.email],
       ...(CONTACT.email ? { reply_to: CONTACT.email } : {}),
       subject: confirmSubject(),
