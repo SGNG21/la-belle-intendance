@@ -4,7 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/mentions-legales";
-export const metadata = { ...pageMeta({ title: "Mentions légales", description: `Mentions légales de ${SITE.name} : éditeur, identité juridique, assurance, hébergement, crédits visuels et propriété intellectuelle du site.`, path }) };
+export const metadata = { ...pageMeta({ title: "Mentions légales", description: `Mentions légales de ${SITE.name} : éditeur, identité juridique, modes d'intervention, hébergement, crédits visuels et propriété intellectuelle du site.`, path }) };
 
 export default function Page() {
   return (
