@@ -7,7 +7,7 @@ import { FREQUENCY_LABEL, HOUSING_LABEL } from "@/lib/lead";
 import { api, shortDate } from "@/lib/intendanceApi";
 
 type ClientRow = Client & { biens: { id: string; libelle: string }[] };
-type Onglet = "demandes" | "clients";
+type Onglet = "demandes" | "clients" | "tarifs";
 
 /** Le scoring du formulaire, en mots plutôt qu'en jargon. */
 const PRIORITE_LABEL: Record<string, string> = { prioritaire: "Prioritaire", standard: "Standard", "a-qualifier": "À qualifier" };
@@ -59,6 +59,9 @@ export function Desk() {
           Clients
           {clients?.length ? <span className="desk-count desk-count--mute">{clients.length}</span> : null}
         </button>
+        <button type="button" role="tab" aria-selected={onglet === "tarifs"} className={onglet === "tarifs" ? "is-on" : ""} onClick={() => setOnglet("tarifs")}>
+          Tarifs
+        </button>
       </div>
 
       {erreur ? (
@@ -67,7 +70,9 @@ export function Desk() {
         </p>
       ) : null}
 
-      {onglet === "demandes" ? <Demandes rows={demandes} reload={charger} /> : <Clients rows={clients} reload={charger} />}
+      {onglet === "demandes" ? <Demandes rows={demandes} reload={charger} /> : null}
+      {onglet === "clients" ? <Clients rows={clients} reload={charger} /> : null}
+      {onglet === "tarifs" ? <Tarifs /> : null}
     </>
   );
 }
@@ -329,5 +334,117 @@ function Clients({ rows, reload }: { rows: ClientRow[] | null; reload: () => Pro
         <p className="desk-vide">Aucune fiche pour l&apos;instant.</p>
       )}
     </>
+  );
+}
+
+/* ------------------------------------------------------------------ tarifs */
+
+interface Reglages {
+  taux_horaire: number | null;
+  deplacement: number | null;
+  validite_jours: number;
+  mentions: string | null;
+}
+
+/**
+ * Les tarifs de l'entreprise.
+ *
+ * Aucun prix n'est proposé par défaut : le site n'affiche pas de tarif et le
+ * simulateur ne doit pas en inventer un. Ce que Coralie saisit ici est la
+ * seule source du calcul.
+ */
+function Tarifs() {
+  const [r, setR] = useState<Reglages | null>(null);
+  const [etat, setEtat] = useState<"" | "ok" | "busy">("");
+  const [erreur, setErreur] = useState("");
+
+  useEffect(() => {
+    api<{ reglages: Reglages }>("/api/intendance/reglages")
+      .then((d) => setR(d.reglages))
+      .catch((e) => setErreur(e instanceof Error ? e.message : "Chargement impossible."));
+  }, []);
+
+  if (erreur) return <p className="error">{erreur}</p>;
+  if (!r) return <p className="desk-wait">Chargement…</p>;
+
+  const nombre = (v: string) => (v.trim() === "" ? null : Number(v.replace(",", ".")));
+
+  async function enregistrer(e: React.FormEvent) {
+    e.preventDefault();
+    setEtat("busy");
+    setErreur("");
+    try {
+      const d = await api<{ reglages: Reglages }>("/api/intendance/reglages", { method: "PATCH", body: JSON.stringify(r) });
+      setR(d.reglages);
+      setEtat("ok");
+    } catch (err) {
+      setErreur(err instanceof Error ? err.message : "Enregistrement impossible.");
+      setEtat("");
+    }
+  }
+
+  return (
+    <form className="desk-form" onSubmit={enregistrer}>
+      <p className="desk-meta">
+        Ces valeurs servent au simulateur de devis. Elles ne sont jamais affichées sur le site public.
+      </p>
+      <div className="desk-grid">
+        <label className="field">
+          <span>Taux horaire (€)</span>
+          <input
+            className="input"
+            type="number"
+            inputMode="decimal"
+            step="any"
+            min={1}
+            max={500}
+            value={r.taux_horaire ?? ""}
+            onChange={(e) => setR({ ...r, taux_horaire: nombre(e.target.value) })}
+          />
+        </label>
+        <label className="field">
+          <span>Déplacement par passage (€)</span>
+          <input
+            className="input"
+            type="number"
+            inputMode="decimal"
+            step="any"
+            min={0}
+            max={500}
+            value={r.deplacement ?? ""}
+            onChange={(e) => setR({ ...r, deplacement: nombre(e.target.value) })}
+          />
+        </label>
+        <label className="field">
+          <span>Validité d&apos;un devis (jours)</span>
+          <input
+            className="input"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            max={365}
+            value={r.validite_jours}
+            onChange={(e) => setR({ ...r, validite_jours: Number(e.target.value) || 30 })}
+          />
+        </label>
+      </div>
+      <label className="field">
+        <span>Note reprise sur chaque devis</span>
+        <textarea
+          className="textarea"
+          rows={3}
+          value={r.mentions ?? ""}
+          onChange={(e) => setR({ ...r, mentions: e.target.value })}
+          placeholder="Produits et matériel fournis. Première visite sur place avant le premier passage."
+        />
+      </label>
+      {erreur ? <p className="error">{erreur}</p> : null}
+      <div className="btn-row">
+        <button type="submit" className="btn" disabled={etat === "busy"}>
+          {etat === "busy" ? "Enregistrement…" : "Enregistrer"}
+        </button>
+        {etat === "ok" ? <span className="desk-meta">Enregistré.</span> : null}
+      </div>
+    </form>
   );
 }

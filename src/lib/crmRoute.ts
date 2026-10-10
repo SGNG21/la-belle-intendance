@@ -15,8 +15,8 @@ export async function guarded<T>(run: () => Promise<T>): Promise<NextResponse> {
     return NextResponse.json({ ok: true, ...(await run()) });
   } catch (e) {
     if (e instanceof CrmError) {
-      console.error("[crm]", e.message);
-      return NextResponse.json({ ok: false, error: e.status === 409 ? "Cette fiche existe déjà." : "La base n'a pas répondu." }, { status: e.status });
+      console.error("[crm]", e.detail ?? e.message);
+      return NextResponse.json({ ok: false, error: e.message }, { status: e.status });
     }
     console.error("[crm] erreur inattendue :", e instanceof Error ? e.message : e);
     return NextResponse.json({ ok: false, error: "Erreur inattendue." }, { status: 500 });

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CATALOGUE, STATUT_LABEL, origine, type Bien, type Client, type Demande } from "@/lib/crmModel";
 import { api, shortDate } from "@/lib/intendanceApi";
+import { DevisBloc } from "./Devis";
 
 type Fiche = { client: Client; biens: Bien[]; demandes: Demande[] };
 type Presta = { label: string; detail: string };
@@ -51,6 +52,7 @@ export function FicheClient({ id }: { id: string }) {
       <Coordonnees client={fiche.client} reload={charger} />
       {fiche.demandes.length ? <Origines demandes={fiche.demandes} /> : null}
       <Biens clientId={fiche.client.id} biens={fiche.biens} reload={charger} />
+      <DevisBloc client={fiche.client} biens={fiche.biens} />
     </>
   );
 }
@@ -395,7 +397,7 @@ function BienForm({ bien, clientId, onDone, onCancel }: { bien?: Bien; clientId?
         </label>
         <label className="field">
           <span>Durée par passage (h)</span>
-          <input className="input" type="number" inputMode="decimal" step="0.5" min={0.5} max={24} {...champ("duree_h")} />
+          <input className="input" type="number" inputMode="decimal" step="any" min={0.5} max={24} {...champ("duree_h")} />
         </label>
       </div>
 

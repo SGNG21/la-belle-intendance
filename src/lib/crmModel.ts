@@ -109,9 +109,16 @@ export const int = (v: unknown, min: number, max: number): number | null => {
   return Number.isFinite(n) && n >= min && n <= max ? Math.round(n) : null;
 };
 
+/** Une décimale : suffisant pour une durée en heures. */
 export const dec = (v: unknown, min: number, max: number): number | null => {
   const n = typeof v === "number" ? v : Number(String(v ?? "").replace(",", "."));
   return Number.isFinite(n) && n >= min && n <= max ? Math.round(n * 10) / 10 : null;
+};
+
+/** Deux décimales : un prix ne s'arrondit pas au dixième d'euro. */
+export const montant = (v: unknown, min: number, max: number): number | null => {
+  const n = typeof v === "number" ? v : Number(String(v ?? "").replace(",", "."));
+  return Number.isFinite(n) && n >= min && n <= max ? Math.round(n * 100) / 100 : null;
 };
 
 export const oneOf = <T extends string>(v: unknown, allowed: readonly T[]): T | null =>

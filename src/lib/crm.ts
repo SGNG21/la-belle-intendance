@@ -28,8 +28,14 @@ export async function authorized(): Promise<boolean> {
   return tokenIsValid(jar.get(SESSION_COOKIE)?.value, expected);
 }
 
+/**
+ * Une erreur dont le message est destiné à l'écran.
+ *
+ * `detail` garde ce qu'il ne faut pas montrer — la réponse brute de la base,
+ * utile dans les journaux et nulle part ailleurs.
+ */
 export class CrmError extends Error {
-  constructor(message: string, readonly status: number) {
+  constructor(message: string, readonly status: number, readonly detail?: string) {
     super(message);
   }
 }
@@ -50,7 +56,12 @@ export async function db<T>(path: string, init: RequestInit = {}): Promise<T> {
   });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new CrmError(`Base : ${res.status} ${body}`.trim(), res.status === 409 ? 409 : 502);
+    const conflit = res.status === 409;
+    throw new CrmError(
+      conflit ? "Cette fiche existe déjà." : "La base n'a pas répondu.",
+      conflit ? 409 : 502,
+      `${path} → ${res.status} ${body}`.trim(),
+    );
   }
   if (res.status === 204) return undefined as T;
   return (await res.json()) as T;

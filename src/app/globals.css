@@ -1948,3 +1948,88 @@ p {
   margin: 0;
 }
 .presta-detail { font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+/* ---------- Devis : liste, simulateur, lignes ---------- */
+
+.devis-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
+.devis-item {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--mist);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.devis-item--brouillon { border-left-color: var(--mist); }
+.devis-item--envoye { border-left-color: var(--gold); }
+.devis-item--accepte { border-left-color: var(--sage-deep); }
+.devis-item--refuse, .devis-item--expire { border-left-color: var(--line); opacity: 0.72; }
+.devis-item h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.14rem;
+  color: var(--navy-deep);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.devis-detail summary {
+  font-size: 0.84rem;
+  color: var(--muted);
+  cursor: pointer;
+  min-height: 2.4rem;
+  display: flex;
+  align-items: center;
+}
+.devis-detail ul { list-style: none; margin: 0.4rem 0 0; padding: 0; display: grid; gap: 0.3rem; }
+.devis-detail li { font-size: 0.88rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.simu { border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; margin: 0; display: grid; gap: 0.9rem; }
+.simu legend {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 0 0.4rem;
+}
+.simu-total {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  background: var(--cream);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  color: var(--navy-deep);
+  font-variant-numeric: tabular-nums;
+}
+.simu-total strong { font-weight: 600; }
+
+.devis-ligne {
+  border-top: 1px solid var(--line);
+  padding-top: 0.8rem;
+  display: grid;
+  gap: 0.7rem;
+}
+.devis-ligne:first-of-type { border-top: 0; padding-top: 0; }
+.devis-ligne-chiffres { display: grid; gap: 0.7rem; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+.devis-ligne-total {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: var(--navy-deep);
+  font-variant-numeric: tabular-nums;
+}
+.devis-ligne-total button {
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--terracotta);
+  background: none;
+  border: 0;
+  padding: 0.5rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
