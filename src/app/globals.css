@@ -1472,3 +1472,91 @@ p {
   text-decoration: none;
   letter-spacing: 0.03em;
 }
+
+/* ---------- Compte rendu de passage (outil interne) ---------- */
+
+.kicker-gold {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+.cr-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.1rem);
+  color: var(--navy-deep);
+  margin: 0.5rem 0 0.8rem;
+  letter-spacing: 0.012em;
+}
+
+/* L'en-tête des pages de destination est collant : sans cette marge, un champ
+   amené à l'écran par le navigateur se retrouve caché dessous. */
+.cr-title,
+.form fieldset,
+.form .field { scroll-margin-top: 4.5rem; }
+
+.cr-rooms { display: grid; gap: 0.5rem; }
+.cr-room {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.9rem;
+  background: var(--paper);
+}
+.cr-room.is-on { border-color: var(--sage-deep); background: #fff; }
+.cr-check {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  min-height: 2.75rem;
+  font-size: 0.98rem;
+  color: var(--navy-deep);
+}
+.cr-check input {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: var(--sage-deep);
+  flex: none;
+  margin: 0;
+}
+.cr-detail {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.cr-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+.cr-photos figure { margin: 0; display: grid; gap: 0.35rem; }
+.cr-photos img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  display: block;
+}
+.cr-photos button {
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--terracotta);
+  background: none;
+  border: 0;
+  padding: 0.3rem;
+  cursor: pointer;
+  text-decoration: underline;
+  min-height: 2.2rem;
+}
