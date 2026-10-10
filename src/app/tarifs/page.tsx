@@ -8,7 +8,7 @@ import { getFaqs } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/tarifs";
-const description = "Comment sont établis nos tarifs de ménage à Joigny et ses alentours, simulateur de durée, et les deux modes d'intervention : prestation facturée ou emploi direct déclaré au CESU.";
+const description = "Comment sont établis nos tarifs de ménage à Joigny et ses alentours, simulateur de durée, et les deux modes : prestation facturée ou emploi direct au CESU.";
 export const metadata = pageMeta({ title: "Tarifs et modes d'intervention", description, path });
 
 export default function Page() {
