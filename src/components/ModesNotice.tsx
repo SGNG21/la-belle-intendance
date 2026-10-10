@@ -5,7 +5,7 @@ import { MODES } from "@/config/site";
  *
  * `domicile` : chez un particulier, les deux modes sont possibles.
  * `pro` : locaux professionnels et locations de courte durée, prestation
- * facturée uniquement — le crédit d'impôt ne concerne que le domicile.
+ * facturée uniquement, l'emploi direct n'ayant pas de sens hors du domicile.
  */
 export function ModesNotice({ scope = "domicile" }: { scope?: "domicile" | "pro" }) {
   if (scope === "pro") {
@@ -13,7 +13,7 @@ export function ModesNotice({ scope = "domicile" }: { scope?: "domicile" | "pro"
       <div className="notice">
         <strong>Facturation</strong>
         <p>
-          Devis puis facture de l&apos;entreprise. Le crédit d&apos;impôt pour services à la personne ne concerne que le domicile des particuliers : il ne s&apos;applique ni aux locaux professionnels, ni aux locations de courte durée.
+          Devis puis facture de l&apos;entreprise, au forfait mensuel ou par rotation selon le contrat. Paiement à trente jours.
         </p>
       </div>
     );
@@ -22,7 +22,7 @@ export function ModesNotice({ scope = "domicile" }: { scope?: "domicile" | "pro"
     <div className="notice">
       <strong>Deux façons de travailler ensemble</strong>
       <p>
-        <strong>Prestation facturée.</strong> Vous recevez un devis, puis une facture. Vous n&apos;avez rien à déclarer et aucune démarche à faire. L&apos;entreprise n&apos;étant pas déclarée au titre des services à la personne, cette formule n&apos;ouvre pas droit au crédit d&apos;impôt.
+        <strong>Prestation facturée.</strong> Vous recevez un devis, puis une facture. Vous n&apos;avez rien à déclarer et aucune démarche à faire.
       </p>
       {MODES.cesu ? (
         <p>

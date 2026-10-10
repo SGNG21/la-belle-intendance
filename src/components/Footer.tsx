@@ -58,7 +58,7 @@ export function Footer() {
 
         <div className="footer-sap">
           <p>
-            Deux modes d&apos;intervention au choix : prestation facturée par l&apos;entreprise, ou emploi direct déclaré au CESU. Le crédit d&apos;impôt de 50 % ne s&apos;applique qu&apos;en emploi direct. L&apos;entreprise n&apos;est pas déclarée au titre des services à la personne.
+            Deux modes d&apos;intervention au choix : prestation facturée par l&apos;entreprise, ou emploi direct déclaré au CESU, qui ouvre droit au crédit d&apos;impôt de 50 % pour le particulier employeur.
           </p>
           <p>
             © {new Date().getFullYear()} {SITE.name} · <Link href="/mentions-legales">Mentions légales</Link> · <Link href="/confidentialite">Confidentialité</Link> · <CookieSettings />

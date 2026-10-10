@@ -59,7 +59,7 @@ export default function HomePage() {
                 ) : null}
               </div>
               <p className="hero-secondary">
-                <Link className="link-quiet" href="/tarifs#simulateur">
+                <Link className="link-quiet" href="/tarifs">
                   Estimer la durée pour mon logement
                 </Link>
               </p>
@@ -208,7 +208,7 @@ export default function HomePage() {
             <Link className="btn" href="/contact">
               Demander un devis
             </Link>
-            <Link className="btn btn--ghost" href="/tarifs#simulateur">
+            <Link className="btn btn--ghost" href="/tarifs">
               Estimer mon besoin
             </Link>
           </div>

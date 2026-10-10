@@ -48,7 +48,7 @@ export function LeadForm({ defaultClientType = "particulier" }: { defaultClientT
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [utm, setUtm] = useState<Record<string, string>>({});
 
-  // Préremplissage depuis le simulateur (?surface=&housing=&bedrooms=&bathrooms=&frequency=) et capture des UTM.
+  // Préremplissage par paramètres d'URL (?surface=&housing=&bedrooms=&bathrooms=&frequency=) et capture des UTM.
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     const h = q.get("housing");

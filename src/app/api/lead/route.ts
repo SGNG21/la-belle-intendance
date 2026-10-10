@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { scoreLead, validateLead, type LeadInput } from "@/lib/lead";
+import { leadHtml, leadSubject, leadText, type LeadMailContext } from "@/lib/leadEmail";
 
 export const runtime = "nodejs";
 
@@ -73,32 +74,68 @@ export async function POST(req: Request) {
     scoring: { score, tier, reasons },
   };
 
-  const url = process.env.N8N_LEAD_WEBHOOK_URL;
-  if (!url) {
-    if (process.env.NODE_ENV !== "production") {
-      console.log("[lead:dev] webhook non configuré, demande non transmise :", JSON.stringify(payload));
-      return NextResponse.json({ ok: true });
-    }
-    console.error("[lead] N8N_LEAD_WEBHOOK_URL manquant : demande perdue.");
-    return NextResponse.json({ ok: false, error: "Le service de demande est momentanément indisponible. Contactez-nous directement." }, { status: 503 });
-  }
+  // Deux acheminements possibles, dans cet ordre : le webhook n8n s'il est
+  // configuré, sinon l'envoi direct par e-mail. Sans l'un des deux, la demande
+  // serait perdue : on refuse explicitement plutôt que de faire semblant.
+  const webhook = process.env.N8N_LEAD_WEBHOOK_URL;
+  const { RESEND_API_KEY: key, LEAD_EMAIL_TO: to, LEAD_EMAIL_FROM: from } = process.env;
 
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 8000);
+  if (webhook) return send(() => postWebhook(webhook, payload), "webhook");
+  if (key && to && from) return send(() => sendEmail({ key, to, from }, payload), "e-mail");
+
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[lead:dev] aucun acheminement configuré, demande non transmise :", JSON.stringify(payload));
+    return NextResponse.json({ ok: true });
+  }
+  console.error("[lead] ni N8N_LEAD_WEBHOOK_URL ni RESEND_API_KEY/LEAD_EMAIL_TO/LEAD_EMAIL_FROM : demande perdue.");
+  return NextResponse.json({ ok: false, error: "Le service de demande est momentanément indisponible. Contactez-nous directement." }, { status: 503 });
+}
+
+type Payload = LeadMailContext & { source: string; consentGiven: boolean; consentAt: string };
+
+async function send(run: () => Promise<void>, label: string) {
   try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...(process.env.N8N_LEAD_WEBHOOK_SECRET ? { "X-Webhook-Secret": process.env.N8N_LEAD_WEBHOOK_SECRET } : {}) },
-      body: JSON.stringify(payload),
-      signal: ctrl.signal,
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error(`webhook ${res.status}`);
+    await run();
     return NextResponse.json({ ok: true });
   } catch (e) {
-    console.error("[lead] échec d'envoi au webhook :", e instanceof Error ? e.message : e);
+    console.error(`[lead] échec d'envoi (${label}) :`, e instanceof Error ? e.message : e);
     return NextResponse.json({ ok: false, error: "Votre demande n'a pas pu être transmise. Réessayez ou contactez-nous directement." }, { status: 502 });
+  }
+}
+
+/** fetch avec garde-temps : une API lente ne doit pas bloquer la fonction. */
+async function fetchWithTimeout(url: string, init: RequestInit, ms = 8000): Promise<Response> {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  try {
+    return await fetch(url, { ...init, signal: ctrl.signal, cache: "no-store" });
   } finally {
     clearTimeout(timer);
   }
+}
+
+async function postWebhook(url: string, payload: Payload): Promise<void> {
+  const secret = process.env.N8N_LEAD_WEBHOOK_SECRET;
+  const res = await fetchWithTimeout(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(secret ? { "X-Webhook-Secret": secret } : {}) },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`webhook ${res.status}`);
+}
+
+async function sendEmail(cfg: { key: string; to: string; from: string }, payload: Payload): Promise<void> {
+  const res = await fetchWithTimeout("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: cfg.from,
+      to: cfg.to.split(",").map((a) => a.trim()).filter(Boolean),
+      reply_to: payload.lead.email,
+      subject: leadSubject(payload),
+      text: leadText(payload),
+      html: leadHtml(payload),
+    }),
+  });
+  if (!res.ok) throw new Error(`resend ${res.status} ${await res.text().catch(() => "")}`.trim());
 }

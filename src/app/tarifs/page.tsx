@@ -2,13 +2,12 @@ import Link from "next/link";
 import { Faq } from "@/components/Faq";
 import { PageHero } from "@/components/PageHero";
 import { ModesNotice } from "@/components/ModesNotice";
-import { Simulator } from "@/components/Simulator";
 import { PRICING } from "@/config/site";
 import { getFaqs } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/tarifs";
-const description = "Comment sont établis nos tarifs de ménage à Joigny et ses alentours, simulateur de durée, et les deux modes : prestation facturée ou emploi direct au CESU.";
+const description = "Comment sont établis nos tarifs de ménage à Joigny et ses alentours, et les deux modes d'intervention : prestation facturée ou emploi direct au CESU.";
 export const metadata = pageMeta({ title: "Tarifs et modes d'intervention", description, path });
 
 export default function Page() {
@@ -54,17 +53,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="section section--cream" id="simulateur">
-        <div className="wrap">
-          <div className="section-head">
-            <h2>Estimer la durée pour votre logement</h2>
-            <p className="muted">Quelques informations suffisent pour obtenir un ordre de grandeur.</p>
-          </div>
-          <Simulator hourlyKnown={PRICING.hourlyTTC != null} />
-        </div>
-      </section>
-
-      <section className="section">
+      <section className="section section--cream">
         <div className="wrap">
           <div className="section-head">
             <h2>Questions fréquentes</h2>

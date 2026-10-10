@@ -29,9 +29,9 @@ export default function Page() {
               Directrice de la publication : <Fill value={LEGAL.publisherName} label="nom de l'exploitant" />.
             </p>
 
-            <h2>Modes d&apos;intervention et fiscalité</h2>
+            <h2>Modes d&apos;intervention</h2>
             <p>
-              L&apos;entreprise n&apos;est pas déclarée au titre des services à la personne. Les prestations qu&apos;elle facture n&apos;ouvrent droit à aucun crédit ni aucune réduction d&apos;impôt, et aucun avantage fiscal n&apos;est annoncé à ce titre sur ce site.
+              Les prestations facturées par l&apos;entreprise n&apos;ouvrent droit à aucun crédit ni aucune réduction d&apos;impôt, et aucun avantage fiscal n&apos;est annoncé à ce titre sur ce site.
             </p>
             <p>
               Le client peut, s&apos;il le préfère, recourir à l&apos;emploi direct : il devient alors particulier employeur et déclare les heures auprès de l&apos;Urssaf via le CESU. C&apos;est l&apos;emploi d&apos;un salarié à domicile qui ouvre droit, pour l&apos;employeur, au crédit d&apos;impôt de 50 % prévu à l&apos;article 199 sexdecies du code général des impôts. Ce régime relève de la relation entre le client et l&apos;Urssaf, non d&apos;une prestation de l&apos;entreprise.

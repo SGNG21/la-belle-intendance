@@ -31,8 +31,7 @@ const need = [
 ];
 for (const [key, scope, label] of need) if (isNull(key, scope)) blockers.push(`Renseigner : ${label} (src/config/site.ts, ${scope}.${key})`);
 
-if (isNull("hourlyTTC", "PRICING")) warnings.push("Tarif horaire TTC non renseigné : le simulateur n'affiche aucun prix (durée seulement). Voulu ? Sinon renseigner PRICING.hourlyTTC.");
-if (/estimateValidated:\s*false/.test(config)) blockers.push("Heuristique de durée du simulateur non validée par l'opératrice terrain (PRICING.estimateValidated).");
+if (isNull("hourlyTTC", "PRICING")) warnings.push("Tarif horaire TTC non renseigné : aucun montant n'est affiché, tout renvoie au devis écrit. Voulu ? Sinon renseigner PRICING.hourlyTTC.");
 if (isNull("zoneBLimitKm", "PRICING")) warnings.push("Bornes de distance des zones B et C non renseignées : le site n'annonce aucun montant de supplément (voulu pour l'instant).");
 if (/declarationNumber|sapActive|SapNotice/.test(config)) blockers.push("Reliquat de l'ancien dispositif « services à la personne » dans src/config/site.ts : l'entreprise ne se déclare pas SAP, le crédit d'impôt ne passe que par l'emploi direct au CESU.");
 if (isNull("cesuNetHourly", "MODES")) warnings.push("MODES.cesuNetHourly non renseigné : aucun taux horaire net n'est annoncé pour l'emploi direct au CESU (voulu tant qu'il n'est pas arrêté).");
@@ -59,7 +58,9 @@ for (const f of walk(join(root, "src/app")).filter((p) => p.endsWith(".tsx"))) {
 
 // Variables d'environnement (celles du build courant)
 if (process.env.SITE_INDEXABLE !== "true") warnings.push("SITE_INDEXABLE n'est pas à « true » : le site est en noindex (normal avant lancement).");
-if (!process.env.N8N_LEAD_WEBHOOK_URL) warnings.push("N8N_LEAD_WEBHOOK_URL absent de cet environnement : en production, /api/lead répondrait 503.");
+const leadMail = process.env.RESEND_API_KEY && process.env.LEAD_EMAIL_TO && process.env.LEAD_EMAIL_FROM;
+if (!process.env.N8N_LEAD_WEBHOOK_URL && !leadMail)
+  blockers.push("Formulaire de contact sans acheminement : configurer soit N8N_LEAD_WEBHOOK_URL, soit RESEND_API_KEY + LEAD_EMAIL_TO + LEAD_EMAIL_FROM. Sinon /api/lead répond 503 et chaque demande est perdue.");
 
 const claims = [
   "Confirmer avec l'opératrice : « la même personne à chaque passage, autant que possible ».",

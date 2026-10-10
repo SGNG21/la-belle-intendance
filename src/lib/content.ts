@@ -4,7 +4,7 @@ import type { FaqItem } from "@/components/Faq";
 export function getFaqs(): FaqItem[] {
   const price = PRICING.hourlyTTC
     ? `Le tarif horaire est de ${PRICING.hourlyTTC.toLocaleString("fr-FR")} € TTC. Il est confirmé dans votre devis écrit, avec les éventuels frais de déplacement.`
-    : "Le tarif dépend de la prestation, de la taille du logement et de la distance. Il est indiqué dans votre devis écrit, avant toute intervention. Le simulateur de la page Tarifs donne une durée indicative.";
+    : "Le tarif dépend de la prestation, de la taille du logement et de la distance. Il est indiqué dans votre devis écrit, avant toute intervention.";
   return [
     { q: "Combien coûte une heure de ménage ?", a: price },
     {
@@ -13,7 +13,7 @@ export function getFaqs(): FaqItem[] {
     },
     {
       q: "Le crédit d'impôt s'applique-t-il ?",
-      a: "Uniquement en emploi direct déclaré au CESU : c'est l'emploi d'un salarié à domicile qui ouvre droit au crédit d'impôt de 50 % sur le salaire et les cotisations (article 199 sexdecies du CGI), avec l'avance immédiate possible via CESU+. En prestation facturée, non : l'entreprise n'est pas déclarée au titre des services à la personne.",
+      a: "Uniquement en emploi direct déclaré au CESU : c'est l'emploi d'un salarié à domicile qui ouvre droit au crédit d'impôt de 50 % sur le salaire et les cotisations (article 199 sexdecies du CGI), avec l'avance immédiate possible via CESU+. En prestation facturée, non.",
     },
     {
       q: "Dans quelles communes intervenez-vous ?",

@@ -41,7 +41,7 @@ export const LEGAL = {
   publisherName: null as string | null, // nom de l'exploitant (entreprise individuelle)
   legalForm: "Micro-entreprise" as string | null,
   siret: "830 242 764 00025" as string | null,
-  vatMention: null as string | null, // ex. "TVA non applicable, art. 293 B du CGI" ou n° de TVA
+  vatMention: "TVA non applicable, art. 293 B du CGI" as string | null, // franchise en base (micro-entreprise)
   host: "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
   dpoOrContact: null as string | null, // contact RGPD, par défaut l'e-mail
 };
@@ -55,10 +55,9 @@ export const FOUNDER = {
 /**
  * Modes d'intervention.
  *
- * L'entreprise n'est PAS déclarée au titre des services à la personne et n'a
- * pas vocation à l'être. Conséquence directe : une prestation facturée
- * n'ouvre droit à AUCUN crédit ni réduction d'impôt, et le site ne doit
- * jamais le laisser entendre.
+ * Une prestation facturée par l'entreprise n'ouvre droit à AUCUN crédit ni
+ * réduction d'impôt, et le site ne doit jamais le laisser entendre. Le seul
+ * avantage fiscal évoqué sur le site l'est au titre de l'emploi direct.
  *
  * Deux modes sont proposés au client, choisis avant la première intervention
  * et jamais cumulés sur une même prestation :
@@ -66,7 +65,7 @@ export const FOUNDER = {
  *  - `cesu` : emploi direct, le client devient particulier employeur et
  *    déclare les heures sur cesu.urssaf.fr. C'est l'emploi d'un salarié à
  *    domicile qui ouvre droit au crédit d'impôt de 50 % (art. 199 sexdecies
- *    du CGI), sans aucune déclaration SAP de l'intervenante.
+ *    du CGI), dans la relation entre le client et l'Urssaf.
  */
 export const MODES = {
   prestation: true,
@@ -77,10 +76,10 @@ export const MODES = {
 
 /**
  * Tarification. Aucun prix n'est inventé : tant que `hourlyTTC` est null,
- * le simulateur affiche une durée estimée et renvoie le tarif au devis.
+ * le site n'affiche aucun montant et renvoie au devis écrit.
  */
 export const PRICING = {
-  hourlyTTC: null as number | null, // tarif horaire TTC avant crédit d'impôt
+  hourlyTTC: null as number | null, // tarif horaire TTC
   /** Supplément de déplacement (communiqué au devis). Montants de la grille tarifaire. */
   travel: {
     zoneAKm: 10, // inclus jusqu'à 10 km
@@ -89,19 +88,6 @@ export const PRICING = {
     zoneBLimitKm: null as number | null,
     zoneCLimitKm: null as number | null,
   },
-  /**
-   * Heuristique de durée du simulateur. À VALIDER par l'opératrice terrain avant mise en ligne.
-   * Les durées affichées sont des ordres de grandeur, jamais un engagement.
-   */
-  estimate: {
-    m2PerHour: 40,
-    perBathroomH: 0.25,
-    perBedroomH: 0.15,
-    grandePropriete: 1.1,
-    ponctuel: 1.6, // un premier grand ménage dure plus qu'un passage d'entretien
-    spreadPct: 0.2,
-  },
-  estimateValidated: false,
 };
 
 /** Communes des alentours desservies (cœur de zone, pas de pages dédiées). */

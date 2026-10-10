@@ -34,7 +34,7 @@ export function ServicePage(p: ServicePageProps) {
           <Link className="btn" href={p.ctaHref ?? "/contact"}>
             {p.ctaLabel ?? "Demander un devis"}
           </Link>
-          <Link className="btn btn--ghost" href="/tarifs#simulateur">
+          <Link className="btn btn--ghost" href="/tarifs">
             Estimer mon besoin
           </Link>
         </div>

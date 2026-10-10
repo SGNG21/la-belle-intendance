@@ -114,7 +114,7 @@ export default function Page() {
           <div className="prose">
             <h2>Locations de courte durée</h2>
             <p>Si vous louez votre maison ou un gîte, nous assurons le ménage entre deux séjours, facturé au forfait par rotation. Les lits et le linge de maison sont une option, à convenir ensemble avant la première rotation.</p>
-            <p className="muted">Les locations de courte durée sont facturées par l&apos;entreprise : elles ne relèvent pas du domicile du particulier et n&apos;ouvrent donc pas droit au crédit d&apos;impôt.</p>
+            <p className="muted">Les locations de courte durée sont toujours facturées par l&apos;entreprise, au forfait par rotation.</p>
           </div>
         </div>
       </section>
