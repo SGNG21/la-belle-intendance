@@ -1,7 +1,8 @@
-import { CONTACT, SITE } from "@/config/site";
+import { CONTACT } from "@/config/site";
 import { CrmError } from "@/lib/crm";
 import { lireDevis, majDevis } from "@/lib/devisDb";
 import { devisHtml, devisSubject, devisText } from "@/lib/devisEmail";
+import { envoiPret, envoyer } from "@/lib/mail";
 import { guarded } from "@/lib/crmRoute";
 
 export const runtime = "nodejs";
@@ -16,29 +17,18 @@ export const dynamic = "force-dynamic";
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   return guarded(async () => {
-    const { RESEND_API_KEY: key, LEAD_EMAIL_FROM: from } = process.env;
-    if (!key || !from) throw new CrmError("L'envoi d'e-mail n'est pas configuré.", 503);
+    if (!envoiPret()) throw new CrmError("L'envoi d'e-mail n'est pas configuré.", 503);
 
     const devis = await lireDevis(id);
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 15000);
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: from.includes("<") ? from : `${SITE.name} <${from}>`,
+    try {
+      await envoyer({
         to: [devis.client_email, ...(CONTACT.email ? [CONTACT.email] : [])],
-        ...(CONTACT.email ? { reply_to: CONTACT.email } : {}),
         subject: devisSubject(devis),
         text: devisText(devis),
         html: devisHtml(devis),
-      }),
-      signal: ctrl.signal,
-      cache: "no-store",
-    }).finally(() => clearTimeout(timer));
-
-    if (!res.ok) {
-      console.error("[devis] envoi refusé :", res.status, await res.text().catch(() => ""));
+      });
+    } catch (e) {
+      console.error("[devis] envoi refusé :", e instanceof Error ? e.message : e);
       throw new CrmError("Le devis n'a pas pu être envoyé. Réessayez.", 502);
     }
 

@@ -3,6 +3,7 @@ import { scoreLead, validateLead, type LeadInput } from "@/lib/lead";
 import { confirmHtml, confirmSubject, confirmText, leadHtml, leadSubject, leadText, type LeadMailContext } from "@/lib/leadEmail";
 import { CONTACT, SITE } from "@/config/site";
 import { crmEnabled, recordDemande } from "@/lib/crm";
+import { envoiPret, envoyer } from "@/lib/mail";
 
 export const runtime = "nodejs";
 
@@ -80,12 +81,13 @@ export async function POST(req: Request) {
   // configuré, sinon l'envoi direct par e-mail. Sans l'un des deux, la demande
   // serait perdue : on refuse explicitement plutôt que de faire semblant.
   const webhook = process.env.N8N_LEAD_WEBHOOK_URL;
-  const { RESEND_API_KEY: key, LEAD_EMAIL_TO: to, LEAD_EMAIL_FROM: from } = process.env;
+  const to = process.env.LEAD_EMAIL_TO;
+  const pret = envoiPret();
 
-  // L'accusé de réception part dès que Resend est configuré, quel que soit
+  // L'accusé de réception part dès que l'envoi est configuré, quel que soit
   // l'acheminement de la notification : sans lui, la personne ne sait pas si
   // son message est parti.
-  const ack = key && from ? () => sendConfirmation({ key, from }, payload) : null;
+  const ack = pret ? () => sendConfirmation(payload) : null;
 
   // La fiche prospect avant tout envoi : si la messagerie tombe, la demande
   // est quand même dans le back-office, avec son origine (référencement,
@@ -93,13 +95,13 @@ export async function POST(req: Request) {
   if (crmEnabled()) await saveDemande(payload).catch((e) => console.error("[lead] fiche prospect non enregistrée :", e instanceof Error ? e.message : e));
 
   if (webhook) return send(() => postWebhook(webhook, payload), "webhook", ack);
-  if (key && to && from) return send(() => sendEmail({ key, to, from }, payload), "e-mail", ack);
+  if (pret && to) return send(() => sendEmail(to, payload), "e-mail", ack);
 
   if (process.env.NODE_ENV !== "production") {
     console.log("[lead:dev] aucun acheminement configuré, demande non transmise :", JSON.stringify(payload));
     return NextResponse.json({ ok: true });
   }
-  console.error("[lead] ni N8N_LEAD_WEBHOOK_URL ni RESEND_API_KEY/LEAD_EMAIL_TO/LEAD_EMAIL_FROM : demande perdue.");
+  console.error("[lead] ni N8N_LEAD_WEBHOOK_URL ni RESEND_API_KEY + LEAD_EMAIL_TO : demande perdue.");
   return NextResponse.json({ ok: false, error: "Le service de demande est momentanément indisponible. Contactez-nous directement." }, { status: 503 });
 }
 
@@ -141,13 +143,6 @@ async function send(run: () => Promise<void>, label: string, ack: (() => Promise
   return NextResponse.json({ ok: true });
 }
 
-/**
- * Expéditeur affiché. Sans nom, la messagerie du destinataire montre
- * l'adresse brute (« site@… »), ce qui fait technique et peu engageant.
- * On rajoute donc le nom de l'entreprise quand la variable n'en porte pas.
- */
-const sender = (from: string) => (from.includes("<") ? from : `${SITE.name} <${from}>`);
-
 /** fetch avec garde-temps : une API lente ne doit pas bloquer la fonction. */
 async function fetchWithTimeout(url: string, init: RequestInit, ms = 8000): Promise<Response> {
   const ctrl = new AbortController();
@@ -169,35 +164,23 @@ async function postWebhook(url: string, payload: Payload): Promise<void> {
   if (!res.ok) throw new Error(`webhook ${res.status}`);
 }
 
-async function sendEmail(cfg: { key: string; to: string; from: string }, payload: Payload): Promise<void> {
-  const res = await fetchWithTimeout("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: sender(cfg.from),
-      to: cfg.to.split(",").map((a) => a.trim()).filter(Boolean),
-      reply_to: payload.lead.email,
-      subject: leadSubject(payload),
-      text: leadText(payload),
-      html: leadHtml(payload, SITE.url),
-    }),
+async function sendEmail(to: string, payload: Payload): Promise<void> {
+  await envoyer({
+    to: to.split(","),
+    // La réponse va au prospect, pas à soi-même.
+    replyTo: payload.lead.email,
+    subject: leadSubject(payload),
+    text: leadText(payload),
+    html: leadHtml(payload, SITE.url),
   });
-  if (!res.ok) throw new Error(`resend ${res.status} ${await res.text().catch(() => "")}`.trim());
 }
 
 /** Accusé de réception au visiteur. Les réponses arrivent dans la boîte de l'entreprise. */
-async function sendConfirmation(cfg: { key: string; from: string }, payload: Payload): Promise<void> {
-  const res = await fetchWithTimeout("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: sender(cfg.from),
-      to: [payload.lead.email],
-      ...(CONTACT.email ? { reply_to: CONTACT.email } : {}),
-      subject: confirmSubject(),
-      text: confirmText(payload, CONTACT.replyDelay, CONTACT.phone, SITE.url),
-      html: confirmHtml(payload, CONTACT.replyDelay, CONTACT.phone, SITE.url),
-    }),
+async function sendConfirmation(payload: Payload): Promise<void> {
+  await envoyer({
+    to: [payload.lead.email],
+    subject: confirmSubject(),
+    text: confirmText(payload, CONTACT.replyDelay, CONTACT.phone, SITE.url),
+    html: confirmHtml(payload, CONTACT.replyDelay, CONTACT.phone, SITE.url),
   });
-  if (!res.ok) throw new Error(`resend ${res.status} ${await res.text().catch(() => "")}`.trim());
 }

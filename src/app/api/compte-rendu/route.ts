@@ -5,6 +5,7 @@ import { validateReport, type ReportInput } from "@/lib/report";
 import { reportHtml, reportSubject, reportText } from "@/lib/reportEmail";
 import { SESSION_COOKIE, codeIsValid, tokenIsValid } from "@/lib/intendance";
 import { archiveEnabled, archiveReport } from "@/lib/archive";
+import { envoiPret, envoyer } from "@/lib/mail";
 
 export const runtime = "nodejs";
 
@@ -61,9 +62,8 @@ export async function POST(req: Request) {
   const errors = validateReport(report);
   if (Object.keys(errors).length) return NextResponse.json({ ok: false, errors, error: "Vérifiez les champs signalés." }, { status: 422 });
 
-  const { RESEND_API_KEY: key, LEAD_EMAIL_FROM: from } = process.env;
-  if (!key || !from) {
-    console.error("[compte-rendu] RESEND_API_KEY ou LEAD_EMAIL_FROM absent : compte rendu non envoyé.");
+  if (!envoiPret()) {
+    console.error("[compte-rendu] envoi non configuré : RESEND_API_KEY ou adresse d'expédition absente.");
     return NextResponse.json({ ok: false, error: "L'envoi n'est pas configuré." }, { status: 503 });
   }
 
@@ -72,31 +72,22 @@ export async function POST(req: Request) {
     content: p.dataUrl.slice(p.dataUrl.indexOf(",") + 1),
     content_id: `photo${i + 1}`,
   }));
-  const cids = attachments.map((a) => a.content_id);
 
-  // Une copie à l'entreprise : c'est elle qui sert d'archive tant qu'il n'y en
-  // a pas d'autre, et elle permet de vérifier ce qui est réellement parti.
+  // Une copie à l'entreprise : elle permet de vérifier ce qui est réellement
+  // parti, et sert d'archive de secours.
   const to = [report.clientEmail, ...(CONTACT.email ? [CONTACT.email] : [])];
 
   try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 20000);
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: from.includes("<") ? from : `${SITE.name} <${from}>`,
+    await envoyer(
+      {
         to,
-        ...(CONTACT.email ? { reply_to: CONTACT.email } : {}),
         subject: reportSubject(report),
         text: reportText(report, SITE.url),
-        html: reportHtml(report, SITE.url, cids),
-        ...(attachments.length ? { attachments } : {}),
-      }),
-      signal: ctrl.signal,
-      cache: "no-store",
-    }).finally(() => clearTimeout(timer));
-    if (!res.ok) throw new Error(`resend ${res.status} ${await res.text().catch(() => "")}`.trim());
+        html: reportHtml(report, SITE.url, attachments.map((a) => a.content_id)),
+        attachments,
+      },
+      20000,
+    );
   } catch (e) {
     console.error("[compte-rendu] échec d'envoi :", e instanceof Error ? e.message : e);
     return NextResponse.json({ ok: false, error: "Le compte rendu n'a pas pu être envoyé. Réessayez." }, { status: 502 });

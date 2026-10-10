@@ -58,9 +58,9 @@ for (const f of walk(join(root, "src/app")).filter((p) => p.endsWith(".tsx"))) {
 
 // Variables d'environnement (celles du build courant)
 if (process.env.SITE_INDEXABLE !== "true") warnings.push("SITE_INDEXABLE n'est pas à « true » : le site est en noindex (normal avant lancement).");
-const leadMail = process.env.RESEND_API_KEY && process.env.LEAD_EMAIL_TO && process.env.LEAD_EMAIL_FROM;
+const leadMail = process.env.RESEND_API_KEY && process.env.LEAD_EMAIL_TO;
 if (!process.env.N8N_LEAD_WEBHOOK_URL && !leadMail)
-  blockers.push("Formulaire de contact sans acheminement : configurer soit N8N_LEAD_WEBHOOK_URL, soit RESEND_API_KEY + LEAD_EMAIL_TO + LEAD_EMAIL_FROM. Sinon /api/lead répond 503 et chaque demande est perdue.");
+  blockers.push("Formulaire de contact sans acheminement : configurer soit N8N_LEAD_WEBHOOK_URL, soit RESEND_API_KEY + LEAD_EMAIL_TO. Sinon /api/lead répond 503 et chaque demande est perdue.");
 
 const claims = [
   "Confirmer avec l'opératrice : « la même personne à chaque passage, autant que possible ».",
