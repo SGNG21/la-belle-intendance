@@ -12,7 +12,42 @@ import sharp from "sharp";
 import { writeFileSync } from "node:fs";
 
 const SOURCE = "public/logo-source.png";
-const CREME = { r: 0xf4, g: 0xee, b: 0xe2, alpha: 1 };
+
+/**
+ * Le beige du fond, mesuré sur le logo lui-même.
+ *
+ * Le fond du fichier n'est pas exactement le crème de la charte : poser le
+ * logo sur un crème choisi à la main laissait voir un carré plus clair au
+ * milieu de l'image. On prend donc la couleur du logo, moyennée sur ses
+ * quatre coins — un seul beige, et plus de soudure.
+ */
+async function beigeDuLogo() {
+  const { width, height } = await sharp(SOURCE).metadata();
+  const coins = [
+    [0, 0],
+    [width - 8, 0],
+    [0, height - 8],
+    [width - 8, height - 8],
+  ];
+  let r = 0, g = 0, b = 0;
+  for (const [left, top] of coins) {
+    const { data } = await sharp(SOURCE).extract({ left, top, width: 8, height: 8 }).raw().toBuffer({ resolveWithObject: true });
+    let sr = 0, sg = 0, sb = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      sr += data[i];
+      sg += data[i + 1];
+      sb += data[i + 2];
+    }
+    const n = data.length / 4;
+    r += sr / n;
+    g += sg / n;
+    b += sb / n;
+  }
+  return { r: Math.round(r / 4), g: Math.round(g / 4), b: Math.round(b / 4), alpha: 1 };
+}
+
+const CREME = await beigeDuLogo();
+const hex = (c) => "#" + [c.r, c.g, c.b].map((v) => v.toString(16).padStart(2, "0")).join("");
 
 /** Le logo détouré de son fond, posé au centre d'un carré crème. */
 async function carre(rognage = 0, marge = 1.16) {
@@ -72,7 +107,7 @@ console.log("Icônes écrites dans public/ : favicon.ico, icone-192, icone-512, 
  * pas. Deux fois la taille d'affichage, pour les écrans à forte densité.
  */
 const NAVY = "#182a45";
-const FOND = "#fbf8f1"; // le crème du logo lui-même
+const FOND = hex(CREME); // le beige mesuré sur le logo
 const OR = "#ae8130";
 
 async function pastilleCourriel(cote) {
@@ -101,4 +136,4 @@ async function pastilleClaire(cote) {
 
 writeFileSync("public/email/marque.png", await pastilleCourriel(112));
 writeFileSync("public/email/marque-signature.png", await pastilleClaire(128));
-console.log("Pastilles des e-mails écrites : public/email/marque.png, marque-signature.png");
+console.log(`Pastilles des e-mails écrites. Beige unique : ${FOND}`);

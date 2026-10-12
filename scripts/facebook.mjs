@@ -27,12 +27,21 @@ const POLICES = `
 const LOGO = `data:image/png;base64,${b64("public/logo.png")}`;
 const PASTILLE = `data:image/png;base64,${b64("public/icone-512.png")}`;
 
+/**
+ * Un seul beige sur toute la panoplie : celui du logo lui-même.
+ *
+ * Poser le logo sur le crème de la charte faisait apparaître un carré plus
+ * clair au milieu de la photo de profil. On prend donc la couleur du fichier,
+ * la même que celle des icônes du site.
+ */
+const BEIGE = "#faf6eb";
+
 const BASE = `
 ${POLICES}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Jost, sans-serif; -webkit-font-smoothing: antialiased; }
 .navy { background: #182a45; color: #f4eee2; }
-.creme { background: #f4eee2; color: #182a45; }
+.creme { background: ${BEIGE}; color: #182a45; }
 .plaque { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .nom { font-family: Marcellus, serif; letter-spacing: 0.18em; text-transform: uppercase; }
 .filet { width: 7rem; height: 1px; background: #ae8130; }
@@ -52,12 +61,13 @@ const navigateur = await chromium.launch();
 const page = await navigateur.newPage({ deviceScaleFactor: 1 });
 
 /* ---------- Photo de profil : recadrée en cercle par Facebook ---------- */
-await rendre(page, {
-  largeur: 1080,
-  hauteur: 1080,
-  fichier: "profil.png",
-  html: `<div class="plaque creme"><img src="${LOGO}" style="width:700px"></div>`,
-});
+// Pas de plaque sous le logo : le carré de public/logo.png porte déjà le bon
+// beige, sur toute sa surface. Une plaque d'une autre nuance se verrait.
+{
+  const sharp = (await import(process.env.SHARP_MODULE ?? "sharp")).default;
+  await sharp("public/logo.png").resize(1080, 1080).png().toFile(`${SORTIE}/profil.png`);
+  console.log("profil.png — 1080 × 1080");
+}
 
 /* ---------- Couverture ---------- */
 await rendre(page, {
