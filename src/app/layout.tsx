@@ -19,6 +19,23 @@ export const metadata: Metadata = {
   robots: SITE.indexable ? { index: true, follow: true } : { index: false, follow: false },
   openGraph: { siteName: SITE.name, locale: "fr_FR", type: "website" },
   formatDetection: { telephone: false },
+  /**
+   * Icônes servies depuis /public, donc à des adresses fixes.
+   *
+   * La convention de fichier de Next (src/app/icon.svg) ajoute une empreinte
+   * à l'URL, qui change à chaque déploiement. Google demande une adresse
+   * stable pour afficher l'icône d'un site dans ses résultats : tant qu'elle
+   * bouge, il garde le globe gris.
+   */
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48", type: "image/x-icon" },
+      { url: "/icone.svg", type: "image/svg+xml" },
+      { url: "/icone-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icone-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+  },
 };
 
 export const viewport: Viewport = {
