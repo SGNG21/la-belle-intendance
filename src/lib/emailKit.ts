@@ -31,7 +31,7 @@ export const shell = (site: string, kicker: string, title: string, body: string,
 <div style="background:${CREAM};padding:24px 12px;font-family:${SANS}">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;border-collapse:collapse;background:${PAPER}">
   <tr><td style="background:${NAVY};padding:22px 28px" align="center">
-    <img src="${site}/email/monogramme.png" width="42" height="38" alt="" style="display:block;border:0;margin:0 auto 10px">
+    <img src="${site}/email/marque.png" width="56" height="56" alt="" style="display:block;border:0;margin:0 auto 10px">
     <div style="font-family:${SERIF};font-size:17px;letter-spacing:.06em;color:${CREAM}">La Belle Intendance</div>
     <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#aec6d2;margin-top:5px">${esc(kicker)}</div>
   </td></tr>
