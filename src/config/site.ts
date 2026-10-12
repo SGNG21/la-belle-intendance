@@ -56,7 +56,9 @@ export const LEGAL = {
   legalForm: "Micro-entreprise" as string | null,
   siret: "830 242 764 00025" as string | null,
   vatMention: "TVA non applicable, art. 293 B du CGI" as string | null, // franchise en base (micro-entreprise)
-  host: "OVH SAS, 2 rue Kellermann, 59100 Roubaix, France — RCS Lille Métropole 424 761 419",
+  host: "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
+  /** Messagerie du domaine : elle reçoit les messages, elle n'héberge pas le site. */
+  mailHost: "OVH SAS, 2 rue Kellermann, 59100 Roubaix, France",
   dpoOrContact: null as string | null, // contact RGPD, par défaut l'e-mail
 };
 

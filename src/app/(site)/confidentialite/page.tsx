@@ -45,13 +45,13 @@ export default function Page() {
               Nous-mêmes, et les prestataires techniques strictement nécessaires au fonctionnement du service :
             </p>
             <ul>
-              <li>l&apos;hébergement du site, assuré par {LEGAL.host}&nbsp;;</li>
-              <li>la diffusion des pages par un réseau de serveurs, qui accélère leur affichage&nbsp;;</li>
-              <li>la base de données et le stockage des documents, hébergés dans l&apos;Union européenne ;</li>
-              <li>l&apos;envoi des e-mails (accusé de réception, devis, compte rendu), depuis des serveurs situés dans l&apos;Union européenne.</li>
+              <li>l&apos;hébergement du site et le traitement du formulaire, assurés par {LEGAL.host}&nbsp;;</li>
+              <li>la base de données et le stockage des documents, hébergés dans l&apos;Union européenne&nbsp;;</li>
+              <li>l&apos;envoi de nos e-mails — accusé de réception, devis, compte rendu — depuis des serveurs situés dans l&apos;Union européenne&nbsp;;</li>
+              <li>la messagerie de notre adresse de contact, chez {LEGAL.mailHost}, relevée dans Gmail (Google).</li>
             </ul>
             <p>
-              Vos données ne sont ni vendues, ni cédées à des tiers à des fins commerciales.
+              Deux de ces prestataires sont établis aux États-Unis&nbsp;: l&apos;hébergeur du site et la messagerie Gmail. Des transferts hors de l&apos;Union européenne ont donc lieu, encadrés par les garanties contractuelles prévues par ces prestataires. Vos données ne sont ni vendues, ni cédées à des tiers à des fins commerciales.
             </p>
 
             <h2>Mesure d'audience et cookies</h2>
