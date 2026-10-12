@@ -154,6 +154,29 @@ export const NAV = [
   { href: "/a-propos", label: "À propos" },
 ] as const;
 
+/**
+ * Avis clients, recopiés depuis la fiche Google de l'entreprise.
+ *
+ * Un avis ne s'invente pas et ne se retouche pas : on reprend le texte tel
+ * qu'il a été écrit, avec le prénom tel qu'il s'affiche publiquement. Tant que
+ * la liste est vide, aucune section n'apparaît sur le site — mieux vaut rien
+ * qu'un faux témoignage.
+ *
+ * Pas de balisage AggregateRating ni Review : Google n'accepte pas qu'une
+ * entreprise republie chez elle, en données structurées, les avis recueillis
+ * ailleurs sur elle-même. Ils s'affichent, ils ne se déclarent pas.
+ */
+export interface Avis {
+  auteur: string;
+  /** De 1 à 5, telle que l'étoile apparaît sur Google. */
+  note: number;
+  /** AAAA-MM, le mois de publication. */
+  date: string;
+  texte: string;
+}
+
+export const AVIS: Avis[] = [];
+
 export const SERVICES = [
   {
     href: "/entretien-regulier",

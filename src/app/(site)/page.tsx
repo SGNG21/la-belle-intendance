@@ -4,6 +4,7 @@ import { Check, Phone, Sprig } from "@/components/Icons";
 import { ReportCard } from "@/components/ReportCard";
 import Image from "next/image";
 import { ModesNotice } from "@/components/ModesNotice";
+import { Avis } from "@/components/Avis";
 import { Faq } from "@/components/Faq";
 import { getFaqs } from "@/lib/content";
 import { JsonLd } from "@/components/JsonLd";
@@ -197,6 +198,8 @@ export default function HomePage() {
           <Faq items={faqs} />
         </div>
       </section>
+
+      <Avis />
 
       <section className="section section--deep on-dark">
         <div className="wrap split">
