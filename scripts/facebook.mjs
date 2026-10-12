@@ -98,7 +98,44 @@ await rendre(page, {
 });
 
 /* ---------- Publications ---------- */
-const posts = [
+
+/**
+ * Deux gabarits seulement, pour que la page ait l'air d'une seule main :
+ * « claire » — un propos, une précision, la marque en bas ;
+ * « sombre » — une liste, sur le navy.
+ */
+const claire = ({ kicker, titre, corps, pied = "la-belle-intendance.fr" }) => `
+  <div class="plaque creme" style="gap:30px;padding:100px">
+    ${kicker ? `<div class="nom" style="font-size:26px;color:#ae8130">${kicker}</div>` : ""}
+    <div class="serif" style="font-size:66px;line-height:1.22">${titre}</div>
+    <div class="filet"></div>
+    <div style="font-size:28px;color:#4d5f74;line-height:1.6">${corps}</div>
+    <div style="display:flex;align-items:center;gap:20px;margin-top:14px">
+      <img class="pastille" src="${PASTILLE}" style="width:72px">
+      <div class="nom" style="font-size:22px;color:#182a45">${pied}</div>
+    </div>
+  </div>`;
+
+const sombre = ({ kicker, lignes, pied = "La Belle Intendance · Joigny" }) => `
+  <div class="plaque navy" style="gap:0;padding:90px;justify-content:space-between;align-items:stretch;text-align:left">
+    <div class="nom" style="font-size:30px;color:#ae8130">${kicker}</div>
+    <div style="display:flex;flex-direction:column;gap:34px">
+      ${lignes
+        .map(
+          ([t, d]) => `<div>
+            <div class="serif" style="font-size:50px;line-height:1.2">${t}</div>
+            <div style="font-size:25px;color:#aec6d2;margin-top:10px;line-height:1.5">${d}</div>
+          </div>`,
+        )
+        .join("")}
+    </div>
+    <div style="display:flex;align-items:center;gap:24px">
+      <img class="pastille" src="${PASTILLE}" style="width:76px">
+      <div class="nom" style="font-size:24px">${pied}</div>
+    </div>
+  </div>`;
+
+const publications = [
   {
     fichier: "post-1-presentation.png",
     html: `<div class="plaque creme" style="gap:36px;padding:100px">
@@ -111,27 +148,14 @@ const posts = [
   },
   {
     fichier: "post-2-prestations.png",
-    html: `<div class="plaque navy" style="gap:0;padding:90px;justify-content:space-between;align-items:stretch;text-align:left">
-      <div class="nom" style="font-size:30px;color:#ae8130">Ce que nous faisons</div>
-      <div style="display:flex;flex-direction:column;gap:38px">
-        ${[
-          ["Entretien régulier", "La même personne, selon un cahier des charges établi avec vous."],
-          ["Grand ménage", "Avant une réception, au printemps, après une longue absence."],
-          ["Grandes demeures", "Préparation avant votre arrivée, contrôle après votre départ."],
-        ]
-          .map(
-            ([t, d]) => `<div>
-              <div class="serif" style="font-size:52px;line-height:1.2">${t}</div>
-              <div style="font-size:26px;color:#aec6d2;margin-top:10px;line-height:1.5">${d}</div>
-            </div>`,
-          )
-          .join("")}
-      </div>
-      <div style="display:flex;align-items:center;gap:24px">
-        <img class="pastille" src="${PASTILLE}" style="width:76px">
-        <div class="nom" style="font-size:24px">La Belle Intendance · Joigny</div>
-      </div>
-    </div>`,
+    html: sombre({
+      kicker: "Ce que nous faisons",
+      lignes: [
+        ["Entretien régulier", "La même personne, selon un cahier des charges établi avec vous."],
+        ["Grand ménage", "Avant une réception, au printemps, après une longue absence."],
+        ["Grandes demeures", "Préparation avant votre arrivée, contrôle après votre départ."],
+      ],
+    }),
   },
   {
     fichier: "post-3-devis.png",
@@ -139,11 +163,129 @@ const posts = [
       <div class="nom" style="font-size:28px;color:#ae8130">Devis gratuit</div>
       <div class="serif" style="font-size:80px;line-height:1.2">Dites-nous ce dont<br>vous avez besoin.</div>
       <div style="font-size:30px;color:#4d5f74;line-height:1.6">Une visite sur place, un devis écrit,<br>et rien ne commence avant votre accord.</div>
-      <div style="margin-top:30px;background:#182a45;color:#f4eee2;padding:26px 54px;border-radius:4px;font-size:34px;letter-spacing:.04em">07 83 29 15 41</div>
+      <div style="margin-top:30px;background:#182a45;color:#faf6eb;padding:26px 54px;border-radius:4px;font-size:34px;letter-spacing:.04em">07 83 29 15 41</div>
       <div class="nom" style="font-size:22px;color:#4d5f74;margin-top:8px">la-belle-intendance.fr</div>
     </div>`,
   },
+  {
+    fichier: "post-4-combien.png",
+    html: claire({
+      kicker: "La question qu'on nous pose le plus",
+      titre: "« Combien ça coûte ? »",
+      corps: "Cela dépend de votre maison. Nous venons voir, puis nous écrivons un devis. Gratuit, sans engagement.",
+    }),
+  },
+  {
+    fichier: "post-5-residence-secondaire.png",
+    html: sombre({
+      kicker: "Résidence secondaire",
+      lignes: [
+        ["Avant votre arrivée", "Maison aérée, volets ouverts, sols faits, réfrigérateur prêt."],
+        ["Pendant votre absence", "Courrier relevé, plantes arrosées, passage de contrôle."],
+        ["Après votre départ", "Remise en ordre, et un compte rendu si vous êtes loin."],
+      ],
+    }),
+  },
+  {
+    fichier: "post-6-compte-rendu.png",
+    html: claire({
+      kicker: "Pour les propriétaires éloignés",
+      titre: "Savoir, sans avoir<br>à demander.",
+      corps: "Après chaque passage, un compte rendu : les pièces faites, ce qui a été remarqué, des photos si besoin.",
+    }),
+  },
+  {
+    fichier: "post-7-cesu.png",
+    html: sombre({
+      kicker: "Deux façons de nous régler",
+      lignes: [
+        ["Facture de l'entreprise", "Au forfait mensuel ou par passage, selon le contrat."],
+        ["Emploi direct au CESU", "Vous devenez employeur : crédit d'impôt de 50 % sur les heures déclarées."],
+      ],
+      pied: "Nous expliquons les deux, vous choisissez",
+    }),
+  },
+  {
+    fichier: "post-8-printemps.png",
+    html: claire({
+      kicker: "Grand ménage",
+      titre: "Une fois par an,<br>de fond en comble.",
+      corps: "Vitres, plinthes, placards, derrière les meubles. Ce qu'un passage hebdomadaire ne fait jamais.",
+    }),
+  },
+  {
+    fichier: "post-9-professionnels.png",
+    html: claire({
+      kicker: "Bureaux, cabinets, commerces",
+      titre: "Avant l'ouverture,<br>après la fermeture.",
+      corps: "Un contrat d'entretien aux horaires qui vous conviennent, avec un interlocuteur unique.",
+    }),
+  },
+  {
+    fichier: "post-10-citation.png",
+    html: `<div class="plaque navy" style="gap:40px;padding:120px">
+      <img class="pastille" src="${PASTILLE}" style="width:110px">
+      <div class="serif" style="font-size:62px;line-height:1.35">Une maison tenue,<br>ça ne se voit pas.<br>Ça se remarque<br>quand ça ne l'est plus.</div>
+      <div class="filet"></div>
+      <div class="nom" style="font-size:22px;color:#aec6d2">La Belle Intendance · Joigny</div>
+    </div>`,
+  },
 ];
-for (const p of posts) await rendre(page, { largeur: 1080, hauteur: 1080, ...p });
+for (const p of publications) await rendre(page, { largeur: 1080, hauteur: 1080, ...p });
+
+/* ---------- Visuels publicitaires ---------- */
+
+// Une photo réelle vaut mieux qu'une carte typographique dans un fil payant :
+// on recadre, et on pose une bande sobre avec la marque et une seule ligne.
+const sharpMod = (await import(process.env.SHARP_MODULE ?? "sharp")).default;
+
+async function creativePhoto({ photo, largeur, hauteur, ligne, fichier }) {
+  const fond = await sharpMod(photo).resize(largeur, hauteur, { fit: "cover", position: "attention" }).toBuffer();
+  const bande = Math.round(hauteur * 0.17);
+  const html = `<div style="position:relative;width:100%;height:100%;overflow:hidden">
+      <img src="data:image/png;base64,${fond.toString("base64")}" style="width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;left:0;right:0;bottom:0;height:${bande}px;background:#182a45;display:flex;align-items:center;gap:${Math.round(bande * 0.22)}px;padding:0 ${Math.round(largeur * 0.07)}px">
+        <img class="pastille" src="${PASTILLE}" style="width:${Math.round(bande * 0.58)}px">
+        <div>
+          <div class="nom" style="font-size:${Math.round(bande * 0.2)}px;color:#faf6eb">La Belle Intendance</div>
+          <div style="font-size:${Math.round(bande * 0.17)}px;color:#aec6d2;margin-top:6px">${ligne}</div>
+        </div>
+      </div>
+    </div>`;
+  await rendre(page, { largeur, hauteur, html, fichier });
+}
+
+await creativePhoto({
+  photo: "public/images/salon-prepare-fleurs.webp",
+  largeur: 1080,
+  hauteur: 1080,
+  ligne: "Ménage et intendance de maison — Joigny (89)",
+  fichier: "pub-1-carre.png",
+});
+await creativePhoto({
+  photo: "public/images/salon-prepare-fleurs.webp",
+  largeur: 1080,
+  hauteur: 1350,
+  ligne: "Ménage et intendance de maison — Joigny (89)",
+  fichier: "pub-1-vertical.png",
+});
+await creativePhoto({
+  photo: "public/images/salon-poele-allume.webp",
+  largeur: 1080,
+  hauteur: 1920,
+  ligne: "Devis gratuit · 07 83 29 15 41",
+  fichier: "pub-2-story.png",
+});
+await rendre(page, {
+  largeur: 1080,
+  hauteur: 1080,
+  fichier: "pub-3-devis.png",
+  html: claire({
+    kicker: "Joigny et ses alentours",
+    titre: "Votre maison,<br>tenue par la même<br>personne.",
+    corps: "Entretien régulier, grands ménages, résidences secondaires. Visite sur place et devis écrit, gratuits.",
+    pied: "07 83 29 15 41",
+  }),
+});
 
 await navigateur.close();

@@ -1,5 +1,8 @@
 # La page Facebook — tout ce qu'il faut
 
+> Trois documents : ce mémo pour créer la Page, `publications.md` pour six
+> semaines de publications gratuites, `publicite.md` pour les campagnes payantes.
+
 Visuels fabriqués par `node scripts/facebook.mjs`, avec le logo et les polices
 du site. Rien ici n'est inventé : les champs que La Belle Intendance n'a pas
 encore arrêtés sont marqués **à renseigner**.
