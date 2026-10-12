@@ -54,6 +54,52 @@ https://la-belle-intendance.fr/devis?utm_source=facebook&utm_medium=social&utm_c
 Ces paramètres ne servent pas à décorer : le bureau lit l'origine de chaque
 demande, et celle-ci arrivera étiquetée « Réseaux sociaux ».
 
+## La toute première publication — « se présenter »
+
+À publier une fois la photo de profil et la couverture en place, et à épingler
+en haut de la Page. Illustration : `salon-prepare-fleurs.webp` (la vraie photo,
+plus chaleureuse) ou, à défaut, `post-1-presentation.png`.
+
+Tout ce qui est écrit ici vient du site : rien sur un parcours, une ancienneté
+ou un nombre de clients, qui ne serait pas vérifiable. Si Coralie veut ajouter
+une phrase sur son histoire, c'est à elle de l'écrire.
+
+> Bonjour, je suis Coralie.
+>
+> J'ai créé La Belle Intendance à Joigny pour faire un métier que j'aime, et le
+> faire correctement : m'occuper des maisons.
+>
+> L'intendance, ce n'est pas seulement le ménage. C'est qu'une maison soit
+> propre, bien sûr, mais aussi prête, surveillée, en bon état. Les volets
+> ouverts et la maison aérée avant votre arrivée. Le courrier relevé et les
+> plantes arrosées pendant votre absence. Ce qu'on ne remarque que lorsque ce
+> n'est pas fait.
+>
+> Ce que je propose :
+>
+> • l'entretien régulier d'une maison ou d'un appartement, chaque semaine ou
+> tous les quinze jours
+> • les grands ménages — avant une réception, au printemps, après des travaux
+> ou une longue absence
+> • l'intendance des grandes demeures et des résidences secondaires, avec un
+> compte rendu de passage si vous êtes loin
+> • les bureaux, cabinets et commerces
+>
+> Une chose à laquelle je tiens : la même personne à chaque passage, et c'est
+> moi qui interviens. À force, on finit par connaître une maison — ses
+> habitudes, ses matériaux, ce qu'elle supporte et ce qu'elle demande.
+>
+> Nous commençons toujours par une visite et un devis écrit. Rien ne démarre
+> avant votre accord.
+>
+> Joigny (89) et ses alentours.
+> 07 83 29 15 41
+> https://la-belle-intendance.fr/devis?utm_source=facebook&utm_medium=social&utm_campaign=presentation
+
+Sans émoji, volontairement : la marque est sobre, et une publication de
+présentation qui en est couverte fait moins sérieux qu'elle ne le voudrait. Si
+Coralie préfère en mettre, un seul en tête de publication suffit.
+
 ## Les trois publications de lancement
 
 ### 1. Présentation — avec `post-1-presentation.png`
