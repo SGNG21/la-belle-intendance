@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CONTACT, LEGAL, SITE } from "@/config/site";
-import { Monogram } from "./Monogram";
+import { Marque } from "./Marque";
 import { Phone } from "./Icons";
 
 /** En-tête d'une page de destination : la marque, et un seul geste possible — appeler. */
@@ -9,7 +9,7 @@ export function LandingHeader() {
     <header className="lp-head">
       <div className="lp-head-in">
         <span className="lp-brand">
-          <Monogram className="lp-mono" title={SITE.name} />
+          <Marque className="marque--lp" title={SITE.name} />
           <span>{SITE.name}</span>
         </span>
         {CONTACT.phone ? (
