@@ -19,7 +19,7 @@ export interface ServicePageProps {
   modes?: "domicile" | "pro" | "none";
   faqs?: FaqItem[];
   /** Image d'ambiance facultative, affichée en tête de la colonne de texte. */
-  image?: { src: string; alt: string; caption?: string };
+  image?: { src: string; alt: string; caption?: string; width?: number; height?: number };
   extra?: React.ReactNode;
   ctaLabel?: string;
   ctaHref?: string;
@@ -43,7 +43,7 @@ export function ServicePage(p: ServicePageProps) {
       <section className="section">
         <div className="wrap split split--wide-left">
           <div className="prose">
-            {p.image ? <Figure src={p.image.src} alt={p.image.alt} caption={p.image.caption} /> : null}
+            {p.image ? <Figure {...p.image} /> : null}
             {p.intro.map((t) => (
               <p key={t}>{t}</p>
             ))}

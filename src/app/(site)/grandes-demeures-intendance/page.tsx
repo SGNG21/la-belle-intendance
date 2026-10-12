@@ -101,6 +101,14 @@ export default function Page() {
             caption="Le contenu du compte rendu est fixé avec vous."
             sizes="(max-width: 900px) 100vw, 34rem"
           />
+          <Figure
+            src="/images/salon-prepare-fleurs.webp"
+            alt="Table basse d'un salon : revues disposées en éventail et bouquet d'iris et d'aulx dans un vase de verre"
+            caption="Fleurs fraîches et revues en évidence : une maison prête à recevoir."
+            sizes="(max-width: 900px) 100vw, 34rem"
+            width={1170}
+            height={1538}
+          />
         </div>
       </section>
 

@@ -42,9 +42,13 @@ export default function Page() {
 
             <h2>Crédits visuels</h2>
             <p>
-              Les photographies d'ambiance du site sont des images de synthèse générées par intelligence artificielle. Elles illustrent le type de
-              prestation proposé&nbsp;: elles ne représentent ni un logement de client, ni une intervention réalisée. Aucune comparaison avant/après n'est
-              présentée sur ce site.
+              Le site mêle deux sortes d'images. Les vues d'ambiance sont des images de synthèse générées par intelligence artificielle&nbsp;: elles
+              illustrent le type de prestation proposé et ne représentent aucun lieu réel. S'y ajoutent des photographies prises dans des intérieurs
+              réels, publiées avec l'accord des personnes concernées.
+            </p>
+            <p>
+              Dans les deux cas, aucune image ne constitue une preuve&nbsp;: aucune ne documente une intervention précise, et aucune comparaison
+              avant/après n'est présentée sur ce site.
             </p>
 
             <h2>Propriété intellectuelle</h2>
