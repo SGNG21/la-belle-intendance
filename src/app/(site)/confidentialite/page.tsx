@@ -46,11 +46,12 @@ export default function Page() {
             </p>
             <ul>
               <li>l&apos;hébergement du site, assuré par {LEGAL.host}&nbsp;;</li>
+              <li>la diffusion des pages par un réseau de serveurs, qui accélère leur affichage&nbsp;;</li>
               <li>la base de données et le stockage des documents, hébergés dans l&apos;Union européenne ;</li>
               <li>l&apos;envoi des e-mails (accusé de réception, devis, compte rendu), depuis des serveurs situés dans l&apos;Union européenne.</li>
             </ul>
             <p>
-              L&apos;hébergeur du site est établi aux États-Unis : des transferts hors de l&apos;Union européenne peuvent donc avoir lieu, encadrés par les garanties contractuelles prévues par ce prestataire. Vos données ne sont ni vendues, ni cédées à des tiers à des fins commerciales.
+              Vos données ne sont ni vendues, ni cédées à des tiers à des fins commerciales.
             </p>
 
             <h2>Mesure d'audience et cookies</h2>
