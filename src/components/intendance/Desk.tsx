@@ -159,7 +159,9 @@ function DemandeCard({ d, reload }: { d: Demande; reload: () => Promise<void> })
   ].filter(Boolean);
 
   return (
-    <li className={`desk-card desk-card--${d.statut}`}>
+    // Le liseré suit le statut affiché, pas celui du chargement : sans cela,
+    // changer le suivi ne change rien à l'œil tant qu'on n'a pas rechargé.
+    <li className={`desk-card desk-card--${statut}`}>
       <div className="desk-card-top">
         <div>
           <h3>{d.nom}</h3>

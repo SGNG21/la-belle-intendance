@@ -1718,6 +1718,7 @@ p {
   gap: 0.6rem;
 }
 .desk-card--nouveau { border-left-color: var(--terracotta); }
+.desk-card--visite_prevue { border-left-color: var(--slate); }
 .desk-card--devis_envoye { border-left-color: var(--gold); }
 .desk-card--gagne { border-left-color: var(--sage-deep); }
 .desk-card--perdu { border-left-color: var(--line); opacity: 0.72; }

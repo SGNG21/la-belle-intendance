@@ -72,12 +72,13 @@ export interface Demande {
   suivi: string | null;
 }
 
-export const STATUTS = ["nouveau", "rappele", "devis_envoye", "gagne", "perdu"] as const;
+export const STATUTS = ["nouveau", "rappele", "visite_prevue", "devis_envoye", "gagne", "perdu"] as const;
 export type Statut = (typeof STATUTS)[number];
 
 export const STATUT_LABEL: Record<Statut, string> = {
   nouveau: "Nouveau",
   rappele: "Rappelé",
+  visite_prevue: "RDV visite fixé",
   devis_envoye: "Devis envoyé",
   gagne: "Client",
   perdu: "Sans suite",
