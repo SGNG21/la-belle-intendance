@@ -25,6 +25,20 @@ export function expediteur(): string | null {
 /** L'envoi est-il configuré de bout en bout ? */
 export const envoiPret = () => Boolean(process.env.RESEND_API_KEY && expediteur());
 
+/**
+ * Copie cachée de tout ce qui part.
+ *
+ * Une boîte de secours, chez un autre fournisseur, pour que rien ne dépende
+ * d'une seule messagerie : si la redirection du domaine tombe, les devis et
+ * les comptes rendus restent lisibles quelque part. En copie cachée, donc
+ * invisible du client — son devis ne doit pas afficher une adresse interne.
+ */
+const copieCachee = (): string[] =>
+  (process.env.MAIL_COPIE ?? "")
+    .split(",")
+    .map((a) => a.trim())
+    .filter(Boolean);
+
 export interface PieceJointe {
   filename: string;
   /** Contenu en base64, sans le préfixe « data: ». */
@@ -65,6 +79,7 @@ export async function envoyer(c: Courriel, ms = 15000): Promise<void> {
       body: JSON.stringify({
         from,
         to: destinataires,
+        ...(copieCachee().length ? { bcc: copieCachee() } : {}),
         // Inutile de répéter l'expéditeur : la réponse y va déjà.
         ...(reply && !from.includes(reply) ? { reply_to: reply } : {}),
         subject: c.subject,
