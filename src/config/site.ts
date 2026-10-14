@@ -144,6 +144,8 @@ export const COMMUNES = [
 export const ANALYTICS = {
   ga4: (process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "").trim() || "G-CKJLM6H9CJ",
   clarity: (process.env.NEXT_PUBLIC_CLARITY_ID ?? "").trim() || null,
+  /** Pixel Meta, pour mesurer les campagnes Facebook et Instagram. */
+  metaPixel: (process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "").trim() || "1580642763306231",
 };
 
 export const NAV = [

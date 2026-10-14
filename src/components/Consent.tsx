@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ANALYTICS } from "@/config/site";
 
-const { ga4: GA_ID, clarity: CLARITY_ID } = ANALYTICS;
+const { ga4: GA_ID, clarity: CLARITY_ID, metaPixel: META_ID } = ANALYTICS;
 const KEY = "lbi-consent";
-const hasTracking = Boolean(GA_ID || CLARITY_ID);
+const hasTracking = Boolean(GA_ID || CLARITY_ID || META_ID);
 
 type Choice = "granted" | "denied" | null;
 
@@ -67,6 +67,23 @@ export function Consent() {
             gtag('config', '${GA_ID}', { anonymize_ip: true });
           `}</Script>
         </>
+      ) : null}
+      {choice === "granted" && META_ID ? (
+        /*
+         * Pixel Meta. Le <noscript> fourni par Facebook est volontairement
+         * omis : il déclenche une requête dès l'affichage de la page, donc
+         * avant toute réponse à la bannière, ce qui viderait le consentement
+         * de son sens.
+         */
+        <Script id="meta-pixel" strategy="afterInteractive">{`
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+          (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '${META_ID}');
+          fbq('track', 'PageView');
+        `}</Script>
       ) : null}
       {choice === "granted" && CLARITY_ID ? (
         <Script id="clarity-init" strategy="afterInteractive">{`
