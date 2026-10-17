@@ -44,6 +44,15 @@ export function localBusiness() {
   });
 }
 
+/**
+ * Date de dernière mise à jour, figée à la compilation.
+ *
+ * Les robots des assistants s'en servent pour juger si une information est
+ * encore d'actualité. Elle est vraie par construction : elle change à chaque
+ * mise en ligne, et jamais sans.
+ */
+const MAJ = new Date().toISOString().slice(0, 10);
+
 export function website() {
   return {
     "@context": "https://schema.org",
@@ -52,6 +61,7 @@ export function website() {
     url: SITE.url,
     name: SITE.name,
     inLanguage: SITE.locale,
+    dateModified: MAJ,
     publisher: { "@id": `${SITE.url}/#entreprise` },
   };
 }

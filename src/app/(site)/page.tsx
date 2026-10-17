@@ -79,7 +79,7 @@ export default function HomePage() {
       <section className="section">
         <div className="wrap">
           <div className="section-head">
-            <h2>Ce que nous prenons en charge</h2>
+            <h2>Ménage et intendance : ce que nous prenons en charge</h2>
             <p className="muted">Cinq prestations, un même soin du détail. Chacune a sa page, avec ce qui est inclus et la façon de la commander.</p>
           </div>
           <ul className="rows">

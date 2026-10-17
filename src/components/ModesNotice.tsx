@@ -26,7 +26,16 @@ export function ModesNotice({ scope = "domicile" }: { scope?: "domicile" | "pro"
       </p>
       {MODES.cesu ? (
         <p>
-          <strong>Emploi direct déclaré au CESU.</strong> Vous m&apos;employez directement et vous déclarez les heures sur cesu.urssaf.fr. C&apos;est l&apos;emploi d&apos;un salarié à domicile qui ouvre droit au crédit d&apos;impôt de 50 % sur le salaire et les cotisations (article 199 sexdecies du CGI). Avec CESU+, l&apos;avance immédiate vous permet de ne régler que la moitié à chaque déclaration.
+          <strong>Emploi direct déclaré au CESU.</strong> Vous m&apos;employez directement et vous déclarez les heures sur{" "}
+          <a href="https://www.cesu.urssaf.fr" target="_blank" rel="noopener noreferrer">
+            cesu.urssaf.fr
+          </a>
+          . C&apos;est l&apos;emploi d&apos;un salarié à domicile qui ouvre droit au{" "}
+          <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F12" target="_blank" rel="noopener noreferrer">
+            crédit d&apos;impôt de 50 %
+          </a>{" "}
+          sur le salaire et les cotisations (article 199 sexdecies du CGI). Avec CESU+, l&apos;avance immédiate vous permet de ne régler
+          que la moitié à chaque déclaration.
         </p>
       ) : null}
       <p className="muted">Le mode est choisi avant la première intervention. Les deux ne se cumulent pas sur une même prestation.</p>
