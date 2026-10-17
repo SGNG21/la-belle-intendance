@@ -36,6 +36,7 @@ if (isNull("zoneBLimitKm", "PRICING")) warnings.push("Bornes de distance des zon
 if (/declarationNumber|sapActive|SapNotice/.test(config)) blockers.push("Reliquat de l'ancien dispositif « services à la personne » dans src/config/site.ts : l'entreprise ne se déclare pas SAP, le crédit d'impôt ne passe que par l'emploi direct au CESU.");
 if (isNull("cesuNetHourly", "MODES")) warnings.push("MODES.cesuNetHourly non renseigné : aucun taux horaire net n'est annoncé pour l'emploi direct au CESU (voulu tant qu'il n'est pas arrêté).");
 if (isNull("googleBusinessUrl", "CONTACT")) warnings.push("Fiche Google Business non liée (CONTACT.googleBusinessUrl) : à ajouter au schema sameAs une fois créée.");
+if (isNull("streetAddress", "CONTACT")) blockers.push("Adresse du siège non renseignée (CONTACT.streetAddress) : les mentions légales et le pied des devis n'en portent aucune, alors qu'un devis d'entreprise individuelle doit indiquer l'adresse de l'entreprise.");
 
 // Repères visibles ⟦…⟧ laissés dans le code source (hors config)
 const walk = (dir) =>

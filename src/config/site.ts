@@ -40,8 +40,18 @@ export const CONTACT = {
   phone: "07 83 29 15 41" as string | null, // format affiché
   phoneE164: "+33783291541" as string | null, // format international
   email: "contact@la-belle-intendance.fr" as string | null,
-  /** Adresse postale : laisser null si l'activité est exercée à domicile et masquée sur Google. */
+  /**
+   * Adresse du siège : numéro et rue. Elle figure dans les mentions légales,
+   * au pied des devis et dans les données structurées — un devis d'entreprise
+   * individuelle doit porter l'adresse de l'entreprise.
+   *
+   * Sur la fiche Google, c'est l'inverse : l'adresse est saisie pour la
+   * validation puis masquée, parce que les clients ne s'y rendent pas.
+   */
   streetAddress: null as string | null,
+  /** Commune et code postal du siège, si le siège n'est pas à `SITE.city`. */
+  addressLocality: null as string | null,
+  addressPostalCode: null as string | null,
   hours: null as string | null, // ex. "Du lundi au vendredi, 8 h – 18 h"
   /** Délai de rappel annoncé dans l'accusé de réception. `null` = aucune promesse de délai. */
   replyDelay: null as string | null, // ex. "sous 48 heures ouvrées"
@@ -217,6 +227,26 @@ export const SERVICES = [
     serviceType: "Nettoyage de locaux professionnels",
   },
 ] as const;
+
+/**
+ * Adresse du siège, telle qu'elle s'affiche. La commune et le code postal sont
+ * ceux du site, sauf si le siège est ailleurs : l'exploitante peut habiter une
+ * commune voisine de celle que le site met en avant.
+ *
+ * Tant que la rue n'est pas renseignée, `street` reste null et chaque support
+ * se contente de la commune plutôt que d'afficher une adresse incomplète.
+ */
+export const siege = () => ({
+  street: CONTACT.streetAddress,
+  postalCode: CONTACT.addressPostalCode ?? SITE.postalCode,
+  locality: CONTACT.addressLocality ?? SITE.city,
+});
+
+/** La même adresse sur une ligne, pour un pied de page ou un pied de devis. */
+export const siegeUneLigne = (): string => {
+  const { street, postalCode, locality } = siege();
+  return [street, `${postalCode} ${locality}`].filter(Boolean).join(", ");
+};
 
 /** Repère visible pour une valeur manquante. Détecté par scripts/launch-check.mjs. */
 export const fill = (value: string | null | undefined, label: string): string =>

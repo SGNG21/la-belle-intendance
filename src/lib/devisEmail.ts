@@ -1,4 +1,4 @@
-import { CONTACT, LEGAL, SITE } from "@/config/site";
+import { CONTACT, LEGAL, SITE, siege, siegeUneLigne } from "@/config/site";
 import { CREAM, GOLD, INK, NAVY, RULE, SANS, SLATE, button, esc, nl2br, shell, telHref } from "./emailKit";
 import { dateLongue, euros, totalLigne, type Devis } from "./devisModel";
 
@@ -100,6 +100,7 @@ ${CONTACT.email ? button(`mailto:${CONTACT.email}`, "Répondre par e-mail", CREA
     [LEGAL.publisherName, SITE.name].filter(Boolean).map((x) => esc(x!)).join(" — "),
     [LEGAL.legalForm, LEGAL.siret ? `SIRET ${LEGAL.siret}` : null].filter(Boolean).map((x) => esc(x!)).join(", "),
     LEGAL.vatMention ? esc(LEGAL.vatMention) : "",
+    siege().street ? esc(siegeUneLigne()) : "",
     [CONTACT.phone, CONTACT.email].filter(Boolean).map((x) => esc(x!)).join(" · "),
   ]
     .filter(Boolean)

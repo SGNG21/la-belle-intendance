@@ -1,4 +1,4 @@
-import { COMMUNES, CONTACT, FOUNDER, LEGAL, PRICING, SERVICES, SITE } from "@/config/site";
+import { COMMUNES, CONTACT, FOUNDER, LEGAL, PRICING, SERVICES, SITE, siege } from "@/config/site";
 
 /** Construit les données structurées. Une valeur inconnue est omise, jamais remplacée par un faux. */
 const drop = <T extends Record<string, unknown>>(o: T): T =>
@@ -29,9 +29,9 @@ export function localBusiness() {
     ],
     address: drop({
       "@type": "PostalAddress",
-      streetAddress: CONTACT.streetAddress,
-      postalCode: SITE.postalCode,
-      addressLocality: SITE.city,
+      streetAddress: siege().street,
+      postalCode: siege().postalCode,
+      addressLocality: siege().locality,
       addressRegion: SITE.region,
       addressCountry: SITE.country,
     }),

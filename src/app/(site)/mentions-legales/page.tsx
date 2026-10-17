@@ -1,4 +1,4 @@
-import { CONTACT, LEGAL, SITE } from "@/config/site";
+import { CONTACT, LEGAL, SITE, siege } from "@/config/site";
 import { Fill } from "@/components/Fill";
 import { PageHero } from "@/components/PageHero";
 import { pageMeta } from "@/lib/meta";
@@ -21,7 +21,13 @@ export default function Page() {
               <br />
               {LEGAL.vatMention ? LEGAL.vatMention : <Fill value={LEGAL.vatMention} label="mention TVA" />}
               <br />
-              {SITE.postalCode} {SITE.city}, {SITE.department}, France
+              {siege().street ? (
+                <>
+                  {siege().street}
+                  <br />
+                </>
+              ) : null}
+              {siege().postalCode} {siege().locality}, {SITE.department}, France
               <br />
               Contact : <Fill value={CONTACT.email} label="e-mail" /> · <Fill value={CONTACT.phone} label="téléphone" />
             </p>
