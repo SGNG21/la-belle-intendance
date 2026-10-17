@@ -12,7 +12,8 @@ import { serviceItemList } from "@/lib/schema";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata = pageMeta({
-  title: "Ménage et intendance de maison à Joigny et ses alentours",
+  // 61 caractères : au-delà, Google tronque et réécrit le titre lui-même.
+  title: "Ménage et intendance de maison à Joigny",
   description: SITE.description,
   path: "/",
 });
