@@ -47,7 +47,13 @@ export const CONTACT = {
   replyDelay: null as string | null, // ex. "sous 48 heures ouvrées"
   facebook: null as string | null,
   instagram: null as string | null,
-  googleBusinessUrl: null as string | null,
+  /**
+   * Fiche Google Business, sous sa forme `?cid=` : c'est l'identifiant interne
+   * du lieu, stable même si le nom, la catégorie ou la position changent. Une
+   * URL `/maps/place/...` copiée depuis le navigateur contient au contraire un
+   * jeton de session et le compte connecté, et finit par ne plus mener nulle part.
+   */
+  googleBusinessUrl: "https://www.google.com/maps?cid=1966875365666046951" as string | null,
 };
 
 /** Identité juridique, pour les mentions légales. */

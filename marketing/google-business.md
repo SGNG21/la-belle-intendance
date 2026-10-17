@@ -1,11 +1,15 @@
 # Fiche Google Business — La Belle Intendance
 
-Tout ce qu'il faut saisir, recopié depuis `src/config/site.ts`. Rien n'est inventé :
-les champs laissés en ⟦crochets⟧ sont à décider par Coralie.
+**La fiche existe** : <https://www.google.com/maps?cid=1966875365666046951>
+(identifiant de lieu `/g/11zzfp0n4j`, position 47.9889126 / 3.4358869, catégorie
+principale *house_cleaning_service*). Elle est reliée au site depuis
+`CONTACT.googleBusinessUrl`.
 
-La fiche se gère sur <https://business.google.com>. Une fois l'adresse validée,
-recopier le lien public de la fiche dans `CONTACT.googleBusinessUrl` (site.ts) :
-le site l'utilisera pour renvoyer vers les avis.
+Ce qui reste à faire figure en **⟦crochets⟧** ci-dessous. Le reste du document
+sert de liste de contrôle : les champs d'une fiche se remplissent rarement tous
+du premier coup, et ce sont les oubliés qui coûtent du classement.
+
+La fiche se gère sur <https://business.google.com>.
 
 ---
 
@@ -24,14 +28,14 @@ renomme la fiche d'office quand il le détecte.
 
 ## 2. Catégories
 
-- **Catégorie principale** : *Service de nettoyage de maisons*
-- Catégories secondaires : *Service de nettoyage*, *Service de nettoyage de
-  bureaux*, *Service de conciergerie*
+- **Catégorie principale** : *Service de nettoyage de maisons* — **déjà en place**,
+  l'URL de la fiche porte `house_cleaning_service`. Ne plus y toucher : c'est
+  elle qui décide des recherches où la fiche sort.
+- Catégories secondaires à ajouter : ⟦*Service de nettoyage*⟧, ⟦*Service de
+  nettoyage de bureaux*⟧, ⟦*Service de conciergerie*⟧
 
 Les intitulés exacts dépendent du menu déroulant de Google, qui ne propose
-qu'une liste fermée : prendre le plus proche de cette liste. La catégorie
-principale est celle qui décide des recherches où la fiche sort — ne pas la
-changer ensuite sans raison.
+qu'une liste fermée : prendre le plus proche.
 
 ## 3. Zone desservie
 
@@ -95,9 +99,11 @@ projet : à lancer en premier.
 
 ## 8. Après validation
 
-- Recopier le lien de la fiche dans `CONTACT.googleBusinessUrl`.
-- Récupérer le lien court de demande d'avis (bouton « Demander des avis » dans
+- ~~Recopier le lien de la fiche dans `CONTACT.googleBusinessUrl`.~~ Fait.
+- ⟦Récupérer le lien court de demande d'avis⟧ (bouton « Demander des avis » dans
   l'interface, de la forme `g.page/r/…`) : c'est celui à envoyer aux clients.
+  Il ne se devine pas depuis l'extérieur, il faut le copier depuis le tableau
+  de bord.
 - Recopier les avis reçus dans le tableau `AVIS` de `src/config/site.ts` pour
   qu'ils s'affichent aussi sur le site. Tant qu'il est vide, la section reste
   masquée.
