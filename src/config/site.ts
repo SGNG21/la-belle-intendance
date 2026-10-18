@@ -31,7 +31,8 @@ export const SITE = {
   department: "Yonne",
   region: "Bourgogne-Franche-Comté",
   country: "FR",
-  geo: { lat: 47.9833, lng: 3.4 },
+  /** Position du siège, telle que la porte la fiche Google de l'entreprise. */
+  geo: { lat: 47.9889126, lng: 3.4358869 },
   indexable: process.env.SITE_INDEXABLE === "true",
 } as const;
 
@@ -48,10 +49,10 @@ export const CONTACT = {
    * Sur la fiche Google, c'est l'inverse : l'adresse est saisie pour la
    * validation puis masquée, parce que les clients ne s'y rendent pas.
    */
-  streetAddress: null as string | null,
+  streetAddress: "6 rue de la Brosse" as string | null,
   /** Commune et code postal du siège, si le siège n'est pas à `SITE.city`. */
-  addressLocality: null as string | null,
-  addressPostalCode: null as string | null,
+  addressLocality: "Looze" as string | null,
+  addressPostalCode: "89300" as string | null,
   hours: null as string | null, // ex. "Du lundi au vendredi, 8 h – 18 h"
   /** Délai de rappel annoncé dans l'accusé de réception. `null` = aucune promesse de délai. */
   replyDelay: null as string | null, // ex. "sous 48 heures ouvrées"
