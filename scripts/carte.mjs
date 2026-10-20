@@ -115,8 +115,10 @@ function verso(c) {
       stroke-linecap="round" stroke-linejoin="round"
       style="width:calc(2.5 * var(--mm));height:calc(2.5 * var(--mm));flex:none">${d}</svg>`;
 
-  const ligne = (icone, texte) =>
-    `<li style="display:flex;align-items:center;gap:calc(1.5 * var(--mm))">${icone}<span>${texte}</span></li>`;
+  const ligne = (icone, texte, gras = false) =>
+    `<li style="display:flex;align-items:center;gap:calc(1.5 * var(--mm))">${icone}<span${
+      gras ? ' style="font-weight:600"' : ""
+    }>${texte}</span></li>`;
 
   return page(`<div class="carte" style="background:var(--papier)">
   <img src="${b64("feuillage-a.png", "image/png")}" style="position:absolute;top:calc(-2 * var(--mm));
@@ -134,6 +136,8 @@ function verso(c) {
       <div style="width:calc(9 * var(--mm));height:calc(0.18 * var(--mm));background:var(--or);
         margin:calc(1.5 * var(--mm)) 0;opacity:.75"></div>
       <div class="bas" style="font-size:calc(1.35 * var(--mm));line-height:1.5">Entretien de la maison<br>&amp; conciergerie</div>
+      <div class="bas" style="font-size:calc(1.3 * var(--mm));line-height:1.55;color:var(--or);
+        margin-top:calc(2.4 * var(--mm))">Maisons soignées,<br>vies plus douces</div>
     </div>
 
     <div style="width:calc(0.14 * var(--mm));background:var(--or);opacity:.5"></div>
@@ -141,20 +145,21 @@ function verso(c) {
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;
       padding-left:calc(3 * var(--mm))">
       <div style="font-family:'Cormorant',serif;font-weight:600;color:var(--navy);
-        font-size:calc(4.6 * var(--mm));line-height:1">Coralie Renault</div>
-      <div class="bas" style="font-size:calc(1.45 * var(--mm));margin-top:calc(1.2 * var(--mm));
-        line-height:1.6;color:var(--or)">Intendante</div>
+        font-size:calc(4.4 * var(--mm));line-height:1">Coralie <span
+        style="text-transform:uppercase;letter-spacing:calc(0.1 * var(--mm))">Renault</span></div>
+      <div class="bas" style="font-size:calc(1.45 * var(--mm));margin-top:calc(1.3 * var(--mm));
+        line-height:1.7;color:var(--or)">Intendante<br><span style="color:var(--navy-clair);opacity:.8">La Belle Intendance</span></div>
 
-      <ul class="chiffres" style="list-style:none;margin-top:calc(2.6 * var(--mm));display:flex;flex-direction:column;
-        gap:calc(1.5 * var(--mm));font-family:'Cormorant',serif;font-size:calc(2.3 * var(--mm));
+      <ul class="chiffres" style="list-style:none;margin-top:calc(2.2 * var(--mm));display:flex;flex-direction:column;
+        gap:calc(1.35 * var(--mm));font-family:'Cormorant',serif;font-size:calc(2.2 * var(--mm));
         color:var(--navy);line-height:1.25">
-        ${ligne(picto('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/>'), c.telephone)}
+        ${ligne(picto('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/>'), c.telephone, true)}
         ${ligne(picto('<rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'), c.email)}
         ${ligne(picto('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>'), c.domaine)}
         ${ligne(picto('<path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/>'), "Joigny et ses environs — Yonne (89)")}
       </ul>
 
-      <div class="chiffres" style="margin-top:calc(2.4 * var(--mm));align-self:flex-start;
+      <div class="chiffres" style="margin-top:calc(2 * var(--mm));align-self:flex-start;
         border:calc(0.14 * var(--mm)) solid rgba(174,129,48,.55);
         padding:calc(0.9 * var(--mm)) calc(2 * var(--mm));
         font-family:'Cormorant',serif;font-size:calc(1.7 * var(--mm));color:var(--navy-clair);
