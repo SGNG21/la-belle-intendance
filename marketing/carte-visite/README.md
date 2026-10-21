@@ -54,14 +54,55 @@ cheveu plus terne qu'à l'écran. C'est normal et sans gravité. Si l'imprimeur
 réclame explicitement du CMJN, il faut repasser par un logiciel de PAO — le
 navigateur qui produit ces images ne sait pas écrire de CMJN.
 
+## Modifier la carte dans Illustrator
+
+`carte-recto.svg` et `carte-verso.svg` s'ouvrent directement dans Illustrator
+(Fichier → Ouvrir, pas Importer). Le texte y reste du texte, les filets restent
+des tracés, et chaque bloc arrive dans un groupe nommé — `Fond`, `Cadre`,
+`Marque`, `Coordonnees`. Le document fait 91 × 61 mm : la règle d'Illustrator
+correspond au gabarit de l'imprimeur, un repère à 3 mm du bord marque la coupe.
+
+**Installer les trois polices d'abord**, sinon Illustrator en substituera
+d'autres et toute la mise en page bougera. Elles sont dans `polices/` :
+double-cliquer chaque fichier puis « Installer ».
+
+| Fichier | Famille dans Illustrator |
+| --- | --- |
+| `Marcellus.ttf` | Marcellus |
+| `CormorantGaramondLightRegular.ttf` | Cormorant Garamond Light — Regular |
+| `CormorantGaramondLightSemiBold.ttf` | Cormorant Garamond Light — SemiBold |
+
+Un calque `Reperes-ne-pas-imprimer` est présent mais masqué : il contient le
+trait de coupe en magenta et la zone tranquille en bleu. L'afficher pour
+vérifier qu'aucun texte ne déborde, le remasquer avant d'exporter.
+
+Deux pièges propres à Illustrator :
+
+- **Les chiffres.** Cormorant dessine par défaut des chiffres elzéviriens, où
+  le 1 se confond avec un I. Le SVG demande les chiffres capitales, mais
+  Illustrator ignore cette consigne à l'ouverture : sélectionner le numéro de
+  téléphone et le SIRET, puis fenêtre Caractère → OpenType → Chiffres →
+  **Alignés tabulaires**.
+- **L'export.** Fichier → Enregistrer sous → Adobe PDF, profil *PDF/X-1a* ou
+  *Qualité supérieure*, repères de rognage décochés, **fond perdu à 0** (il est
+  déjà dans le document, l'ajouter une seconde fois agrandirait la carte).
+
 ## Les fichiers
 
 ```
-carte-la-belle-intendance.pdf   le fichier à envoyer
-carte-recto.png                 la face 1 seule, si un imprimeur préfère des images
-carte-verso.png                 la face 2 seule
-assets/                         photo, monogramme, feuillages et polices
+carte-la-belle-intendance.pdf   le fichier à envoyer à l'imprimeur, aplati
+carte-recto.svg                 la face 1, modifiable dans Illustrator
+carte-verso.svg                 la face 2, modifiable
+carte-recto.png                 la face 1 en image, pour contrôle
+carte-verso.png                 la face 2 en image
+polices/                        les trois polices à installer
+assets/                         photo, monogramme, feuillages
 ```
+
+Deux chaînes cohabitent et ne se mélangent pas : `scripts/carte.mjs` produit le
+PDF aplati destiné à l'impression, `scripts/carte-svg.mjs` produit les SVG
+destinés à la retouche. Modifier un SVG dans Illustrator ne met pas le PDF à
+jour — il faut réexporter depuis Illustrator, ou corriger le script et relancer.
 
 Les textes imprimés (téléphone, e-mail, domaine, SIRET) sont lus à l'exécution
 dans `src/config/site.ts`. Ils ne se recopient pas à la main : corriger la
