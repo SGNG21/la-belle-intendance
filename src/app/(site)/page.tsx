@@ -13,7 +13,10 @@ import { pageMeta } from "@/lib/meta";
 
 export const metadata = pageMeta({
   // 61 caractères : au-delà, Google tronque et réécrit le titre lui-même.
-  title: "Ménage et intendance de maison à Joigny",
+  // Le titre porte le mot que les clients tapent, l'intitulé de marque suit.
+  // Il reste distinct de celui de /joigny : deux pages au même titre se font
+  // concurrence sur la même requête et Google en retient une au hasard.
+  title: "Femme de ménage et intendance à Joigny",
   description: SITE.description,
   path: "/",
 });

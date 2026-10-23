@@ -25,7 +25,7 @@ export const SITE = {
   locale: "fr-FR",
   tagline: "Ménage et intendance de maison à Joigny et ses alentours",
   description:
-    "Ménage à domicile, entretien de grandes maisons et intendance de résidences secondaires à Joigny (89) et ses alentours. Devis sur mesure.",
+    "Femme de ménage à domicile, entretien de grandes maisons et intendance de résidences secondaires à Joigny (89) et ses alentours. Devis écrit avant toute intervention.",
   city: "Joigny",
   postalCode: "89300",
   department: "Yonne",

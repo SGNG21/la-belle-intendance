@@ -5,8 +5,8 @@ import { Band } from "@/components/Figure";
 import { pageMeta } from "@/lib/meta";
 
 const path = "/joigny";
-const description = "Ménage et intendance de maison à Joigny : centre ancien, bords de l'Yonne et coteaux. La zone d'intervention de La Belle Intendance, commune par commune.";
-export const metadata = pageMeta({ title: "Ménage à Joigny et ses alentours", description, path });
+const description = "Femme de ménage à Joigny et dans les communes alentour : centre ancien, bords de l'Yonne et coteaux. La zone d'intervention de La Belle Intendance, commune par commune.";
+export const metadata = pageMeta({ title: "Femme de ménage à Joigny et ses alentours", description, path });
 
 export default function Page() {
   return (
