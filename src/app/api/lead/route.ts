@@ -92,7 +92,23 @@ export async function POST(req: Request) {
   // La fiche prospect avant tout envoi : si la messagerie tombe, la demande
   // est quand même dans le back-office, avec son origine (référencement,
   // campagne, réseaux sociaux) telle que le lien l'a transmise.
-  if (crmEnabled()) await saveDemande(payload).catch((e) => console.error("[lead] fiche prospect non enregistrée :", e instanceof Error ? e.message : e));
+  if (crmEnabled()) {
+    await saveDemande(payload).catch(async (e) => {
+      const why = e instanceof Error ? e.message : String(e);
+      console.error("[lead] fiche prospect non enregistrée :", why);
+      // Alerte : la demande n'apparaîtra pas dans le bureau (base en pause, par exemple).
+      if (pret && to) {
+        const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
+        const text = `La demande de ${payload.lead.name} (${payload.lead.email}, ${payload.lead.phone || "sans téléphone"}, ${payload.lead.commune}) n'a pas pu être enregistrée dans le bureau.\nLa notification complète arrive par ailleurs ; ajoutez la fiche à la main.\n\nCause : ${why}`;
+        await envoyer({
+          to: to.split(","),
+          subject: `⚠ Demande non enregistrée dans le bureau — ${payload.lead.name}`,
+          text,
+          html: `<p>${esc(text).replace(/\n/g, "<br>")}</p>`,
+        }).catch((err) => console.error("[lead] alerte non envoyée :", err instanceof Error ? err.message : err));
+      }
+    });
+  }
 
   if (webhook) return send(() => postWebhook(webhook, payload), "webhook", ack);
   if (pret && to) return send(() => sendEmail(to, payload), "e-mail", ack);
