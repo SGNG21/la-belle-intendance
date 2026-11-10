@@ -36,7 +36,7 @@ Deux à quatre liens bien placés valent mieux que vingt liens de pied de page.
 ## Sources à viser, par ordre de rendement
 
 1. **Fiche Google Business** : déjà reliée au site (`googleBusinessUrl` dans `src/config/site.ts`). Vérifier que le site web, les horaires et la zone y sont renseignés.
-2. **Page Facebook de l'entreprise** : le champ `facebook` de `src/config/site.ts` est encore vide. Le renseigner relie la Page et le site dans les données structurées.
+2. **Page Facebook de l'entreprise** : reliée au site (`facebook` dans `src/config/site.ts`, repris dans les données structurées `sameAs`). Penser à mettre l'adresse du site dans la rubrique « Coordonnées » de la Page.
 3. **Clients et amis** : un lien sur leur site (page partenaires ou témoignage), selon les règles ci-dessus.
 4. **Annuaires locaux sérieux** : office de tourisme, mairie ou communauté de communes si une rubrique « services » existe, CCI, annuaire CESU/Urssaf des services à la personne.
 5. **Partenaires métier** : agents immobiliers, gîtes et chambres d'hôtes, artisans (peintres, plombiers) qui ont besoin d'un ménage de fin de chantier.
