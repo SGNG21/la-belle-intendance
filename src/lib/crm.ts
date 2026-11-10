@@ -44,16 +44,26 @@ export class CrmError extends Error {
 export async function db<T>(path: string, init: RequestInit = {}): Promise<T> {
   const cfg = config();
   if (!cfg) throw new CrmError("Base non configurée.", 503);
-  const res = await fetch(`${cfg.url}/rest/v1/${path}`, {
-    ...init,
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-      "Content-Type": "application/json",
-      ...(init.headers ?? {}),
-    },
-    cache: "no-store",
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${cfg.url}/rest/v1/${path}`, {
+      ...init,
+      headers: {
+        apikey: cfg.key,
+        Authorization: `Bearer ${cfg.key}`,
+        "Content-Type": "application/json",
+        ...(init.headers ?? {}),
+      },
+      cache: "no-store",
+    });
+  } catch (e) {
+    // Hôte injoignable : projet en pause, URL erronée ou réseau coupé.
+    throw new CrmError(
+      "Base injoignable (projet peut-être en pause).",
+      503,
+      `${path} → ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
   const body = await res.text().catch(() => "");
   if (!res.ok) {
     const conflit = res.status === 409;
