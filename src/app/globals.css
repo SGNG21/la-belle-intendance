@@ -2160,3 +2160,75 @@ p {
 .avis-signature { margin: 0; font-size: 0.86rem; color: var(--navy-deep); }
 .avis-signature span { color: var(--muted); }
 .avis-lien { margin: 1.6rem 0 0; font-size: 0.92rem; }
+
+/* ------------------------------------------------------------------ *
+ * Page de destination des campagnes professionnelles (/entreprises).
+ *
+ * Elle emprunte le cadre des pages `lp-*`, mais lui ajoute trois blocs
+ * qu'aucune autre page n'utilise : la liste des reproches faits au
+ * prestataire précédent, la carte qui y répond, et la bande sombre des
+ * engagements.
+ * ------------------------------------------------------------------ */
+
+/* Les reproches. Un tiret, pas une coche : ce ne sont pas des arguments. */
+.pro-griefs {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.pro-griefs li {
+  display: grid;
+  grid-template-columns: 1rem 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.pro-griefs li::before {
+  content: "—";
+  color: var(--terracotta);
+  line-height: 1.55;
+}
+
+/* La réponse, posée en vis-à-vis des reproches. */
+.pro-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  padding: clamp(1.4rem, 3vw, 2rem);
+}
+.pro-card h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+  color: var(--navy-deep);
+  margin: 0 0 0.9rem;
+}
+.pro-card p { color: var(--muted); font-size: 0.97rem; line-height: 1.6; margin: 0 0 0.75rem; }
+.pro-card p:last-child { margin-bottom: 0; }
+.pro-card strong { color: var(--ink); font-weight: 500; }
+
+/* Les engagements, sur fond sombre : `.lp-sec h2` force le navy, on le reprend. */
+.pro-eng { background: var(--navy-deep); color: var(--cream); }
+.pro-eng h2 { color: #fff; }
+.pro-eng .pro-eng-grid {
+  display: grid;
+  gap: 1.6rem;
+  margin-top: 1.8rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 46rem) {
+  .pro-eng .pro-eng-grid { grid-template-columns: repeat(3, 1fr); gap: 2.2rem; }
+}
+.pro-eng-grid > div { border-top: 2px solid var(--gold); padding-top: 1rem; }
+.pro-eng-grid h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.2rem;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+.pro-eng-grid p { color: var(--mist); font-size: 0.95rem; line-height: 1.55; margin: 0; }
