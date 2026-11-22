@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { CrmError, crmEnabled, roleCourant } from "./crm";
+import { CrmError, appelant, crmEnabled, type Appelant } from "./crm";
 import { peut, type Droit } from "./roles";
 
 /**
@@ -14,21 +14,25 @@ import { peut, type Droit } from "./roles";
  * Le droit exigé est déclaré par la route elle-même, au plus près de ce
  * qu'elle fait.
  */
-export async function guarded<T>(run: () => Promise<T>, droit?: Droit): Promise<NextResponse> {
-  const role = await roleCourant();
-  if (!role) return NextResponse.json({ ok: false, error: "Session fermée." }, { status: 401 });
+export async function guarded<T>(
+  run: (qui: Appelant) => Promise<T>,
+  droit?: Droit,
+): Promise<NextResponse> {
+  const qui = await appelant();
+  if (!qui) return NextResponse.json({ ok: false, error: "Session fermée." }, { status: 401 });
+  const role = qui.role;
 
   if (droit && !peut(role, droit)) {
     // 403 et non 401 : la session est valide, c'est le droit qui manque.
     // Le message ne dit pas ce qui existe derrière, seulement que c'est refusé.
-    console.warn(`[crm] ${role} a tenté « ${droit} »`);
+    console.warn(`[crm] ${qui.nom ?? role} a tenté « ${droit} »`);
     return NextResponse.json({ ok: false, error: "Cette action ne vous est pas ouverte." }, { status: 403 });
   }
 
   if (!crmEnabled()) return NextResponse.json({ ok: false, error: "Base non configurée sur le serveur." }, { status: 503 });
 
   try {
-    return NextResponse.json({ ok: true, ...(await run()) });
+    return NextResponse.json({ ok: true, ...(await run(qui)) });
   } catch (e) {
     if (e instanceof CrmError) {
       console.error("[crm]", e.detail ?? e.message);

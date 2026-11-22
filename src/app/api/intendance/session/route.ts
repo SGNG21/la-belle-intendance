@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { SESSION_COOKIE, codeIsValid, cookieOptions, roleDuJeton, sessionToken } from "@/lib/intendance";
 import { droitsDe } from "@/lib/roles";
+import { appelant } from "@/lib/crm";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,6 +33,19 @@ export async function GET() {
   const code = expected();
   if (!code) return NextResponse.json({ ok: false, configured: false }, { status: 503 });
   const jar = await cookies();
+  // Un compte individuel l'emporte sur un code partagé : c'est lui qui porte
+  // un nom, et les écrans doivent refléter ses droits à lui.
+  const qui = await appelant();
+  if (qui) {
+    return NextResponse.json({
+      ok: true,
+      configured: true,
+      role: qui.role,
+      nom: qui.nom,
+      nominatif: qui.personne_id !== null,
+      droits: droitsDe(qui.role),
+    });
+  }
   const role = roleDuJeton(jar.get(SESSION_COOKIE)?.value, {
     proprietaire: process.env.INTENDANCE_CODE,
     intervenant: process.env.INTENDANCE_CODE_INTERVENANT,
@@ -40,6 +54,8 @@ export async function GET() {
     ok: role !== null,
     configured: true,
     role,
+    nom: null,
+    nominatif: false,
     droits: role ? droitsDe(role) : [],
   });
 }

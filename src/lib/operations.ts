@@ -215,10 +215,11 @@ export const historique = (clientId: string) =>
 
 /* ------------------------------------------------- la trace des accès */
 
-/** Enregistre qu'on a consulté les consignes d'entrée d'un logement. */
-export const tracerAcces = (bienId: string, par: string) =>
-  db<void>("acces_revelations", {
-    method: "POST",
-    headers: { Prefer: "return=minimal" },
-    body: JSON.stringify({ bien_id: bienId, par }),
-  });
+/**
+ * Enregistre qu'une personne nommée a consulté les consignes d'un logement.
+ *
+ * La base refuse une trace anonyme : c'est elle qui garantit qu'aucune
+ * consigne ne part sans que l'on sache à qui.
+ */
+export const tracerAcces = (bienId: string, personneId: string) =>
+  essayer(() => rpc<unknown>("tracer_acces", { p_bien_id: bienId, p_personne_id: personneId }));

@@ -29,6 +29,7 @@ export const DROITS = [
   "facturer",
   "encaisser",
   "envoyer_documents",
+  "gerer_comptes",
 ] as const;
 export type Droit = (typeof DROITS)[number];
 

@@ -5,9 +5,11 @@
 -- règle en production et rend le « vidage de tables » impossible.
 begin;
 
-insert into intervenants (id, nom, couleur) values
-  ('10000000-0000-0000-0000-000000000001','Coralie','navy'),
-  ('10000000-0000-0000-0000-000000000002','Nadia','terracotta');
+-- Les personnes, avec leurs comptes. Adresses fictives.
+insert into intervenants (id, nom, couleur, email, role) values
+  ('10000000-0000-0000-0000-000000000001','Coralie','navy','coralie@exemple.fr','proprietaire'),
+  ('10000000-0000-0000-0000-000000000002','Nadia','terracotta','nadia@exemple.fr','intervenant'),
+  ('10000000-0000-0000-0000-000000000003','Sabine','sage','sabine@exemple.fr','intervenant');
 
 insert into clients (id, nom, email, telephone, commune, type, mode, notes) values
   ('20000000-0000-0000-0000-000000000001','Hélène Delaunay','h.delaunay@exemple.fr','06 12 34 56 78','Villecien','particulier','cesu','Joignable le soir après 18 h.'),

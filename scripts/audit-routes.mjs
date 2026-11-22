@@ -38,7 +38,15 @@ async function routes(dir, prefixe = "") {
  * avant d'avoir une session. Elle ne rend aucune donnée. Toute autre route
  * de /intendance qui répondrait 200 sans cookie serait un trou.
  */
-const EXCEPTIONS = new Set(["/intendance/session"]);
+const EXCEPTIONS = new Set([
+  // La sonde d'état du portail : l'écran doit pouvoir demander « ai-je une
+  // session ? » avant d'en avoir une. Elle ne rend aucune donnée.
+  "/intendance/session",
+  // La route de connexion : on ne peut pas exiger une session pour en ouvrir
+  // une. Elle répond la même chose que l'adresse existe ou non, et le lien
+  // qu'elle prépare n'est jamais rendu hors recette.
+  "/intendance/connexion",
+]);
 const SENSIBLE = (p) => (p.startsWith("/intendance") || p.startsWith("/compte-rendu")) && !EXCEPTIONS.has(p);
 
 // Une réponse ne doit jamais contenir ceci sans session.

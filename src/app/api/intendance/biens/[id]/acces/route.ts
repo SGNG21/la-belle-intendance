@@ -22,18 +22,28 @@ const UUID = /^[0-9a-f-]{36}$/i;
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return guarded(async () => {
+  return guarded(async (qui) => {
     if (!UUID.test(id)) throw new CrmError("Bien introuvable.", 404);
+
+    // Une consigne d'entrée ne se sert qu'à quelqu'un de nommé. Un code
+    // partagé n'identifie personne : la demande est refusée plutôt que
+    // tracée sous « session », qui ne trace rien.
+    if (!qui.personne_id) {
+      throw new CrmError(
+        "Ces consignes exigent un compte nominatif. Connectez-vous avec votre adresse.",
+        403,
+      );
+    }
     const rows = await db<Pick<Bien, "id" | "acces" | "particularites">[]>(
       `biens?id=eq.${encodeURIComponent(id)}&select=id,acces,particularites&limit=1`,
     );
     if (!rows.length) throw new CrmError("Bien introuvable.", 404);
 
-    // La trace ne doit pas empêcher d'entrer dans la maison : si elle échoue,
-    // on le note et on sert quand même.
-    await tracerAcces(id, "session").catch((e) =>
-      console.error("[acces] trace non enregistrée :", e instanceof Error ? e.message : e),
-    );
+    // La trace est posée AVANT de servir la consigne : si elle échoue, on ne
+    // sert rien. Servir un secret sans savoir à qui est précisément ce qu'il
+    // faut éviter — et c'est l'inverse de ce que faisait la version
+    // précédente, qui notait l'échec et servait quand même.
+    await tracerAcces(id, qui.personne_id);
 
     return { acces: rows[0].acces, particularites: rows[0].particularites };
   }, "voir_consignes");

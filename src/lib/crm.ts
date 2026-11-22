@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { SESSION_COOKIE, roleDuJeton } from "./intendance";
 import type { Role } from "./roles";
+import { personneCourante } from "./comptes";
 import { type Bien, type Client, type Demande } from "./crmModel";
 
 /**
@@ -27,18 +28,39 @@ export async function authorized(): Promise<boolean> {
 }
 
 /**
- * Le rôle de la session en cours, ou null si elle est fermée.
+ * Qui appelle, et avec quel rôle.
  *
- * Deux codes possibles : celui de la responsable et celui des intervenantes.
- * Le rôle n'est pas stocké dans le cookie mais déduit de lui, donc on ne peut
- * pas se promouvoir en le modifiant.
+ * Deux chemins pendant la bascule. Les **comptes individuels** d'abord : une
+ * session en base, attribuable à une personne, révocable. Les **codes
+ * partagés** ensuite, en repli, le temps que tout le monde ait un compte.
+ *
+ * L'ordre compte : une personne identifiée doit l'emporter sur un code
+ * anonyme, sans quoi la traçabilité retomberait sur « session ».
  */
-export async function roleCourant(): Promise<Role | null> {
+export interface Appelant {
+  role: Role;
+  /** Null quand la session vient d'un code partagé : personne n'est nommé. */
+  personne_id: string | null;
+  nom: string | null;
+}
+
+export async function appelant(): Promise<Appelant | null> {
+  const p = await personneCourante();
+  if (p) return { role: p.role, personne_id: p.personne_id, nom: p.nom };
+
   const jar = await cookies();
-  return roleDuJeton(jar.get(SESSION_COOKIE)?.value, {
+  const role = roleDuJeton(jar.get(SESSION_COOKIE)?.value, {
     proprietaire: process.env.INTENDANCE_CODE,
     intervenant: process.env.INTENDANCE_CODE_INTERVENANT,
   });
+  // Un code partagé n'identifie personne : personne_id reste nul, et les
+  // opérations qui exigent un nom le refuseront.
+  return role ? { role, personne_id: null, nom: null } : null;
+}
+
+/** Le rôle seul, pour les appels qui n'ont pas besoin de savoir qui. */
+export async function roleCourant(): Promise<Role | null> {
+  return (await appelant())?.role ?? null;
 }
 
 /**

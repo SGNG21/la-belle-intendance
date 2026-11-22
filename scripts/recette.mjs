@@ -72,8 +72,10 @@ titre("1 — Autorisations : être connecté ne suffit pas");
   const c = await intervenante("/intendance/contrats");
   verifier("l'intervenante ne voit pas les tarifs (403)", c.statut === 403, c.statut);
 
+  // Depuis les comptes individuels, une consigne d'entrée n'est servie qu'à
+  // quelqu'un de nommé : un code partagé ne trace rien, donc il est refusé.
   const d = await intervenante(`/intendance/biens/${BIEN}/acces`, { method: "POST" });
-  verifier("l'intervenante voit les consignes de ses chantiers", d.statut === 200, d.statut);
+  verifier("un code partagé n'obtient plus les consignes (403)", d.statut === 403, d.statut);
 
   const e = await responsable("/intendance/contrats");
   verifier("la responsable voit les tarifs", e.statut === 200, e.statut);
@@ -92,8 +94,10 @@ titre("2 — Consignes d'accès : servies à part et tracées");
   const avant = await responsable(`/intendance/biens/${BIEN}`);
   verifier("la fiche du bien ne porte pas les consignes", !("acces" in (avant.corps?.bien ?? {})));
 
+  // Servies, mais seulement à un compte nominatif : voir recette-comptes.mjs,
+  // qui ouvre une vraie session par lien et obtient bien la consigne.
   const acces = await responsable(`/intendance/biens/${BIEN}/acces`, { method: "POST" });
-  verifier("la route dédiée les sert", typeof acces.corps?.acces === "string" && acces.corps.acces.length > 0);
+  verifier("un code partagé est refusé, même pour la responsable (403)", acces.statut === 403, acces.statut);
 }
 
 /* ------------------------------------------------------ 3. conflit entre deux appareils */
