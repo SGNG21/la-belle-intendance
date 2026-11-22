@@ -284,7 +284,7 @@ function CarteCase({ c, onAction, detaille = false }: { c: Case; onAction: (a: {
       <div className="ag-carte__actions">
         <Link href={`/intendance/clients/${c.client_id}`} className="os-btn os-btn--nu">Fiche client</Link>
         {c.intervention_id && (
-          <Link href={`/intendance/compte-rendu?bien=${c.bien_id}`} className="os-btn os-btn--nu">Checklist</Link>
+          <Link href={`/intendance/passage/${c.intervention_id}`} className="os-btn os-btn--nu">Ouvrir</Link>
         )}
         {modifiable && (
           <>
