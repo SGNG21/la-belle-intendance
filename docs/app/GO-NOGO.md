@@ -2,13 +2,12 @@
 
 Au 22 novembre 2026, sur la branche `claude/business-os-v1`.
 
-## Verdict
+## Verdict — mis à jour le 22 novembre 2026, seconde passe
 
 **NO-GO pour la production. GO pour une Preview privée de validation.**
 
-Le logiciel fait ce qu'on lui demande et le prouve. Trois choses manquent, dont
-deux tiennent à la sécurité et une à la facturation. Aucune n'est un chantier,
-toutes sont des décisions à prendre.
+Le verdict ne change pas, mais sa composition si : le blocage de sécurité est
+levé. Il en reste deux, et aucun ne dépend plus de moi.
 
 ## Les niveaux de preuve
 
@@ -18,10 +17,11 @@ PostgREST a révélé.
 
 | | Doublure | PostgreSQL réel | PostgREST réel | Preview | Production |
 |---|---|---|---|---|---|
-| Contraintes et verrous (35 refus) | — | **oui** | — | non | non |
+| Contraintes et verrous (41 refus) | — | **oui** | — | non | non |
 | Parcours complet (35 contrôles) | oui | — | **oui** | non | non |
 | Hors ligne (22 contrôles) | oui | — | **oui** | non | non |
-| Routes sans session (31 refus) | oui | — | **oui** | non | non |
+| Comptes et cloisonnement (28) | oui | — | **oui** | non | non |
+| Routes sans session (34 refus) | oui | — | **oui** | non | non |
 | Sept points de compatibilité (24) | oui | — | **oui** | non | non |
 | Sécurité niveau ligne | **non applicable** | — | **oui** | non | non |
 | Agenda, fiche client, passage | oui | — | **oui** | non | non |
@@ -74,12 +74,19 @@ démentie.
 
 ## Les trois blocages
 
-### 1. La traçabilité ne nomme personne — **bloquant**
-`acces_revelations.par` vaut `'session'`. On sait qu'une consigne d'entrée a
-été consultée, pas par qui. Pour une donnée qui permet d'entrer chez un client,
-une traçabilité anonyme ne trace rien. Les codes partagés doivent céder la
-place à des comptes individuels : voir `COMPTES-INDIVIDUELS.md`, deux à trois
-jours.
+### 1. ~~La traçabilité ne nomme personne~~ — **levé**
+Les comptes individuels sont en place : connexion par lien à usage unique,
+session en base donc révocable, rôle porté par la personne. Une consigne
+d'entrée n'est servie qu'à quelqu'un de nommé — un code partagé est refusé en
+403 — et la trace est posée **avant** que la consigne ne parte.
+
+28 vérifications de cloisonnement entre personnes authentifiées, et non plus
+seulement contre un inconnu. Fermer un compte ferme ses sessions à la requête
+suivante.
+
+Reste une transition à finir : les deux codes partagés fonctionnent encore, en
+repli. Ils devront être retirés une fois chacun pourvu d'un compte, et c'est
+une ligne de configuration, pas un chantier.
 
 ### 2. La facturation n'a pas de propriétaire désigné — **bloquant**
 Le code sait émettre des factures numérotées. Reste à décider si c'est lui ou
@@ -105,11 +112,21 @@ n'a pas été reconstruite depuis ces changements.
 
 ## Pour lever le NO-GO
 
-1. Comptes individuels — 2 à 3 jours.
-2. Décider du propriétaire de la facturation, après le test Henrri — 1 jour.
-3. Appliquer les migrations sur une branche Supabase, déployer en Preview,
-   rejouer les quatre recettes contre elle — 1 jour.
+1. ~~Comptes individuels~~ — **fait**.
+2. Décider du propriétaire de la facturation, après le test Henrri en bac à
+   sable — **une demi-journée de votre côté**, il me faut des clés de bac à
+   sable. Voir `scripts/recette-henrri.md`.
+3. Appliquer les migrations sur un projet Supabase de test, déployer en
+   Preview, rejouer les cinq recettes contre elle — **un jour**. La procédure
+   complète est dans `PREVIEW.md`.
 
-Soit **quatre à cinq jours** avant un GO de production. D'ici là, une Preview
-privée pour montrer le logiciel est sans risque, à condition que son
-environnement ne porte aucune clé de production.
+Soit **un jour et demi** avant un GO de production, dont une demi-journée qui
+ne dépend pas de moi.
+
+## Un point d'exploitation trouvé en route
+
+PostgREST garde en mémoire la description du schéma. Après une migration, il
+continue de servir l'ancienne et répond des erreurs incompréhensibles jusqu'à
+recevoir `notify pgrst, 'reload schema'`. Supabase l'émet tout seul ; un
+déploiement manuel, non. Cela rendait la recette intermittente — ce qui est
+pire qu'une recette fausse, parce qu'on finit par croire au hasard.

@@ -57,4 +57,12 @@ for f in "$racine"/supabase/migrations/*.sql; do
 done
 
 psql -q -v ON_ERROR_STOP=1 -f "$racine/supabase/tests/semence.sql"
+
+# PostgREST garde en mémoire la description du schéma : tables, colonnes,
+# fonctions. Après un « drop schema » il continue de servir l'ancienne et
+# répond des erreurs incompréhensibles jusqu'à ce qu'on le prévienne.
+# Supabase émet cette notification tout seul après une migration ; ici c'est
+# à nous. Sans elle, la recette est intermittente, ce qui est pire que fausse.
+psql -q -c "notify pgrst, 'reload schema';" || true
+
 echo "base de recette prête"
