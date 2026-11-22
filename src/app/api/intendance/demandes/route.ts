@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 /** Les demandes reçues par le site, la plus récente d'abord. */
 export async function GET() {
-  return guarded(async () => ({ demandes: await listDemandes() }));
+  return guarded(async () => ({ demandes: await listDemandes() }), "voir_clients");
 }

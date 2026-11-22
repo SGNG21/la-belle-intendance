@@ -21,7 +21,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       bien: { ...sansSecrets, a_des_consignes: Boolean(acces || particularites) },
       client: clients,
     };
-  });
+  }, "voir_clients");
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -58,7 +58,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       body: JSON.stringify(patch),
     });
     return {};
-  });
+  }, "voir_clients");
 }
 
 /** Suppression d'un bien. Les comptes rendus déjà envoyés restent, détachés. */
@@ -67,5 +67,5 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   return guarded(async () => {
     await db<void>(`biens?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: { Prefer: "return=minimal" } });
     return {};
-  });
+  }, "voir_clients");
 }

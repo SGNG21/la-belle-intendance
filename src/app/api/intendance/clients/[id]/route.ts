@@ -11,7 +11,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     const fiche = await getClient(id);
     if (!fiche) throw new CrmError("Fiche introuvable.", 404);
     return fiche;
-  });
+  }, "voir_clients");
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -35,5 +35,5 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       body: JSON.stringify(patch),
     });
     return {};
-  });
+  }, "voir_clients");
 }

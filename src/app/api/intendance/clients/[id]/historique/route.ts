@@ -17,5 +17,5 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   return guarded(async () => {
     if (!UUID.test(id)) return { error: "Référence client invalide." };
     return { evenements: await historique(id) };
-  });
+  }, "voir_clients");
 }

@@ -24,7 +24,7 @@ create table intervenants (
 );
 
 alter table interventions
-  add column intervenant_id uuid references intervenants(id) on delete set null;
+  add column if not exists intervenant_id uuid references intervenants(id) on delete set null;
 
 create index intervention_par_intervenant on interventions (intervenant_id, date desc);
 
@@ -32,13 +32,13 @@ create index intervention_par_intervenant on interventions (intervenant_id, date
 
 -- Les conditions au moment du passage. Nulles tant qu'il n'est pas clos.
 alter table interventions
-  add column fige_base             base_tarifaire,
-  add column fige_libelle          text,
-  add column fige_forfait_ht       numeric(10,2),
-  add column fige_taux_horaire_ht  numeric(10,2),
-  add column fige_heures_convenues numeric(5,2),
-  add column fige_tva              numeric(4,3),
-  add column fige_le               timestamptz;
+  add column if not exists fige_base             base_tarifaire,
+  add column if not exists fige_libelle          text,
+  add column if not exists fige_forfait_ht       numeric(10,2),
+  add column if not exists fige_taux_horaire_ht  numeric(10,2),
+  add column if not exists fige_heures_convenues numeric(5,2),
+  add column if not exists fige_tva              numeric(4,3),
+  add column if not exists fige_le               timestamptz;
 
 comment on column interventions.fige_base is
   'Conditions tarifaires recopiées à la clôture. La facturation lit ces colonnes et jamais le contrat, pour qu''un changement de tarif ne réécrive pas le passé.';

@@ -20,5 +20,5 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       body: JSON.stringify(patch),
     });
     return {};
-  });
+  }, "voir_clients");
 }

@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   return guarded(async () => {
     const filtre = clientId && UUID.test(clientId) ? `&client_id=eq.${encodeURIComponent(clientId)}` : "";
     return { contrats: await db(`contrats?select=*${filtre}&order=debut.desc`) };
-  });
+  }, "voir_tarifs");
 }
 
 /**
@@ -61,5 +61,5 @@ export async function POST(req: Request) {
       throw e;
     });
     return { contratId: contrat.id };
-  });
+  }, "voir_tarifs");
 }

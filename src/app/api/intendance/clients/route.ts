@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return guarded(async () => ({ clients: await listClients() }));
+  return guarded(async () => ({ clients: await listClients() }), "voir_clients");
 }
 
 /** Nouvelle fiche client. Seul le nom est exigé ; le reste se complète ensuite. */
@@ -29,5 +29,5 @@ export async function POST(req: Request) {
       }),
     });
     return { clientId: client.id };
-  });
+  }, "voir_clients");
 }

@@ -28,5 +28,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     const empreinte = createHash("sha256").update(id).digest("hex").slice(0, 32);
     // L'e-mail part ici, en production. En l'état, seul l'état est posé.
     return { envoye: true, nouveau: true, compteRendu: await marquerEnvoye(id, empreinte) };
-  });
+  }, "envoyer_documents");
 }

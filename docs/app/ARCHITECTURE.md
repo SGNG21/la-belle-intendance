@@ -219,3 +219,38 @@ réelles, pas en démonstration.
   douze graphiques que personne ne regarde.
 - **Une application mobile native.** Le web suffit, et il se met à jour sans
   passer par une boutique.
+
+---
+
+## Annexe — l'environnement de recette locale
+
+Le lot 1 se teste contre une base PostgreSQL locale et jetable, jamais contre
+Supabase. Trois pièces :
+
+1. **PostgreSQL 16** sur `127.0.0.1:5433`, créé pour l'occasion et supprimé après.
+2. **`scripts/postgrest-de-test.mjs`** — une doublure qui parle assez du
+   dialecte PostgREST pour que l'application tourne sans modification. Ce n'est
+   pas PostgREST : elle ne sait ni la sécurité niveau ligne, ni les filtres
+   composés. Elle lit les types des fonctions dans le catalogue pour distinguer
+   un `text[]` d'un `jsonb`, parce que deviner d'après le nom cesserait de
+   marcher un jour.
+3. **`scripts/base-de-test.sh`** — reconstruit le schéma, rejoue les migrations,
+   sème le jeu d'essai.
+
+On **reconstruit** le schéma entre deux recettes au lieu de vider les tables :
+le déclencheur qui fige une facture émise refuse la suppression de ses lignes.
+C'est la bonne règle en production, et elle interdit le raccourci.
+
+### Les contrôles, et ce qu'ils prouvent
+
+| Commande | Ce qu'elle établit |
+|---|---|
+| `scripts/base-de-test.sh` | schéma neuf, migrations rejouables |
+| `psql -f supabase/tests/verrous.sql` | 12 refus : doubles, facture figée, idempotence |
+| `psql -f supabase/tests/operations.sql` | 11 refus : parcours par les fonctions |
+| `psql -f supabase/tests/agenda.sql` | 9 refus : instantané tarifaire, exceptions |
+| `psql -f supabase/tests/concurrence.sql` | 3 refus : versions périmées |
+| `node scripts/recette.mjs <url>` | 35 vérifications du parcours par HTTP |
+| `node scripts/audit-routes.mjs <url>` | 29 routes refusent sans session |
+
+Un test qui ne lève rien est un test raté : on attend les refus.

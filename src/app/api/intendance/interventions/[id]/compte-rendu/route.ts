@@ -19,5 +19,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const destinataires = Array.isArray(b.destinataires)
     ? b.destinataires.filter((d): d is string => typeof d === "string" && EMAIL.test(d)).slice(0, 5)
     : [];
-  return guarded(async () => ({ compteRendu: await etablirCompteRendu(id, destinataires) }));
+  return guarded(async () => ({ compteRendu: await etablirCompteRendu(id, destinataires) }), "relever_passage");
 }

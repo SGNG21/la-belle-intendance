@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IntendanceGate } from "@/components/IntendanceGate";
 import { OsNav } from "@/components/apercu/OsNav";
-import "./apercu.css";
+import "@/app/os.css";
 
 /**
  * Maquette navigable du Business OS.

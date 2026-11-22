@@ -35,5 +35,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     const envoye_le = new Date().toISOString();
     await majDevis(id, { statut: "envoye", envoye_le });
     return { devis: { ...devis, statut: "envoye" as const, envoye_le } };
-  });
+  }, "envoyer_documents");
 }

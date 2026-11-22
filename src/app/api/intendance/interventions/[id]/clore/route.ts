@@ -26,6 +26,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       checklist: Array.isArray(b.checklist) ? b.checklist.slice(0, 200) : null,
       observations: text(b.observations, 4000),
       km: int(b.km, 0, 2000),
+      // La version sur laquelle le téléphone a travaillé. Si elle a changé
+      // depuis, la base refuse plutôt que d'écraser en silence.
+      version: int(b.version, 1, 1_000_000),
     }),
-  }));
+  }), "relever_passage");
 }

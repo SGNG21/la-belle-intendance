@@ -13,5 +13,5 @@ export const dynamic = "force-dynamic";
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return guarded(async () => ({ facture: await facturerIntervention(id) }));
+  return guarded(async () => ({ facture: await facturerIntervention(id) }), "facturer");
 }

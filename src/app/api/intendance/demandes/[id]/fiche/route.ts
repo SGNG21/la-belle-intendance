@@ -72,5 +72,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     });
 
     return { clientId: client.id, existing: connus.length > 0 };
-  });
+  }, "modifier_clients");
 }

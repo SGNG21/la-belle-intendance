@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { SESSION_COOKIE, tokenIsValid } from "./intendance";
+import { SESSION_COOKIE, roleDuJeton } from "./intendance";
+import type { Role } from "./roles";
 import { type Bien, type Client, type Demande } from "./crmModel";
 
 /**
@@ -22,10 +23,22 @@ export const crmEnabled = () => config() !== null;
 
 /** La session du back-office est-elle ouverte ? */
 export async function authorized(): Promise<boolean> {
-  const expected = process.env.INTENDANCE_CODE;
-  if (!expected) return false;
+  return (await roleCourant()) !== null;
+}
+
+/**
+ * Le rôle de la session en cours, ou null si elle est fermée.
+ *
+ * Deux codes possibles : celui de la responsable et celui des intervenantes.
+ * Le rôle n'est pas stocké dans le cookie mais déduit de lui, donc on ne peut
+ * pas se promouvoir en le modifiant.
+ */
+export async function roleCourant(): Promise<Role | null> {
   const jar = await cookies();
-  return tokenIsValid(jar.get(SESSION_COOKIE)?.value, expected);
+  return roleDuJeton(jar.get(SESSION_COOKIE)?.value, {
+    proprietaire: process.env.INTENDANCE_CODE,
+    intervenant: process.env.INTENDANCE_CODE_INTERVENANT,
+  });
 }
 
 /**
@@ -34,8 +47,20 @@ export async function authorized(): Promise<boolean> {
  * `detail` garde ce qu'il ne faut pas montrer — la réponse brute de la base,
  * utile dans les journaux et nulle part ailleurs.
  */
+export interface Conflit {
+  attendue: number;
+  reelle: number;
+  modifie_le: string;
+}
+
 export class CrmError extends Error {
-  constructor(message: string, readonly status: number, readonly detail?: string) {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly detail?: string,
+    /** Rempli sur un conflit de version : l'écran s'en sert pour proposer une issue. */
+    readonly conflit?: Conflit,
+  ) {
     super(message);
   }
 }

@@ -21,5 +21,5 @@ export async function GET(req: Request) {
     if (!JOUR.test(debut) || !JOUR.test(fin)) return { error: "Indiquez une période (debut et fin, au format AAAA-MM-JJ)." };
     if (debut > fin) return { error: "La période est à l'envers." };
     return { cases: await agenda(debut, fin) };
-  });
+  }, "voir_agenda");
 }

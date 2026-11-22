@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   const client = new URL(req.url).searchParams.get("client") ?? undefined;
-  return guarded(async () => ({ devis: await listerDevis(client ?? undefined) }));
+  return guarded(async () => ({ devis: await listerDevis(client ?? undefined) }), "voir_tarifs");
 }
 
 /** Les lignes acceptées : libellé, quantité, unité connue, prix unitaire. */
@@ -50,5 +50,5 @@ export async function POST(req: Request) {
     if (Object.keys(erreurs).length) return { erreurs, error: "Vérifiez les champs signalés." };
 
     return { devis: await creerDevis(brouillon) };
-  });
+  }, "voir_tarifs");
 }

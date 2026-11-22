@@ -20,5 +20,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (!moyen) return { error: "Indiquez le moyen de paiement." };
     if (!date) return { error: "Indiquez la date du règlement." };
     return { facture: await enregistrerPaiement(id, date, m, moyen) };
-  });
+  }, "encaisser");
 }

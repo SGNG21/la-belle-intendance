@@ -1,4 +1,5 @@
 import { createHash, timingSafeEqual } from "node:crypto";
+import type { Role } from "./roles";
 
 /**
  * Session de l'outil interne.
@@ -36,6 +37,24 @@ export function tokenIsValid(token: string | undefined, expected: string): boole
     return false;
   }
   return same(given, digest(expected));
+}
+
+/**
+ * Le rôle que porte un cookie.
+ *
+ * Le jeton est l'empreinte du code saisi : il suffit donc de le comparer à
+ * l'empreinte de chaque code connu pour savoir lequel a servi. Aucun rôle
+ * n'est inscrit dans le cookie, et on ne peut donc pas s'en attribuer un en
+ * le modifiant.
+ */
+export function roleDuJeton(
+  token: string | undefined,
+  codes: { proprietaire?: string; intervenant?: string },
+): Role | null {
+  if (!token) return null;
+  if (codes.proprietaire && tokenIsValid(token, codes.proprietaire)) return "proprietaire";
+  if (codes.intervenant && tokenIsValid(token, codes.intervenant)) return "intervenant";
+  return null;
 }
 
 export const cookieOptions = {

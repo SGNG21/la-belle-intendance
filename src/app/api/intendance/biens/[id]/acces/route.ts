@@ -36,5 +36,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     );
 
     return { acces: rows[0].acces, particularites: rows[0].particularites };
-  });
+  }, "voir_consignes");
 }

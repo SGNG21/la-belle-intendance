@@ -44,5 +44,5 @@ export async function POST(req: Request) {
       }),
     });
     return { bienId: bien.id };
-  });
+  }, "modifier_clients");
 }
