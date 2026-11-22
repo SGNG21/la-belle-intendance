@@ -44,6 +44,20 @@ const OPERATEURS = {
 
 /** `nom=eq.valeur` devient un fragment SQL et son paramètre. */
 function filtre(colonne, brut, params) {
+  // « in.(a,b,c) » : PostgREST accepte les valeurs nues ou entre guillemets.
+  if (brut.startsWith("in.")) {
+    const liste = brut
+      .slice(4, -1)
+      .split(",")
+      .map((v) => v.trim().replaceAll('"', ""))
+      .filter(Boolean);
+    if (!liste.length) return "false";
+    const places = liste.map((v) => {
+      params.push(v);
+      return `$${params.length}`;
+    });
+    return `"${colonne}"::text in (${places.join(", ")})`;
+  }
   if (brut.startsWith("is.")) {
     const v = brut.slice(3);
     const litteral = v === "null" ? "null" : v === "true" ? "true" : "false";

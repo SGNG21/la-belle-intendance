@@ -33,6 +33,23 @@ create table biens (
   caracteristiques text[] default '{}', prestations jsonb default '[]',
   frequence text, duree_h numeric, acces text, particularites text, notes text,
   km int, cree_le timestamptz default now());
+create table demandes (
+  id uuid primary key default gen_random_uuid(), recu_le timestamptz default now(),
+  client_id uuid references clients(id) on delete set null,
+  nom text not null, email text not null, telephone text, commune text,
+  type_client text, logement text, surface int, chambres int, salles_de_bains int,
+  frequence text, besoin text, score int, priorite text,
+  raisons text[] default '{}', page text, utm jsonb default '{}',
+  statut text default 'nouveau', suivi text);
+create table devis (
+  id uuid primary key default gen_random_uuid(), cree_le timestamptz default now(),
+  numero text, client_id uuid references clients(id) on delete set null,
+  client_nom text, client_email text, bien_id uuid references biens(id) on delete set null,
+  prestation text, lignes jsonb default '[]', total_ttc numeric default 0,
+  statut text default 'brouillon', envoye_le timestamptz, notes text,
+  mode text, frequence text, validite_jours int);
+create table reglages (
+  cle text primary key, valeur jsonb not null default '{}');
 SQL
 
 for f in "$racine"/supabase/migrations/*.sql; do

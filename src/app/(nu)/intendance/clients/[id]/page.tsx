@@ -1,6 +1,9 @@
 import { LandingFooter, LandingHeader } from "@/components/LandingChrome";
 import { IntendanceGate } from "@/components/IntendanceGate";
 import { FicheClient } from "@/components/intendance/Fiche";
+// La ligne de temps du dossier vient de la feuille de l'outil : sans elle,
+// l'historique retombe en liste à puces.
+import "@/app/os.css";
 
 export const metadata = {
   title: "Fiche client",

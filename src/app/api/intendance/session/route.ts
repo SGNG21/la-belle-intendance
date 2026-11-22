@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { SESSION_COOKIE, codeIsValid, cookieOptions, sessionToken, tokenIsValid } from "@/lib/intendance";
+import { SESSION_COOKIE, codeIsValid, cookieOptions, roleDuJeton, sessionToken } from "@/lib/intendance";
+import { droitsDe } from "@/lib/roles";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,13 +19,29 @@ const codes = () =>
     (c): c is string => Boolean(c),
   );
 
-/** La session est-elle encore ouverte ? Interrogé à l'ouverture de la page. */
+/**
+ * La session est-elle encore ouverte, et avec quels droits ?
+ *
+ * L'écran a besoin de savoir ce qu'il peut proposer : afficher un bouton
+ * « Facturer » à qui sera refusé est une promesse qu'on ne tient pas. Les
+ * droits rendus ici ne sont qu'un confort d'affichage — chaque route les
+ * revérifie, parce qu'une réponse d'API se falsifie et pas une vérification
+ * faite côté serveur.
+ */
 export async function GET() {
   const code = expected();
   if (!code) return NextResponse.json({ ok: false, configured: false }, { status: 503 });
   const jar = await cookies();
-  const jeton = jar.get(SESSION_COOKIE)?.value;
-  return NextResponse.json({ ok: codes().some((c) => tokenIsValid(jeton, c)), configured: true });
+  const role = roleDuJeton(jar.get(SESSION_COOKIE)?.value, {
+    proprietaire: process.env.INTENDANCE_CODE,
+    intervenant: process.env.INTENDANCE_CODE_INTERVENANT,
+  });
+  return NextResponse.json({
+    ok: role !== null,
+    configured: true,
+    role,
+    droits: role ? droitsDe(role) : [],
+  });
 }
 
 /** Ouverture de session. Un code faux attend une seconde avant de répondre. */

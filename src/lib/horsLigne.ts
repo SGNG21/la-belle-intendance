@@ -119,33 +119,87 @@ export function enfiler(a: Action): void {
   ecrireFile([...f, a]);
 }
 
+/** Ce qu'il est advenu d'une action sortie de la file. */
+export type Issue = "acceptee" | "deja_faite" | "refusee" | "conflit" | "reseau";
+
+export interface Resultat {
+  cle: string;
+  issue: Issue;
+  message?: string;
+  /** Rempli sur un conflit : de quoi expliquer, pas de quoi forcer. */
+  conflit?: { attendue: number; reelle: number; modifie_le: string };
+}
+
+export interface Bilan {
+  parties: number;
+  restantes: number;
+  conflits: Resultat[];
+  refusees: Resultat[];
+}
+
 /**
  * Tente d'envoyer ce qui attend.
  *
- * Une action est retirée de la file si le serveur l'a acceptée **ou** s'il
- * répond qu'elle avait déjà été faite : dans les deux cas le travail est
- * enregistré. Une panne réseau la laisse en file ; une erreur de validation
- * la retire, parce que la rejouer indéfiniment ne la fera jamais passer.
+ * Quatre issues, et c'est le cœur du sujet.
+ *
+ *   — **Acceptée** : elle quitte la file.
+ *   — **Déjà faite** : elle quitte la file aussi. Le serveur a reconnu la clé
+ *     d'idempotence, donc le travail est enregistré ; insister ne changerait
+ *     rien et ferait croire à un échec.
+ *   — **Conflit** (409) : elle quitte la file et **remonte à l'utilisatrice**.
+ *     On ne rejoue pas, on ne force pas : un autre appareil est passé après,
+ *     et écraser son travail sans le dire est précisément ce qu'il faut
+ *     éviter. La file ne doit pas non plus la garder indéfiniment, sinon elle
+ *     bloquerait tout ce qui suit.
+ *   — **Refusée** (autre 4xx) : elle quitte la file et remonte aussi. Une
+ *     saisie invalide ne deviendra pas valide en étant rejouée mille fois.
+ *
+ * Une panne réseau, elle, **arrête la vidange** sans rien retirer : l'ordre
+ * des actions est conservé, on reprendra au même point.
  */
-export async function vider(): Promise<{ parties: number; restantes: number }> {
+export async function vider(): Promise<Bilan> {
+  const conflits: Resultat[] = [];
+  const refusees: Resultat[] = [];
   let parties = 0;
+
   for (const a of lireFile()) {
+    let r: Response;
     try {
-      const r = await fetch(a.url, {
+      r = await fetch(a.url, {
         method: a.methode,
         headers: { "Content-Type": "application/json", "Idempotency-Key": a.cle },
         body: JSON.stringify(a.corps),
       });
-      if (r.ok || (r.status >= 400 && r.status < 500 && r.status !== 429)) {
-        ecrireFile(lireFile().filter((x) => x.cle !== a.cle));
-        parties++;
-      }
     } catch {
-      // Réseau absent : on s'arrête, la file garde l'ordre.
+      // Réseau absent : on s'arrête là, la file garde son ordre.
+      break;
+    }
+
+    let corps: { error?: string; conflit?: Resultat["conflit"] } = {};
+    try {
+      corps = await r.json();
+    } catch {
+      /* corps vide ou illisible */
+    }
+
+    const retirer = () => ecrireFile(lireFile().filter((x) => x.cle !== a.cle));
+
+    if (r.ok) {
+      retirer();
+      parties++;
+    } else if (r.status === 409) {
+      retirer();
+      conflits.push({ cle: a.cle, issue: "conflit", message: corps.error, conflit: corps.conflit });
+    } else if (r.status >= 400 && r.status < 500 && r.status !== 408 && r.status !== 429) {
+      retirer();
+      refusees.push({ cle: a.cle, issue: "refusee", message: corps.error });
+    } else {
+      // 5xx, 408, 429 : la faute n'est pas à la saisie. On réessaiera.
       break;
     }
   }
-  return { parties, restantes: lireFile().length };
+
+  return { parties, restantes: lireFile().length, conflits, refusees };
 }
 
 /** Y a-t-il du réseau ? `navigator.onLine` ment parfois, mais il ment peu. */

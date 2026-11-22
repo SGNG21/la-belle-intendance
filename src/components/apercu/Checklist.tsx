@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Carte, Tag } from "./Os";
 import { avancement, heures, type LigneChecklist } from "@/lib/apercu/modele";
-import { enfiler, garder, reprendre } from "@/lib/apercu/horsLigne";
+import { enfiler, garder, reprendre } from "@/lib/horsLigne";
 import { EtatReseau } from "./EtatReseau";
 
 /**

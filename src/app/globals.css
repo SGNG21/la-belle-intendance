@@ -2263,3 +2263,83 @@ p {
   color: var(--danger);
   font-size: 0.8125rem;
 }
+
+/* ------------------------------------------------ dossier client ------- */
+
+.dossier-bloc {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.dossier-bloc h2 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+
+.dossier-liste {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: grid;
+  gap: 0.625rem;
+}
+
+.dossier-liste li {
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9375rem;
+}
+.dossier-liste li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.dossier-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.dossier-table th {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.dossier-table th + th,
+.dossier-table td + td {
+  padding-left: 1rem;
+}
+.dossier-table td {
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.dossier-table .os-r {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Un règlement sous sa facture : on lit « réglé le, combien, comment ». */
+.dossier-reglement {
+  display: block;
+  margin-top: 0.1875rem;
+}
+
+.dossier-temps {
+  max-height: 28rem;
+  overflow-y: auto;
+}
+
+.desk-lien {
+  font-size: 0.875rem;
+  text-decoration-color: var(--terracotta);
+}

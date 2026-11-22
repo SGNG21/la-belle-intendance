@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AccesMasque } from "./AccesMasque";
+import { Dossier } from "./Dossier";
 import {
   CARACTERISTIQUES,
   CATALOGUE,
@@ -74,6 +75,7 @@ export function FicheClient({ id }: { id: string }) {
       {fiche.demandes.length ? <Origines demandes={fiche.demandes} /> : null}
       <Biens clientId={fiche.client.id} biens={fiche.biens} reload={charger} />
       <DevisBloc client={fiche.client} biens={fiche.biens} />
+      <Dossier clientId={fiche.client.id} />
     </>
   );
 }

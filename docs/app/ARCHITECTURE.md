@@ -254,3 +254,19 @@ C'est la bonne règle en production, et elle interdit le raccourci.
 | `node scripts/audit-routes.mjs <url>` | 29 routes refusent sans session |
 
 Un test qui ne lève rien est un test raté : on attend les refus.
+
+### Les quatre contrôles, et ce qu'ils donnent
+
+Vérifié le 22 novembre 2026, application branchée sur PostgreSQL 16 local via
+la doublure PostgREST.
+
+| Contrôle | Résultat |
+|---|---|
+| `node scripts/recette.mjs <url> <code> <code2>` | 35 vérifications du parcours |
+| `node scripts/recette-hors-ligne.mjs <url> <code>` | 22 vérifications de la reprise |
+| `node scripts/audit-routes.mjs <url>` | 30 refus, 0 route ouverte, 0 fuite |
+| les quatre fichiers de `supabase/tests/` | 35 refus attendus levés |
+
+La recette avec le vrai PostgREST n'a pas pu être jouée ici : voir
+`RECETTE-POSTGREST.md`, qui donne la marche à suivre et les sept points à
+comparer.
