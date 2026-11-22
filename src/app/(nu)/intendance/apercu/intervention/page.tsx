@@ -1,6 +1,8 @@
 import { Bandeau, Carte, Champ, Entete, Tag } from "@/components/apercu/Os";
 import { Checklist } from "@/components/apercu/Checklist";
+import { Acces } from "@/components/apercu/Acces";
 import { BIEN, CLIENT, INTERVENTION } from "@/lib/apercu/donnees";
+import type { Role } from "@/lib/apercu/permissions";
 import { dateLongue, heures } from "@/lib/apercu/modele";
 
 /**
@@ -11,6 +13,8 @@ import { dateLongue, heures } from "@/lib/apercu/modele";
  * le bouton « clore ».
  */
 export default function Page() {
+  // Une intervenante voit les consignes de ses propres passages, pas les tarifs.
+  const role: Role = "intervenant";
   return (
     <div className="os-wrap os-wrap--doc">
       <Bandeau>Maquette — rien n&apos;est enregistré.</Bandeau>
@@ -24,8 +28,8 @@ export default function Page() {
 
       <div className="os-grid">
         <Carte titre="Avant d'entrer">
-          <p style={{ marginTop: 0 }}>{BIEN.acces}</p>
-          <div className="os-note">
+          <Acces texte={BIEN.acces} role={role} bienId={BIEN.id} />
+          <div className="os-note" style={{ marginTop: "1rem" }}>
             <strong>À savoir.</strong> {BIEN.particularites}
           </div>
           <dl className="os-dl" style={{ marginTop: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(8rem, 1fr))" }}>

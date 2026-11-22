@@ -1,26 +1,38 @@
-import { Bandeau, Carte, Entete, Tag } from "@/components/apercu/Os";
+import { Bandeau, Carte, Entete, Stat, Tag } from "@/components/apercu/Os";
 import { EmissionFacture } from "@/components/apercu/EmissionFacture";
-import { CLIENT, FACTURE, INTERVENTION } from "@/lib/apercu/donnees";
-import { euros, facturable, nombre, totalHT, totalLigneFacture, totalTTC } from "@/lib/apercu/modele";
+import { CLIENT, CONTRAT, COUT, ECARTS_RECENTS, INTERVENTION, SUPPLEMENTS } from "@/lib/apercu/donnees";
+import { facturable } from "@/lib/apercu/modele";
+import { alerteEcart, calculer, euros, heures, LABEL_BASE, rentabilite } from "@/lib/apercu/facturation";
+import { droits, type Role } from "@/lib/apercu/permissions";
 import { SITE } from "@/config/site";
 
 /**
  * La facture en préparation.
  *
- * Elle naît du passage, pas d'une saisie : la ligne est pré-remplie avec la
- * durée réellement passée, pas la durée prévue. Coralie corrige si elle veut
- * arrondir en faveur du client, ce qui arrive plus souvent que l'inverse.
+ * Le prix vient du contrat et des suppléments approuvés. **Le temps réellement
+ * passé n'y entre pas** : il est affiché à côté, dans la rentabilité, pour que
+ * Coralie sache ce que le passage rapporte et décide s'il faut renégocier.
+ * Facturer le temps réel reviendrait à punir le client d'un retard et à
+ * récompenser la lenteur.
  */
 export default function Page() {
+  // En production, le rôle vient de la session. Ici, celui de la responsable.
+  const role: Role = "proprietaire";
+  const peut = droits(role);
+
+  const reelles = 4.25;
+  const calcul = calculer(CONTRAT, SUPPLEMENTS, reelles);
   const verrou = facturable(INTERVENTION);
   const numeroPrevu = "2026-042";
+  const marge = rentabilite(calcul.total_ht, reelles, INTERVENTION.km, CONTRAT.heures_convenues, COUT);
+  const alerte = alerteEcart(ECARTS_RECENTS, CONTRAT.heures_convenues ?? 0);
 
   return (
     <div className="os-wrap os-wrap--doc">
       <Bandeau>Maquette — aucune facture officielle n&apos;est créée.</Bandeau>
 
       <Entete
-        kicker="Facture en préparation"
+        kicker={`Facture en préparation · ${LABEL_BASE[CONTRAT.base]}`}
         titre={`Brouillon · ${numeroPrevu}`}
         sous={`${CLIENT.nom} · CESU, sans TVA`}
         action={<Tag ton="attente">Brouillon</Tag>}
@@ -41,9 +53,7 @@ export default function Page() {
           <div className="os-doc__marque">
             {SITE.name}
             <br />
-            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)" }}>
-              Facture
-            </span>
+            <span className="os-doc__type">Facture</span>
           </div>
           <div className="os-doc__meta">
             N° {numeroPrevu}
@@ -73,22 +83,18 @@ export default function Page() {
             </tr>
           </thead>
           <tbody>
-            {FACTURE.lignes.map((l) => (
-              <tr key={l.id}>
+            {calcul.lignes.map((l, i) => (
+              <tr key={i}>
                 <td>
                   {l.libelle}
-                  {l.intervention_id && (
-                    <>
-                      <br />
-                      <span className="os-sub">Rattachée au passage du 24 novembre</span>
-                    </>
-                  )}
+                  <br />
+                  <span className="os-sub">{l.detail}</span>
                 </td>
                 <td className="os-r">
-                  {nombre(l.quantite)} {l.unite}
+                  {l.quantite != null ? `${l.quantite.toLocaleString("fr-FR")} ${l.unite ?? ""}` : "—"}
                 </td>
-                <td className="os-r">{euros(l.pu)}</td>
-                <td className="os-r">{euros(totalLigneFacture(l))}</td>
+                <td className="os-r">{l.pu != null ? euros(l.pu) : "—"}</td>
+                <td className="os-r">{euros(l.montant_ht)}</td>
               </tr>
             ))}
           </tbody>
@@ -98,7 +104,7 @@ export default function Page() {
                 Total
               </td>
               <td className="os-r">
-                <span className="os-total">{euros(totalTTC(FACTURE))}</span>
+                <span className="os-total">{euros(calcul.total_ht)}</span>
               </td>
             </tr>
           </tfoot>
@@ -106,28 +112,59 @@ export default function Page() {
 
         <p className="os-sub" style={{ marginTop: "1.5rem" }}>
           TVA non applicable, article 293 B du code général des impôts. Prestation éligible au crédit d&apos;impôt
-          services à la personne. Total HT {euros(totalHT(FACTURE))}.
+          services à la personne.
         </p>
       </article>
 
-      <Carte className="os-card--sous-barre" titre="Comment la ligne a été calculée">
-        <div className="os-rang">
-          <div>Durée prévue à l&apos;abonnement</div>
-          <span className="os-num">4 h 30</span>
-        </div>
-        <div className="os-rang">
-          <div>Durée réellement passée</div>
-          <span className="os-num">4 h 15</span>
-        </div>
-        <div className="os-rang">
-          <div>Retenu pour la facture</div>
-          <strong className="os-num">4 h 15</strong>
-        </div>
-        <p className="os-sub" style={{ marginTop: "0.75rem" }}>
-          C&apos;est le temps réel qui est facturé, jamais le temps prévu. Le montant reste modifiable tant que la
-          facture est un brouillon.
-        </p>
+      <Carte titre="Pourquoi ce montant">
+        <div className="os-note">{calcul.note}</div>
+
+        {calcul.exclusions.length > 0 && (
+          <>
+            <p className="os-card__title" style={{ marginTop: "1.25rem" }}>
+              Écarté de la facture
+            </p>
+            {calcul.exclusions.map((e) => (
+              <div key={e.libelle} className="os-rang">
+                <div>
+                  <strong>{e.libelle}</strong>
+                  <br />
+                  <span className="os-sub">{e.raison}</span>
+                </div>
+                <Tag ton="attente">Non facturé</Tag>
+              </div>
+            ))}
+            <p className="os-sub" style={{ marginTop: "0.75rem" }}>
+              Un supplément non approuvé par le client n&apos;est jamais ajouté d&apos;office : la facture surprise
+              est ce qui fait perdre un client d&apos;abonnement.
+            </p>
+          </>
+        )}
       </Carte>
+
+      {peut.voirRentabilite && (
+        <Carte
+         
+          titre="Rentabilité du passage"
+          action={<span className="os-sub">Interne, jamais sur la facture</span>}
+        >
+          <div className="os-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(8rem, 1fr))", gap: "1.25rem" }}>
+            <Stat k="Facturé" v={euros(marge.produit_ht)} />
+            <Stat k="Temps passé" v={heures(reelles)} n={`${euros(marge.cout_temps)} de coût`} />
+            <Stat k="Trajet" v={`${(INTERVENTION.km ?? 0) * 2} km`} n={`${euros(marge.cout_trajet)} de coût`} />
+            <Stat
+              k="Marge"
+              v={euros(marge.marge)}
+              n={marge.rendement_horaire != null ? `${euros(marge.rendement_horaire)} de l'heure` : undefined}
+            />
+          </div>
+          <p className="os-sub" style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--line)" }}>
+            Le temps réel sert ici, et nulle part ailleurs. Il ne modifie jamais le prix convenu : un forfait tenu en
+            trois heures reste facturé {euros(CONTRAT.forfait_ht ?? 0)}, et le même tenu en six aussi.
+          </p>
+          {alerte && <div className="os-note os-note--alerte" style={{ marginTop: "1rem" }}>{alerte}</div>}
+        </Carte>
+      )}
 
       <EmissionFacture numeroPrevu={numeroPrevu} />
     </div>

@@ -29,7 +29,7 @@ export function Checklist({ initial, prevue }: { initial: LigneChecklist[]; prev
   return (
     <>
       <Carte
-        className="os-card--sous-barre"
+       
         titre="Relevé du passage"
         action={
           reste === 0 ? <Tag ton="fait">Complet</Tag> : <Tag ton="cours">{reste} à voir</Tag>

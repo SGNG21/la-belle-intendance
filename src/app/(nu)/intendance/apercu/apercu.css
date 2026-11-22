@@ -73,8 +73,9 @@
   stroke: var(--gold);
 }
 
+/* La hauteur de la navigation, plus celle d'une barre d'action à deux lignes. */
 .os-main {
-  padding: 1.25rem 1rem calc(var(--os-bar) + 2rem);
+  padding: 1.25rem 1rem calc(var(--os-bar) + 8rem);
 }
 
 @media (min-width: 64rem) {
@@ -366,34 +367,28 @@
   cursor: not-allowed;
 }
 
-/* La carte que la barre d'action peut recouvrir réserve sa hauteur : sans
-   cela, la barre flotte au-dessus des dernières lignes et masque ce qu'on
-   vient de cocher. */
-.os-card--sous-barre {
-  padding-bottom: 7.5rem;
-}
-
-/* Sur mobile, l'action principale est une barre basse au-dessus de la nav. */
+/* Sur mobile, l'action principale est une barre fixe au-dessus de la
+   navigation. Fixe et non « sticky » : une barre sticky remonte sur le
+   contenu et coupe une phrase en deux, ce qui se lit comme un bug. Ici elle
+   est franche, opaque, toujours au même endroit, et .os-main réserve sa
+   hauteur pour qu'aucun texte ne finisse dessous. */
 .os-sticky {
-  position: sticky;
-  bottom: calc(var(--os-bar) + 0.75rem);
+  position: fixed;
+  inset: auto 0 var(--os-bar) 0;
+  z-index: 15;
   display: grid;
   gap: 0.5rem;
-  margin-top: 1.5rem;
-  padding: 0.75rem;
-  background: rgba(251, 248, 241, 0.94);
-  backdrop-filter: blur(6px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: 1px solid var(--line);
 }
 
 @media (min-width: 64rem) {
-  .os-card--sous-barre {
-    padding-bottom: 1.5rem;
-  }
-
   .os-sticky {
     position: static;
+    inset: auto;
+    z-index: auto;
+    border-top: 0;
     grid-auto-flow: column;
     justify-content: start;
     background: none;
@@ -645,6 +640,12 @@
   white-space: nowrap;
 }
 
+/* Sans cela, deux colonnes chiffrées se touchent : « QUANTITÉPRIX UNITAIRE ». */
+.os-table th + th,
+.os-table td + td {
+  padding-left: 1rem;
+}
+
 .os-table tfoot td {
   border-bottom: 0;
   padding-top: 1rem;
@@ -723,4 +724,21 @@
   .os * {
     transition: none !important;
   }
+}
+
+/* Une consigne d'accès masquée : on voit qu'il y a quelque chose, pas quoi. */
+.os-masque {
+  margin: 0 0 0.75rem;
+  color: var(--slate);
+  letter-spacing: 0.12em;
+  word-break: break-all;
+  font-size: 0.9375rem;
+}
+
+.os-doc__type {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
 }

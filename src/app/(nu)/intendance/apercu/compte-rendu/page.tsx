@@ -83,7 +83,7 @@ export default function Page() {
         </div>
       </article>
 
-      <Carte className="os-card--sous-barre" titre="Avant d'envoyer">
+      <Carte titre="Avant d'envoyer">
         <div className="os-rang">
           <div>Destinataire</div>
           <strong>{COMPTE_RENDU.destinataires[0]}</strong>

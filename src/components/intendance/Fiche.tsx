@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { AccesMasque } from "./AccesMasque";
 import {
   CARACTERISTIQUES,
   CATALOGUE,
@@ -305,16 +306,8 @@ function BienCard({ bien, reload }: { bien: Bien; reload: () => Promise<void> })
           <span>Particularités du lieu</span> {traits.join(" · ")}
         </p>
       ) : null}
-      {bien.acces ? (
-        <p className="bien-ligne">
-          <span>Accès</span> {bien.acces}
-        </p>
-      ) : null}
-      {bien.particularites ? (
-        <p className="bien-ligne">
-          <span>Particularités</span> {bien.particularites}
-        </p>
-      ) : null}
+      {bien.acces ? <AccesMasque libelle="Accès" texte={bien.acces} /> : null}
+      {bien.particularites ? <AccesMasque libelle="Particularités" texte={bien.particularites} /> : null}
       {bien.prestations.length ? (
         <ul className="bien-prestations">
           {bien.prestations.map((p) => (

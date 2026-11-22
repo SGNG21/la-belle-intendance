@@ -6,7 +6,8 @@
  * inventés ; les montants et les durées sortent du calculateur du projet.
  */
 
-import type { Abonnement, CompteRendu, Facture, Intervention, LigneChecklist } from "./modele";
+import type { Abonnement, CompteRendu, Intervention, LigneChecklist } from "./modele";
+import type { Contrat, Cout, Supplement } from "./facturation";
 
 export interface ClientDemo {
   id: string;
@@ -132,27 +133,63 @@ export const COMPTE_RENDU: CompteRendu = {
   empreinte_envoyee: null,
 };
 
-export const FACTURE: Facture = {
-  id: "f-brouillon",
-  numero: null,
+/**
+ * Le contrat qui fixe le prix.
+ *
+ * Forfait : Hélène paie 140 € le passage, que celui-ci dure trois heures ou
+ * cinq. C'est le cas le plus fréquent en intendance de résidence secondaire,
+ * parce que le client veut connaître sa dépense à l'avance.
+ */
+export const CONTRAT: Contrat = {
+  id: "ct-pre",
   client_id: "c-delaunay",
-  statut: "brouillon",
-  date_emission: null,
-  date_echeance: null,
+  bien_id: "b-pre",
+  base: "forfait",
+  libelle: "Entretien de La Maison du Pré — passage du 24 novembre",
+  forfait_ht: 140,
+  taux_horaire_ht: null,
+  heures_convenues: null,
+  abonnement_ht: null,
+  abonnement_periode: null,
+  passages_inclus: null,
   tva: 0, // CESU : pas de TVA facturée au particulier.
-  lignes: [
-    {
-      id: "fl1",
-      libelle: "Entretien de la maison — passage du 24 novembre",
-      quantite: 4.25,
-      unite: "h",
-      pu: 32,
-      intervention_id: "i-2026-11-24",
-    },
-  ],
-  paiements: [],
-  envoye_le: null,
+  debut: "2026-03-24",
+  fin: null,
 };
+
+/**
+ * Les suppléments du passage.
+ *
+ * Le premier est approuvé, il sera facturé. Le second ne l'est pas : le
+ * travail a peut-être été fait, il ne sera pas facturé. C'est volontaire —
+ * une facture surprise fait perdre un client d'abonnement.
+ */
+export const SUPPLEMENTS: Supplement[] = [
+  {
+    id: "sp1",
+    intervention_id: "i-2026-11-24",
+    libelle: "Vitres du séjour",
+    montant_ht: null,
+    heures: 1.25,
+    taux_horaire_ht: 32,
+    approbation: { par: "Hélène Delaunay", le: "2026-11-20", canal: "sms" },
+  },
+  {
+    id: "sp2",
+    intervention_id: "i-2026-11-24",
+    libelle: "Dégivrage du congélateur",
+    montant_ht: 25,
+    heures: null,
+    taux_horaire_ht: null,
+    approbation: null,
+  },
+];
+
+/** Ce que coûte réellement une heure et un kilomètre. Sert à la marge, jamais au prix. */
+export const COUT: Cout = { horaire: 19.5, kilometrique: 0.43 };
+
+/** Les écarts des derniers passages, pour savoir s'il faut renégocier. */
+export const ECARTS_RECENTS = [0.25, -0.25, 0.0];
 
 /** L'historique du client : ce qui alimente la ligne de temps de la fiche. */
 export interface Evenement {

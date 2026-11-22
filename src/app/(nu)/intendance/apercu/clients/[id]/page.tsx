@@ -1,5 +1,8 @@
 import { Bandeau, Carte, Champ, Entete, Lien, Stat, Tag } from "@/components/apercu/Os";
-import { ABONNEMENT, BIEN, CLIENT, HISTORIQUE, PROCHAINS } from "@/lib/apercu/donnees";
+import { Acces } from "@/components/apercu/Acces";
+import { ABONNEMENT, BIEN, CLIENT, CONTRAT, HISTORIQUE, PROCHAINS } from "@/lib/apercu/donnees";
+import { LABEL_BASE } from "@/lib/apercu/facturation";
+import type { Role } from "@/lib/apercu/permissions";
 import { euros, heures } from "@/lib/apercu/modele";
 
 /**
@@ -22,6 +25,8 @@ const CARACTERISTIQUES: Record<string, string> = {
 };
 
 export default function Page() {
+  // En production, le rôle vient de la session ouverte.
+  const role: Role = "proprietaire";
   const parMois = ABONNEMENT.duree_h * ABONNEMENT.tarif_horaire * 2;
 
   return (
@@ -46,8 +51,8 @@ export default function Page() {
         {/* ----------------------------------------------- colonne gauche */}
         <div className="os-grid">
           <Carte titre="Entrer chez elle">
-            <p style={{ marginTop: 0 }}>{BIEN.acces}</p>
-            <div className="os-note">
+            <Acces texte={BIEN.acces} role={role} bienId={BIEN.id} />
+            <div className="os-note" style={{ marginTop: "1rem" }}>
               <strong>À savoir.</strong> {BIEN.particularites}
             </div>
             <dl className="os-dl" style={{ marginTop: "1rem" }}>
@@ -156,8 +161,9 @@ export default function Page() {
             <dl className="os-dl">
               <Champ k="Rythme">Tous les quinze jours, le mardi</Champ>
               <Champ k="Durée">{heures(ABONNEMENT.duree_h)}</Champ>
-              <Champ k="Tarif">
-                <span className="os-num">{euros(ABONNEMENT.tarif_horaire)}</span> de l&apos;heure
+              <Champ k="Base de prix">{LABEL_BASE[CONTRAT.base]}</Champ>
+              <Champ k="Prix du passage">
+                <span className="os-num">{euros(CONTRAT.forfait_ht ?? 0)}</span>, quelle qu&apos;en soit la durée
               </Champ>
               <Champ k="Depuis">24 mars 2026</Champ>
             </dl>
