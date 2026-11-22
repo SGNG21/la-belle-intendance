@@ -257,6 +257,30 @@ async function appeler(fn, args) {
   return rows.length === 1 ? rows[0] : rows;
 }
 
+/**
+ * Le statut HTTP d'une erreur SQL, comme le vrai PostgREST le calcule.
+ *
+ * Aligné sur lui après la recette du 22 novembre 2026 : sans cela la doublure
+ * répondait 400 à tout, et les essais rapides auraient donné une fausse
+ * confiance. Les écarts constatés étaient tous en faveur du vrai serveur.
+ *
+ *   PTxyz → xyz      la convention de PostgREST pour choisir le statut
+ *   42501 → 401      droits refusés
+ *   42883 → 404      fonction inexistante
+ *   23505 → 409      violation d'unicité
+ *   23514, 22P02 → 400   contrainte ou saisie invalide
+ *   le reste → 500   une exception non classée est une panne, et doit se voir
+ */
+function statutDeLErreur(e) {
+  const code = String(e.code ?? "");
+  if (/^PT\d{3}$/.test(code)) return Number(code.slice(2));
+  if (code === "42501") return 401;
+  if (code === "42883" || code === "42P01") return 404;
+  if (code === "23505") return 409;
+  if (code === "23514" || code === "23503" || code === "22P02") return 400;
+  return 500;
+}
+
 createServer(async (req, res) => {
   const url = new URL(req.url, "http://x");
   const chemin = url.pathname.replace(/^\/rest\/v1\//, "");
@@ -279,8 +303,12 @@ createServer(async (req, res) => {
     const r = await ecrire(table, url, brut ? JSON.parse(brut) : {}, req.method, prefer);
     return repondre(r ? 200 : 204, r);
   } catch (e) {
-    // Le format d'erreur de PostgREST : l'application sait déjà le lire.
-    repondre(400, { message: e.message, details: e.detail ?? null, code: e.code ?? null });
+    repondre(statutDeLErreur(e), {
+      code: e.code ?? null,
+      details: e.detail ?? null,
+      hint: e.hint ?? null,
+      message: e.message,
+    });
   }
 }).listen(PORT, "127.0.0.1", () => {
   console.log(`doublure PostgREST sur 127.0.0.1:${PORT}`);
