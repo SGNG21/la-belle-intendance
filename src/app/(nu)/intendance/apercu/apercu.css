@@ -755,3 +755,322 @@
 .os-reseau--coupe {
   border-left-color: var(--terracotta);
 }
+
+/* ======================================================= agenda ======= */
+
+.ag-barre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ag-vues {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.ag-vue {
+  min-height: 2.5rem;
+  padding: 0 0.875rem;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: #fff;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+.ag-vue:last-child { border-right: 0; }
+.ag-vue[aria-selected="true"] {
+  background: var(--navy-deep);
+  color: var(--cream);
+}
+
+.ag-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ag-fleche {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+}
+.ag-fleche:hover { border-color: var(--navy); }
+
+.ag-titre {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin: 0 0 0.75rem;
+}
+
+/* « Semaine du 23 novembre », et non « Semaine Du 23 Novembre » : capitalize
+   met une majuscule à chaque mot, ce que le français ne veut pas. */
+.ag-titre::first-letter {
+  text-transform: uppercase;
+}
+
+.ag-bilan { margin: 0 0 0.75rem; }
+
+.ag-filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 1.25rem;
+}
+
+.ag-puce {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+.ag-puce[aria-pressed="true"] {
+  border-color: var(--navy);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.ag-pastille {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+}
+.ag-pastille--navy { background: var(--navy); }
+.ag-pastille--terracotta { background: var(--terracotta); }
+
+/* -------------------------------------------------------------- listes */
+
+.ag-liste { display: grid; gap: 0.75rem; }
+
+.ag-semaine { display: grid; gap: 1rem; }
+
+@media (min-width: 64rem) {
+  .ag-semaine {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    align-items: start;
+  }
+}
+
+.ag-jour { display: grid; gap: 0.5rem; }
+
+.ag-jour__tete {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0 0 0.375rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ag-jour__nom {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ag-jour__num {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+}
+.ag-jour__h {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.ag-jour__vide {
+  margin: 0;
+  color: var(--mist);
+  font-size: 0.875rem;
+}
+
+/* --------------------------------------------------------- une occurrence */
+
+.ag-carte {
+  display: grid;
+  gap: 0.1875rem;
+  padding: 0.75rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  /* Le liseré gauche porte le statut : lisible d'un coup d'œil dans une colonne. */
+  border-left: 3px solid var(--slate);
+  border-radius: var(--radius);
+}
+.ag-carte[data-statut="en_cours"] { border-left-color: var(--terracotta); }
+.ag-carte[data-statut="faite"] { border-left-color: var(--sage-deep); }
+.ag-carte[data-statut="reportee"] { border-left-color: var(--gold); }
+.ag-carte[data-statut="annulee"] { border-left-color: var(--danger); opacity: 0.6; }
+.ag-carte[data-statut="projete"] { border-left-style: dashed; }
+
+.ag-carte__haut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.ag-carte__h {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.ag-carte__client { font-size: 0.9375rem; }
+.ag-carte__quoi {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.ag-carte__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.375rem;
+}
+.ag-carte__actions .os-btn {
+  min-height: 2.25rem;
+  font-size: 0.8125rem;
+}
+
+/* ----------------------------------------------------------------- mois */
+
+.ag-mois__entete,
+.ag-mois {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.ag-mois__entete {
+  margin-bottom: 2px;
+}
+.ag-mois__entete span {
+  text-align: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding-bottom: 0.25rem;
+}
+
+.ag-case {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  align-content: start;
+  /* 44 px minimum : une case de calendrier reste une cible tactile. */
+  min-height: 3rem;
+  padding: 0.375rem 0.125rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.ag-case[data-dehors] { background: var(--cream); color: var(--mist); }
+.ag-case:hover { border-color: var(--navy); }
+
+.ag-case__num {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+.ag-case__points {
+  display: flex;
+  gap: 2px;
+  min-height: 0.375rem;
+}
+.ag-point {
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 50%;
+  background: var(--slate);
+}
+.ag-point--en_cours { background: var(--terracotta); }
+.ag-point--faite { background: var(--sage-deep); }
+.ag-point--reportee { background: var(--gold); }
+.ag-point--annulee { background: var(--danger); }
+.ag-point--projete { background: none; border: 1px solid var(--slate); }
+
+/* -------------------------------------------------------- confirmation */
+
+.ag-voile {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: end center;
+  padding: 1rem;
+  background: rgba(24, 42, 69, 0.45);
+}
+
+@media (min-width: 48rem) {
+  .ag-voile { place-items: center; }
+}
+
+.ag-boite {
+  width: 100%;
+  max-width: 28rem;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.ag-boite__titre {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.ag-boite p { margin: 0; font-size: 0.9375rem; }
+
+.ag-boite__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.ag-champ { display: grid; gap: 0.25rem; }
+.ag-champ span {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ag-champ input {
+  min-height: 2.75rem;
+  padding: 0 0.625rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  font: inherit;
+  color: var(--ink);
+}
+.ag-champ input:focus-visible { border-color: var(--navy); }

@@ -16,6 +16,30 @@
 
 const PREFIXE = "lbi:";
 
+/* ------------------------------------------- ce qui ne descend jamais ici */
+
+/**
+ * Le stockage du navigateur n'est pas chiffré, survit à la fermeture et se lit
+ * depuis la console. Les consignes d'entrée d'un logement — code du portail,
+ * emplacement des clés, alarme — n'y descendent donc jamais : elles ne sont
+ * lues qu'à la demande, gardées en mémoire vive, et oubliées à la fermeture
+ * de l'écran.
+ *
+ * Ce garde-fou est une ceinture par-dessus les bretelles. Le serveur ne les
+ * envoie déjà qu'à la demande, par une route séparée ; cette fonction attrape
+ * le jour où un développeur pressé voudrait tout de même les mettre en cache.
+ */
+const CLES_INTERDITES = ["acces", "particularites", "code", "alarme", "cle", "cles", "digicode", "badge"];
+
+function contientUnSecret(v: unknown, profondeur = 0): boolean {
+  if (profondeur > 6 || v === null || typeof v !== "object") return false;
+  for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
+    if (CLES_INTERDITES.includes(k.toLowerCase()) && val) return true;
+    if (contientUnSecret(val, profondeur + 1)) return true;
+  }
+  return false;
+}
+
 /* ------------------------------------------------------ le relevé en cours */
 
 export interface Brouillon<T> {
@@ -23,8 +47,17 @@ export interface Brouillon<T> {
   modifie_le: number;
 }
 
-/** Écrit le relevé localement. Appelé à chaque geste, pas à la validation. */
+/**
+ * Écrit le relevé localement. Appelé à chaque geste, pas à la validation.
+ *
+ * Refuse d'écrire ce qui porte une consigne d'accès : mieux vaut perdre un
+ * brouillon que laisser le code d'un portail dans un stockage en clair.
+ */
 export function garder<T>(cle: string, valeur: T): void {
+  if (contientUnSecret(valeur)) {
+    console.error("[horsLigne] écriture refusée : la valeur porte une consigne d'accès.");
+    return;
+  }
   try {
     const b: Brouillon<T> = { valeur, modifie_le: Date.now() };
     localStorage.setItem(PREFIXE + cle, JSON.stringify(b));
