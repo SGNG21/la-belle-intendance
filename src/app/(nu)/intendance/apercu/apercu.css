@@ -1,0 +1,726 @@
+/* Business OS — coquille de l'application.
+   Marine, crème, filets. Aucune ombre : la hiérarchie vient du trait et du fond,
+   comme sur du papier. Préfixe « os- » pour ne croiser aucun style du site. */
+
+.os {
+  --os-side: 15rem;
+  --os-bar: 4.25rem;
+  min-height: 100dvh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* ------------------------------------------------------------ navigation */
+
+.os-nav {
+  position: fixed;
+  z-index: 20;
+  background: var(--navy-deep);
+  color: var(--cream);
+}
+
+/* Mobile : barre basse, cinq entrées, le pouce atteint tout. */
+.os-nav {
+  inset: auto 0 0 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid var(--line-on-dark);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.os-nav__brand {
+  display: none;
+}
+
+.os-nav__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: var(--os-bar);
+  padding: 0.5rem 0.25rem;
+  color: rgba(244, 238, 226, 0.68);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-decoration: none;
+  transition: color 120ms;
+}
+
+.os-nav__link:hover {
+  color: var(--cream);
+}
+
+.os-nav__link[aria-current="page"] {
+  color: var(--cream);
+}
+
+.os-nav__icon {
+  display: block;
+  width: 1.375rem;
+  height: 1.375rem;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* L'onglet actif porte un filet or : la couleur seule ne suffit pas. */
+.os-nav__link[aria-current="page"] .os-nav__icon {
+  stroke: var(--gold);
+}
+
+.os-main {
+  padding: 1.25rem 1rem calc(var(--os-bar) + 2rem);
+}
+
+@media (min-width: 64rem) {
+  .os-nav {
+    inset: 0 auto 0 0;
+    width: var(--os-side);
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: 0.125rem;
+    border-top: 0;
+    border-right: 1px solid var(--line-on-dark);
+    padding: 1.5rem 0.75rem;
+  }
+
+  .os-nav__brand {
+    display: block;
+    padding: 0 0.75rem 1.5rem;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    line-height: 1.25;
+    color: var(--cream);
+  }
+
+  .os-nav__brand span {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 0.375rem;
+  }
+
+  .os-nav__link {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+    text-align: left;
+  }
+
+  .os-nav__link[aria-current="page"] {
+    background: rgba(244, 238, 226, 0.1);
+  }
+
+  .os-main {
+    margin-left: var(--os-side);
+    padding: 2.5rem 2.5rem 4rem;
+  }
+}
+
+.os-wrap {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.os-wrap--doc {
+  max-width: 44rem;
+}
+
+/* ----------------------------------------------------------- en-têtes */
+
+.os-kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 0.5rem;
+}
+
+.os-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.os-sub {
+  color: var(--muted);
+  margin: 0.375rem 0 0;
+  font-size: 0.9375rem;
+}
+
+.os-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* -------------------------------------------------------------- cartes */
+
+.os-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+@media (min-width: 48rem) {
+  .os-card {
+    padding: 1.5rem;
+  }
+}
+
+.os-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.os-card__title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.os-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 60rem) {
+  .os-grid--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .os-grid--side {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* ------------------------------------------------------------- données */
+
+.os-dl {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.os-dl div {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.os-dl dt {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.os-dl dd {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.os-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Les chiffres qui comptent : grands, alignés, avec leur libellé au-dessus. */
+.os-stat {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.os-stat__k {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.os-stat__v {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.os-stat__n {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- statuts */
+
+.os-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 1.5rem;
+  padding: 0 0.5rem;
+  border-radius: var(--radius);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Couleur + glyphe : lisible en noir et blanc et pour un daltonien. */
+.os-tag::before {
+  content: attr(data-glyphe);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.os-tag--attente {
+  background: rgba(79, 114, 136, 0.13);
+  color: #3c5a6c;
+}
+.os-tag--cours {
+  background: rgba(190, 122, 84, 0.15);
+  color: #8f512f;
+}
+.os-tag--fait {
+  background: rgba(95, 118, 88, 0.16);
+  color: var(--sage-deep);
+}
+.os-tag--sceau {
+  background: rgba(174, 129, 48, 0.15);
+  color: #8a6420;
+}
+.os-tag--alerte {
+  background: rgba(163, 58, 44, 0.12);
+  color: var(--danger);
+}
+
+/* -------------------------------------------------------------- boutons */
+
+.os-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 120ms, color 120ms, border-color 120ms;
+}
+
+.os-btn--plein {
+  background: var(--navy-deep);
+  color: var(--cream);
+}
+.os-btn--plein:hover {
+  background: var(--navy);
+}
+
+.os-btn--contour {
+  border-color: var(--line);
+  color: var(--ink);
+}
+.os-btn--contour:hover {
+  border-color: var(--navy);
+}
+
+.os-btn--nu {
+  padding: 0 0.25rem;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--terracotta);
+  text-underline-offset: 0.25em;
+}
+
+.os-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* La carte que la barre d'action peut recouvrir réserve sa hauteur : sans
+   cela, la barre flotte au-dessus des dernières lignes et masque ce qu'on
+   vient de cocher. */
+.os-card--sous-barre {
+  padding-bottom: 7.5rem;
+}
+
+/* Sur mobile, l'action principale est une barre basse au-dessus de la nav. */
+.os-sticky {
+  position: sticky;
+  bottom: calc(var(--os-bar) + 0.75rem);
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  background: rgba(251, 248, 241, 0.94);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+@media (min-width: 64rem) {
+  .os-card--sous-barre {
+    padding-bottom: 1.5rem;
+  }
+
+  .os-sticky {
+    position: static;
+    grid-auto-flow: column;
+    justify-content: start;
+    background: none;
+    backdrop-filter: none;
+    border: 0;
+    padding: 0;
+  }
+}
+
+.os-why {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (min-width: 64rem) {
+  .os-why {
+    text-align: left;
+    align-self: center;
+  }
+}
+
+/* --------------------------------------------------------- la checklist */
+
+.os-check {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.os-check__li {
+  border-bottom: 1px solid var(--line);
+}
+
+/* 56 px : on coche debout, parfois avec des gants. */
+.os-check__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.5rem 0.25rem;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.os-check__box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1.5px solid var(--slate);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.os-check__btn[data-etat="fait"] .os-check__box {
+  border-color: var(--sage-deep);
+  background: var(--sage-deep);
+  color: #fff;
+}
+
+.os-check__btn[data-etat="ecarte"] .os-check__box {
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+.os-check__label {
+  flex: 1;
+}
+
+.os-check__btn[data-etat="ecarte"] .os-check__label {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+
+.os-check__note {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-top: 0.125rem;
+}
+
+/* ------------------------------------------------------- barre d'avancée */
+
+.os-jauge {
+  height: 3px;
+  background: var(--cream);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.os-jauge__in {
+  height: 100%;
+  background: var(--sage-deep);
+}
+
+/* ------------------------------------------------------- ligne de temps */
+
+.os-temps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.os-temps__li {
+  position: relative;
+  padding: 0 0 1.125rem 1.5rem;
+  border-left: 1px solid var(--line);
+}
+
+.os-temps__li:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+.os-temps__li::before {
+  content: "";
+  position: absolute;
+  left: -0.3125rem;
+  top: 0.3125rem;
+  width: 0.5625rem;
+  height: 0.5625rem;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1.5px solid var(--slate);
+}
+
+.os-temps__li[data-type="facture"]::before,
+.os-temps__li[data-type="devis"]::before {
+  border-color: var(--gold);
+}
+.os-temps__li[data-type="paiement"]::before {
+  border-color: var(--sage-deep);
+  background: var(--sage-deep);
+}
+.os-temps__li[data-type="intervention"]::before {
+  border-color: var(--terracotta);
+  background: var(--terracotta);
+}
+
+.os-temps__d {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.os-temps__t {
+  font-size: 0.9375rem;
+}
+
+.os-temps__x {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ documents */
+
+/* Un devis, un compte rendu, une facture ont l'air de la feuille qu'ils deviendront. */
+.os-doc {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+@media (min-width: 48rem) {
+  .os-doc {
+    padding: 3rem;
+  }
+}
+
+.os-doc__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--navy-deep);
+}
+
+.os-doc__marque {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.os-doc__meta {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.os-doc__corps {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.os-doc h2 {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2rem 0 0.75rem;
+}
+
+/* --------------------------------------------------------------- table */
+
+.os-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.os-table th {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.os-table td {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.os-table .os-r {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.os-table tfoot td {
+  border-bottom: 0;
+  padding-top: 1rem;
+}
+
+.os-total {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----------------------------------------------------------- l'avertissement */
+
+.os-note {
+  border-left: 3px solid var(--gold);
+  background: var(--cream);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.os-note--alerte {
+  border-left-color: var(--danger);
+  background: rgba(163, 58, 44, 0.07);
+}
+
+/* --------------------------------------------------------------- divers */
+
+.os-rang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.os-rang:last-child {
+  border-bottom: 0;
+}
+
+.os-vide {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  padding: 1rem 0;
+}
+
+.os-fil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.os-puce {
+  display: inline-block;
+  padding: 0.1875rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.os-demo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--gold);
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .os * {
+    transition: none !important;
+  }
+}
