@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Carte, Tag } from "./Os";
 import { avancement, heures, type LigneChecklist } from "@/lib/apercu/modele";
+import { enfiler, garder, reprendre } from "@/lib/apercu/horsLigne";
+import { EtatReseau } from "./EtatReseau";
 
 /**
  * Le relevé d'un passage.
@@ -15,19 +17,45 @@ import { avancement, heures, type LigneChecklist } from "@/lib/apercu/modele";
  * Un appui fait tourner l'état. La ligne entière est la cible, 56 px de haut :
  * on coche debout, parfois avec des gants.
  */
-export function Checklist({ initial, prevue }: { initial: LigneChecklist[]; prevue: number }) {
+export function Checklist({ initial, prevue, interventionId = "demo" }: { initial: LigneChecklist[]; prevue: number; interventionId?: string }) {
   const [lignes, setLignes] = useState(initial);
+  const cle = `releve:${interventionId}`;
+
+  // Au retour sur l'écran — téléphone verrouillé, onglet fermé, réseau tombé —
+  // on repart du relevé gardé localement plutôt que de la liste vierge.
+  useEffect(() => {
+    const b = reprendre<LigneChecklist[]>(cle);
+    if (b?.valeur?.length) setLignes(b.valeur);
+  }, [cle]);
 
   const tourner = (id: string) =>
-    setLignes((ls) =>
-      ls.map((l) => (l.id === id ? { ...l, fait: l.fait === null ? true : l.fait === true ? false : null } : l)),
-    );
+    setLignes((ls) => {
+      const suite = ls.map((l) =>
+        l.id === id ? { ...l, fait: l.fait === null ? true : l.fait === true ? false : null } : l,
+      );
+      // Écrit à chaque geste, pas à la validation : c'est ce qui sauve l'heure
+      // de relevé quand le téléphone s'éteint.
+      garder(cle, suite);
+      return suite;
+    });
 
   const av = avancement(lignes);
   const reste = av.restants;
 
+  // Clore sans réseau : l'action part en file avec sa clé d'idempotence, et
+  // le serveur refusera un second passage si elle revient.
+  const clore = () =>
+    enfiler({
+      cle: `clore:${interventionId}`,
+      url: `/api/intendance/interventions/${interventionId}/clore`,
+      methode: "POST",
+      corps: { checklist: lignes },
+      cree_le: Date.now(),
+    });
+
   return (
     <>
+      <EtatReseau />
       <Carte
        
         titre="Relevé du passage"
@@ -84,7 +112,7 @@ export function Checklist({ initial, prevue }: { initial: LigneChecklist[]; prev
           </>
         ) : (
           <>
-            <Link href="/intendance/apercu/compte-rendu" className="os-btn os-btn--plein">
+            <Link href="/intendance/apercu/compte-rendu" className="os-btn os-btn--plein" onClick={clore}>
               Clore et rédiger le compte rendu
             </Link>
             <span className="os-why">Le compte rendu reprendra ce relevé.</span>

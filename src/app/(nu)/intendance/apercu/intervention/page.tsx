@@ -41,7 +41,7 @@ export default function Page() {
           </dl>
         </Carte>
 
-        <Checklist initial={INTERVENTION.checklist} prevue={INTERVENTION.duree_prevue_h} />
+        <Checklist initial={INTERVENTION.checklist} prevue={INTERVENTION.duree_prevue_h} interventionId={INTERVENTION.id} />
 
         <Carte titre="Observations">
           <p style={{ marginTop: 0 }}>{INTERVENTION.observations}</p>

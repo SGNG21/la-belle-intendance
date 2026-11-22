@@ -13,7 +13,14 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     );
     if (!rows.length) throw new CrmError("Bien introuvable.", 404);
     const { clients, ...bien } = rows[0];
-    return { bien, client: clients };
+    // Les consignes d'entrée — code du portail, emplacement des clés — ne
+    // partent pas avec la fiche. Elles ont leur propre route, qui trace la
+    // consultation : voir biens/[id]/acces. Ici on dit seulement qu'il y en a.
+    const { acces, particularites, ...sansSecrets } = bien;
+    return {
+      bien: { ...sansSecrets, a_des_consignes: Boolean(acces || particularites) },
+      client: clients,
+    };
   });
 }
 

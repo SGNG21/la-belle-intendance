@@ -95,12 +95,30 @@ export const listClients = () =>
     "clients?select=*,biens(id,libelle)&order=actif.desc,nom.asc",
   );
 
-export async function getClient(id: string): Promise<{ client: Client; biens: Bien[]; demandes: Demande[] } | null> {
+/**
+ * Les colonnes d'un bien, moins les consignes d'entrée.
+ *
+ * PostgREST ne sait pas dire « tout sauf » : il faut énumérer. La liste est
+ * donc à tenir à jour avec la table — le prix à payer pour que le code du
+ * portail et l'emplacement des clés ne partent pas avec chaque lecture de
+ * fiche. Ils ont leur propre route, qui trace la consultation.
+ */
+const CHAMPS_BIEN = [
+  "id", "client_id", "cree_le", "libelle", "adresse", "commune", "surface",
+  "chambres", "salles_de_bains", "wc", "pieces_vie", "lits", "cuisine_equipee",
+  "usage", "caracteristiques", "km", "notes", "prestations", "frequence", "duree_h",
+].join(",");
+
+export type BienSansConsignes = Omit<Bien, "acces" | "particularites">;
+
+export async function getClient(
+  id: string,
+): Promise<{ client: Client; biens: BienSansConsignes[]; demandes: Demande[] } | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
   const rows = await db<Client[]>(`clients?id=eq.${id}&select=*&limit=1`);
   if (!rows.length) return null;
   const [biens, demandes] = await Promise.all([
-    db<Bien[]>(`biens?client_id=eq.${id}&select=*&order=cree_le.asc`),
+    db<BienSansConsignes[]>(`biens?client_id=eq.${id}&select=${CHAMPS_BIEN}&order=cree_le.asc`),
     db<Demande[]>(`demandes?client_id=eq.${id}&select=*&order=recu_le.desc`),
   ]);
   return { client: rows[0], biens, demandes };

@@ -742,3 +742,16 @@
   text-transform: uppercase;
   color: var(--gold);
 }
+
+/* L'état du réseau. Visible seulement quand il y a quelque chose à dire. */
+.os-reseau {
+  margin: 0 0 1rem;
+  padding: 0.625rem 0.875rem;
+  border-left: 3px solid var(--sage-deep);
+  background: var(--cream);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.875rem;
+}
+.os-reseau--coupe {
+  border-left-color: var(--terracotta);
+}

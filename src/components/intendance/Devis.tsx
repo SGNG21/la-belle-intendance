@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { dureeMenage, heures, type Bien, type Client } from "@/lib/crmModel";
+import type { BienSansConsignes } from "@/lib/crm";
 import {
   RYTHMES,
   STATUT_DEVIS,
@@ -26,7 +27,7 @@ interface Reglages {
 const nombre = (v: string): number => Number(v.replace(",", ".")) || 0;
 
 /** Les devis d'un client : la liste, le simulateur, l'envoi. */
-export function DevisBloc({ client, biens }: { client: Client; biens: Bien[] }) {
+export function DevisBloc({ client, biens }: { client: Client; biens: BienSansConsignes[] }) {
   const [devis, setDevis] = useState<Devis[] | null>(null);
   const [reglages, setReglages] = useState<Reglages | null>(null);
   const [nouveau, setNouveau] = useState(false);
@@ -172,7 +173,7 @@ function DevisForm({
   onCancel,
 }: {
   client: Client;
-  biens: Bien[];
+  biens: BienSansConsignes[];
   reglages: Reglages;
   onDone: () => Promise<void>;
   onCancel: () => void;
@@ -182,7 +183,7 @@ function DevisForm({
 
   const [prestation, setPrestation] = useState("");
   // Sans durée convenue, on part de ce que le logement laisse prévoir.
-  const estime = (b?: Bien) => (b ? dureeMenage(b) : 0);
+  const estime = (b?: BienSansConsignes) => (b ? dureeMenage(b) : 0);
   const [duree, setDuree] = useState((bien?.duree_h ?? estime(bien) ?? "").toString());
   const [taux, setTaux] = useState(reglages.taux_horaire?.toString() ?? "");
   const [deplacement, setDeplacement] = useState(reglages.deplacement?.toString() ?? "");

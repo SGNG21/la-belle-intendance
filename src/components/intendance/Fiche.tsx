@@ -21,7 +21,13 @@ import {
 import { api, shortDate } from "@/lib/intendanceApi";
 import { DevisBloc } from "./Devis";
 
-type Fiche = { client: Client; biens: Bien[]; demandes: Demande[] };
+/**
+ * Le bien tel que l'API le rend maintenant : sans les consignes d'entrée,
+ * avec seulement l'indication qu'il y en a. Voir CHAMPS_BIEN dans crm.ts.
+ */
+type BienFiche = Omit<Bien, "acces" | "particularites"> & { a_des_consignes?: boolean };
+
+type Fiche = { client: Client; biens: BienFiche[]; demandes: Demande[] };
 type Presta = { label: string; detail: string };
 
 const FREQUENCES = ["Chaque semaine", "Tous les quinze jours", "Une fois par mois", "Ponctuel", "Sur demande"];
@@ -227,7 +233,7 @@ function Origines({ demandes }: { demandes: Demande[] }) {
 
 /* ------------------------------------------------------------------ biens */
 
-function Biens({ clientId, biens, reload }: { clientId: string; biens: Bien[]; reload: () => Promise<void> }) {
+function Biens({ clientId, biens, reload }: { clientId: string; biens: BienFiche[]; reload: () => Promise<void> }) {
   const [nouveau, setNouveau] = useState(false);
 
   return (
@@ -256,7 +262,7 @@ function Biens({ clientId, biens, reload }: { clientId: string; biens: Bien[]; r
   );
 }
 
-function BienCard({ bien, reload }: { bien: Bien; reload: () => Promise<void> }) {
+function BienCard({ bien, reload }: { bien: BienFiche; reload: () => Promise<void> }) {
   const [edit, setEdit] = useState(false);
 
   if (edit) {
@@ -306,8 +312,7 @@ function BienCard({ bien, reload }: { bien: Bien; reload: () => Promise<void> })
           <span>Particularités du lieu</span> {traits.join(" · ")}
         </p>
       ) : null}
-      {bien.acces ? <AccesMasque libelle="Accès" texte={bien.acces} /> : null}
-      {bien.particularites ? <AccesMasque libelle="Particularités" texte={bien.particularites} /> : null}
+      {bien.a_des_consignes !== false ? <AccesMasque bienId={bien.id} /> : null}
       {bien.prestations.length ? (
         <ul className="bien-prestations">
           {bien.prestations.map((p) => (
@@ -329,7 +334,7 @@ function BienCard({ bien, reload }: { bien: Bien; reload: () => Promise<void> })
   );
 }
 
-function BienForm({ bien, clientId, onDone, onCancel }: { bien?: Bien; clientId?: string; onDone: () => Promise<void>; onCancel: () => void }) {
+function BienForm({ bien, clientId, onDone, onCancel }: { bien?: BienFiche; clientId?: string; onDone: () => Promise<void>; onCancel: () => void }) {
   const [f, setF] = useState({
     libelle: bien?.libelle ?? "",
     adresse: bien?.adresse ?? "",
@@ -342,12 +347,32 @@ function BienForm({ bien, clientId, onDone, onCancel }: { bien?: Bien; clientId?
     wc: bien?.wc?.toString() ?? "",
     pieces_vie: bien?.pieces_vie?.toString() ?? "",
     lits: bien?.lits?.toString() ?? "",
-    acces: bien?.acces ?? "",
-    particularites: bien?.particularites ?? "",
+    acces: "",
+    particularites: "",
     frequence: bien?.frequence ?? "",
     duree_h: bien?.duree_h?.toString() ?? "",
     notes: bien?.notes ?? "",
   });
+  // Les consignes d'entrée ne viennent pas avec la fiche. Pour les modifier,
+  // il faut d'abord les lire : on les demande à la route qui trace la
+  // consultation, et on laisse les champs vides tant qu'elles ne sont pas là.
+  const [consignesChargees, setConsignesChargees] = useState(!bien);
+  useEffect(() => {
+    if (!bien || consignesChargees) return;
+    let annule = false;
+    fetch(`/api/intendance/biens/${bien.id}/acces`, { method: "POST", cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        if (annule || !d?.ok) return;
+        setF((v) => ({ ...v, acces: d.acces ?? "", particularites: d.particularites ?? "" }));
+        setConsignesChargees(true);
+      })
+      .catch(() => undefined);
+    return () => {
+      annule = true;
+    };
+  }, [bien, consignesChargees]);
+
   const [cuisine, setCuisine] = useState(bien?.cuisine_equipee ?? false);
   const [caracs, setCaracs] = useState<string[]>(bien?.caracteristiques ?? []);
   const [lignes, setLignes] = useState<Presta[]>(bien?.prestations ?? []);

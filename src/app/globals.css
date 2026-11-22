@@ -2254,3 +2254,12 @@ p {
 .acces-bascule:hover {
   color: var(--ink);
 }
+.acces-bloc {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: start;
+}
+.acces-erreur {
+  color: var(--danger);
+  font-size: 0.8125rem;
+}
